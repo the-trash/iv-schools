@@ -1,0 +1,82 @@
+
+.body
+  -if flash[:notice]
+    .notice
+      = flash[:notice]
+
+  -if flash[:error]
+    .error
+      = flash[:error]
+
+  %h1
+    Список объектов roles
+    = link_to "Весь список", admins_roles_path
+
+  %br
+  = link_to 'Новый объект role', new_admins_role_path
+  %br
+  %br
+  = will_paginate @roles, :class=>:scaffold_pagination, :previous_label=>"&larr;", :next_label=>"&rarr;"
+
+
+  %table
+    %tr
+      -for role in @roles
+        %td
+          %table.object_card
+            %tr
+              %td.field
+                Управление
+              %td
+                = link_to 'Показать', admins_role_path(role)
+                = link_to 'Редактировать', edit_admins_role_path(role)
+                = link_to 'Удалить', admins_role_path(role), :confirm => 'Вы уверены?', :method => :delete
+
+            
+            %tr
+              
+              %td.field
+                ID
+              %td
+                
+                =h role.id
+                                       
+            %tr
+              
+              %td.field
+                Название
+              %td
+                
+                =h role.title
+                                       
+            %tr
+              
+              %td.field
+                Описание
+              %td
+                
+                .text_field
+                  =(h truncate(role.description.chars, 250, "")).gsub("\n", "<br />")
+                  &hellip;
+                                       
+            %tr
+              
+              %td.field
+                Набор прав
+              %td
+                
+                .text_field
+                  =(h truncate(role.settings.chars, 250, "")).gsub("\n", "<br />")
+                  &hellip;
+                                                  
+            %tr
+              %td.field
+                Управление
+              %td
+                = link_to 'Показать', admins_role_path(role)
+                = link_to 'Редактировать', edit_admins_role_path(role)
+                = link_to 'Удалить', admins_role_path(role), :confirm => 'Вы уверены?', :method => :delete
+
+
+  %br
+  = will_paginate @roles, :class=>:scaffold_pagination, :previous_label=>"&larr;", :next_label=>"&rarr;"

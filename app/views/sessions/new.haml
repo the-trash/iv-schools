@@ -1,0 +1,33 @@
+.std_form
+  %h3
+    Вход в систему iv-schools.ru
+  %p
+    Данная форма позволяет выполнить вход зарегистрированного пользователя в систему
+
+  -form_tag session_path do
+    %label{:for=>:login}
+      Логин
+      %strong
+        (имя в системе)
+    %span
+      = text_field_tag :login, '', :class=>:input
+    %p
+      Логин &mdash; это ваш псеводоним в системе iv-schools.ru, который Вы указали при регистрации
+      
+    %label{:for=>:password}
+      Пароль
+    %span
+      = password_field_tag :password, '', :class=>:input
+    %p
+      Пароль для доступа в систему
+      
+    %label{:for=>:remember_me}
+      = check_box_tag 'remember_me', '1', false, :class=>:check_box
+      Запомнить меня
+      %strong
+        (3 дня)
+    %p
+      не устанавливайте, если работаете на чужом компьютере
+
+    %p
+      = submit_tag 'Вход', :class=>:submit

@@ -1,0 +1,34 @@
+.block
+  %ul
+    %li.parent
+      - text= content_tag :span, "Визитка", :class=>:bar
+      = link_to text, "#"
+      
+    %li
+      - text= content_tag :span, "Коллектив", :class=>:bar
+      = link_to text, "#"
+      
+    %li
+      - text= content_tag :span, "Наши достижения", :class=>:bar
+      = link_to text, "#"
+      
+    %li
+      - text= content_tag :span, "Творческие коллективы", :class=>:bar
+      = link_to text, "#"
+      
+    %li
+      - text= content_tag :span, "Методический раздел", :class=>:bar
+      = link_to text, "#"
+      
+    %li
+      - text= content_tag :span, "История школы", :class=>:bar
+      = link_to text, "#"
+      
+    %li.system
+      - text= content_tag :span, "Редактировать", :class=>:bar
+      = link_to text, "#"
+      
+    %li
+      - iv= content_tag :span, "iv-schools.ru", :class=>:nobr
+      - text= content_tag :span, "Регистрация в системе #{iv}", :class=>:bar
+      = link_to text, signup_path

@@ -1,0 +1,8 @@
+.user_panel
+  
+  =link_to "Мой Кабинет (#{current_user.login})", "#"
+  =link_to "Сообщения (15)", "#"
+  =link_to "Контакты", "#"
+  =link_to "События", "#"
+  =link_to "Управление", :controller=>"/admins"
+  =link_to "Выход", logout_path

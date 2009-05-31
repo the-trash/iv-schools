@@ -1,0 +1,135 @@
+!!! Strict
+%html{:xmlns=>"http://www.w3.org/1999/xhtml", 'xml:lang'=>"en", :lang=>"en"}
+  %head
+    %meta{'http-equiv'=>"content-type", :content=>"text/html; charset=utf-8"}
+    %link{:href=>"favicon.ico", :rel=>"shortcut icon"}
+    %title
+      =yield :title
+    =yield :meta
+    
+    =stylesheet_link_tag 'basic/style.css', :media=>'screen'
+    =stylesheet_link_tag 'basic/paginator', :media=>'screen'
+    
+    =yield  :js
+    =yield  :css
+
+    - content_for :meta do
+      %meta{:name=>"description", :content=>"Ивановский региональный школьный портал"}
+      %meta{:name=>"keywords", :content=>"Ивановский региональный школьный портал"}
+      %meta{:name=>"author", :content=>"killich@yandex.ru, Илья Зыкин"}
+      
+    - content_for :js do
+      =#javascript_include_tag :defaults  
+      =#javascript_include_tag "messanger"
+      
+    - content_for :css do
+      =#stylesheet_link_tag 'haml_scaffolds/reset', :media=>'screen'
+      =#stylesheet_link_tag 'haml_scaffolds/style', :media=>'screen'
+      =stylesheet_link_tag 'basic/paginator', :media=>'screen'
+      
+    - content_for :title do
+      Иваново, Школьный портал
+  %body
+    .body
+      -# Если выполнен вход, то отобразим верхнее меню для данного пользователя
+      -if current_user
+        =render :partial => "users/toolbar"
+
+      =image_tag "basic/school.gif", :alt=>"iv36.iv-schools.ru"
+
+      .header{:id=>:header}
+        - if @subdomain.blank?
+          = link_to "Ивановский школьный портал iv-schools.ru", "#" 
+        - else
+          = link_to @subdomain.to_s + ".iv-schools.ru", "#" 
+
+      %ul.system_navigation
+        %li
+          =link_to "Новости +7", url_for(:controller=>:reports)
+        %li
+          =link_to "Задать вопрос +4", url_for(:controller=>:questions)
+        %li
+          =link_to "Фотоальбом +45", url_for(:controller=>:albums)
+        %li
+          =link_to "Официально +3", url_for(:controller=>:documents)
+        %li
+          =link_to "Карта", url_for(:controller=>:map)
+        %li
+          -if current_user            
+            =link_to "Выход", logout_path
+          -else
+            =link_to "Вход", login_path(:subdomain => @subdomain)
+
+      %table.main#main
+        %tbody
+          %tr
+            %td.content#content_column
+              .block#content_block
+                -# Ввод Флеш сообщений
+                = app_flash(flash)
+                =yield
+                  
+            %td.navigation
+              =render :partial => 'admins/navigation'
+                    
+      .footer
+        .block
+          .moderator
+            Редактор сайта: Иванова Лидия Петровна
+            %br
+            Редактор сайта был: 12.03.2009
+            %br
+            Обновление страниц редактором: 12.03.2009
+            = link_to "Подробнее", "#"
+            %br
+            %br
+
+            Редакторы страниц:
+            %span.nobr
+              Кузьмина Светлана Федоровна,
+            %span.nobr
+              Зарядин Александр Владимирович,
+            %span.nobr
+              Кузьмина Светлана Федоровна,
+            %span.nobr
+              Зарядин Александр Владимирович,
+            %br
+            
+            Редакторы страниц были: 12.03.2009
+            %br
+            Обновление страниц: 12.03.2009
+            = link_to "Подробнее", "#"
+            %br
+          
+          .portal
+            = link_to "Ивановский Региональный Школьный Интернет Портал", "#"
+            &nbsp;&nbsp;&nbsp;2006 &mdash; 2009 &copy;
+          ____________________________________________________________________________________________________________
+          %br
+          %br
+          Debugger
+          %br
+          ____________________________________________________________________________________________________________
+          %br
+          %br
+          
+          %div
+            Текущий пользователь:
+            = current_user.class.to_s
+            = current_user ? current_user.login : ''
+          %br  
+          %div
+            Просматриваемый пользователь:
+            = @user.class.to_s
+            = @user ? @user.login : ''
+          %br  
+          %div
+            Поддомен
+            = @subdomain.class.to_s
+            = @subdomain ? @subdomain : ''
+          %br  
+          %div
+            Контроллер
+            = [controller.controller_name, controller.action_name].join('/')
+            
+            

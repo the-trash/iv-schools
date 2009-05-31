@@ -1,0 +1,68 @@
+- content_for :navigation do
+  =render :partial => 'admins/navigation'
+  
+- content_for :css do
+  =stylesheet_link_tag 'admins/style', :media=>'screen'
+
+-if flash[:notice]
+  .notice
+    = flash[:notice]
+
+-if flash[:error]
+  .error
+    = flash[:error]
+
+.admins
+  %h1
+    Пользователи
+
+  %p
+    = link_to '&laquo; Назад', "/admins"
+  %p
+    = link_to 'Создать пользователя', new_admins_user_path
+    |
+    = link_to 'список пользователей', admins_users_path
+    
+
+  = will_paginate @users, :class=>:pagination, :previous_label=>"&larr;", :next_label=>"&rarr;"
+
+  %table.listing
+    %tr
+      %th.id
+        ID 
+      %th.login
+        Логин
+      %th.name
+        Ф.И.О.
+      %th.email
+        E-mail   
+    -color= true
+    -for user in @users
+      -# Строчка с подсветкой
+      - if color
+        -color= !color
+        %tr
+          %td.id
+            =h user.id     
+          %td
+            = link_to h(user.login), edit_admins_user_path(user)
+          %td
+            = link_to 'Николаев Николай Николаевич', edit_admins_user_path(user)
+          %td
+            =h user.email
+      -else
+        -color= !color
+        %tr.item
+          %td.id
+            =h user.id     
+          %td
+            = link_to h(user.login), edit_admins_user_path(user)
+          %td
+            = link_to 'Николаев Николай Николаевич', edit_admins_user_path(user)
+          %td
+            =h user.email
+
+      
+
+  %br
+  = will_paginate @users, :class=>:pagination, :previous_label=>"&larr;", :next_label=>"&rarr;"

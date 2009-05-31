@@ -1,0 +1,62 @@
+
+.body
+  %h1
+    Новый объект role
+
+  %table
+    %tr
+      %td
+        -form_for(@role, :url => admins_roles_path) do |f|
+          = f.error_messages
+          %table.object_card
+            
+            
+            
+            %tr
+              %td.field
+                ID
+              %td
+                
+                = h @role.id
+                                                       
+            
+            
+            %tr
+              %td.field
+                Название
+              %td
+                
+                  
+                %span
+                  = f.text_field :title, :class=>:scaffold_field
+                                                                         
+            
+            
+            %tr
+              %td.field
+                Описание
+              %td
+                
+                  
+                .editable_text_field
+                  %span
+                    = f.text_area :description, :class=>:scaffold_textarea
+                                                                         
+            
+            
+            %tr
+              %td.field
+                Набор прав
+              %td
+                
+                  
+                .editable_text_field
+                  %span
+                    = f.text_area :settings, :class=>:scaffold_textarea
+                                                                         
+            %tr
+              %td.field
+                Управление
+              %td
+                = f.submit "Создать"
+                = link_to 'Полный список', admins_roles_path

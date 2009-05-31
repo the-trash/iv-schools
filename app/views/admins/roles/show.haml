@@ -1,0 +1,64 @@
+
+.body
+  %h1
+    Объект
+    = "role"
+    = "#"+@role.id.to_s
+    
+  -if flash[:notice]
+    .notice
+      = flash[:notice]
+
+  -if flash[:error]
+    .error
+      = flash[:error]
+
+  %table
+    %tr
+      %td
+        %table.object_card
+        
+        
+          
+          %tr
+            %td.field
+              ID
+            %td
+            
+              =h @role.id
+                                     
+        
+          
+          %tr
+            %td.field
+              Название
+            %td
+            
+              =h @role.title
+                                     
+        
+          
+          %tr
+            %td.field
+              Описание
+            %td
+            
+              .readeble_text_field
+                =(h @role.description).gsub("\n", "<br />")
+                                     
+        
+          
+          %tr
+            %td.field
+              Набор прав
+            %td
+            
+              .readeble_text_field
+                =(h @role.settings).gsub("\n", "<br />")
+                                     
+          %tr
+            %td.field
+              Управление
+            %td
+              = link_to 'Редактировать', edit_admins_role_path(@role)
+              = link_to 'Полный список', admins_roles_path
