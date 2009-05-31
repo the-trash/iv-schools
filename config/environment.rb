@@ -39,3 +39,8 @@ Rails::Initializer.run do |config|
   # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}')]
   # config.i18n.default_locale = :de
 end
+
+# Убирает в формах дивы обрамляющие поля с ошибками
+ActionView::Base.field_error_proc = proc { |input, instance| input }
+# Настройка ключа сессии для всех поддоменов. Авторизация действительная для всех поддоменов
+ActionController::Base.session_options[:session_domain] = Site::COOKIES_SCOPE
