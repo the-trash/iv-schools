@@ -3,6 +3,7 @@
 class CreateRoles < ActiveRecord::Migration
   def self.up
     create_table :roles do |t|
+      t.string    :name         # Английское имя роли
       t.string    :title        # Название Роли
       t.text      :description  # Текстовое описание Роли
       t.text      :settings     # Настройки Роли
