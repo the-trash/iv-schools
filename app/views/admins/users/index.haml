@@ -19,9 +19,8 @@
   %p
     = link_to '&laquo; Назад', "/admins"
   %p
-    = link_to 'Создать пользователя', new_admins_user_path
-    |
-    = link_to 'список пользователей', admins_users_path
+    =# link_to 'Создать пользователя', new_admins_user_path
+    =# link_to 'список пользователей', admins_users_path
     
 
   = will_paginate @users, :class=>:pagination, :previous_label=>"&larr;", :next_label=>"&rarr;"
@@ -47,7 +46,7 @@
           %td
             = link_to h(user.login), edit_admins_user_path(user)
           %td
-            = link_to 'Николаев Николай Николаевич', edit_admins_user_path(user)
+            = link_to user.name, edit_admins_user_path(user)
           %td
             =h user.email
       -else
@@ -58,11 +57,9 @@
           %td
             = link_to h(user.login), edit_admins_user_path(user)
           %td
-            = link_to 'Николаев Николай Николаевич', edit_admins_user_path(user)
+            = link_to user.name, edit_admins_user_path(user)
           %td
             =h user.email
-
-      
 
   %br
   = will_paginate @users, :class=>:pagination, :previous_label=>"&larr;", :next_label=>"&rarr;"

@@ -20,6 +20,15 @@ Rails::Initializer.run do |config|
   # config.gem "sqlite3-ruby", :lib => "sqlite3"
   # config.gem "aws-s3", :lib => "aws/s3"
 
+  # Предполагается, что начальная инициализация данных приожения
+  # будет проводится при помощи Фабрик
+  config.gem "thoughtbot-factory_girl",
+             :lib    => "factory_girl",
+             :source => "http://gems.github.com"
+             
+  # Установка всех гемов выполняется командой
+  # rake gems:install # если надо указать среду разработки RAILS_ENV=test
+
   # Only load the plugins named here, in the order given (default is alphabetical).
   # :all can be used as a placeholder for all plugins not explicitly named
   # config.plugins = [ :exception_notification, :ssl_requirement, :all ]

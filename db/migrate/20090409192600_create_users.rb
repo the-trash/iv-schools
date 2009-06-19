@@ -11,8 +11,10 @@ class CreateUsers < ActiveRecord::Migration
       t.datetime  :remember_token_expires_at
 
       # Все дополнительные данные хранятся в профайле
-      t.string :name            # Имя пользователя
-      t.text :setting           # Набор различных настроек
+      t.string    :name               # Имя пользователя (Полное ФИО)
+      t.text      :setting            # Набор различных настроек
+      t.integer   :sex, :default=>0   # Пол 1-женщина, 2-мужчина, иначе - не установлено
+      t.datetime  :last_login_at      # Был на сайте
       
       t.integer  "role_id"      # Ссылка на Роль пользователя в системе
       t.integer  "profile_id"   # Ссылка на Профиль пользователя

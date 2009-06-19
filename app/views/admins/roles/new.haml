@@ -10,50 +10,28 @@
           = f.error_messages
           %table.object_card
             
-            
-            
             %tr
               %td.field
-                ID
+                Имя (En)
               %td
-                
-                = h @role.id
-                                                       
-            
-            
+                %span
+                  = f.text_field :name, :class=>:scaffold_field                
+
             %tr
               %td.field
                 Название
               %td
-                
-                  
                 %span
                   = f.text_field :title, :class=>:scaffold_field
-                                                                         
-            
             
             %tr
               %td.field
                 Описание
               %td
-                
-                  
+                                  
                 .editable_text_field
                   %span
-                    = f.text_area :description, :class=>:scaffold_textarea
-                                                                         
-            
-            
-            %tr
-              %td.field
-                Набор прав
-              %td
-                
-                  
-                .editable_text_field
-                  %span
-                    = f.text_area :settings, :class=>:scaffold_textarea
-                                                                         
+                    = f.text_area :description, :class=>:scaffold_textarea                                                                         
             %tr
               %td.field
                 Управление
