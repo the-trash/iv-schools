@@ -14,6 +14,10 @@ Rails::Initializer.run do |config|
   # Add additional load paths for your own custom dirs
   # config.load_paths += %W( #{RAILS_ROOT}/extras )
 
+  #-------------------------------------------------------------------------------------------------------
+  # Информация о связанных плагинах и гемах
+  #-------------------------------------------------------------------------------------------------------
+      
   # Specify gems that this application depends on and have them installed with rake gems:install
   # config.gem "bj"
   # config.gem "hpricot", :version => '0.6', :source => "http://code.whytheluckystiff.net"
@@ -25,9 +29,18 @@ Rails::Initializer.run do |config|
   config.gem "thoughtbot-factory_girl",
              :lib    => "factory_girl",
              :source => "http://gems.github.com"
-             
+
   # Установка всех гемов выполняется командой
   # rake gems:install # если надо указать среду разработки RAILS_ENV=test
+
+  # Деревья страниц
+  # http://github.com/collectiveidea/awesome_nested_set/tree/master
+  # script/plugin install git://github.com/collectiveidea/awesome_nested_set.git
+  
+  #-------------------------------------------------------------------------------------------------------
+  # ~Информация о связанных плагинах и гемах
+  #-------------------------------------------------------------------------------------------------------
+             
 
   # Only load the plugins named here, in the order given (default is alphabetical).
   # :all can be used as a placeholder for all plugins not explicitly named

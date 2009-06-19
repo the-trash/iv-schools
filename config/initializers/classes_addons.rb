@@ -1,5 +1,6 @@
-# добавить метод к классу Стринг
-# endl2br
+#-------------------------------------------------------------------------------------------------------
+# String
+#-------------------------------------------------------------------------------------------------------
 class String
   def endl2br
     self.gsub("\n", "<br />")
@@ -12,47 +13,57 @@ class String
     str.gsub(/\s+/, '<br />')
   end
 end
+#-------------------------------------------------------------------------------------------------------
+# ~String
+#-------------------------------------------------------------------------------------------------------
 
-# ---------------------------------------------------------------
 
 
-
-=begin
-  #def recursive_merge(hash= nil)
+#-------------------------------------------------------------------------------------------------------
+# Hash
+#-------------------------------------------------------------------------------------------------------
+# Рекурсивное объединение Хеш массивов
+class Hash
+  # Рекурсивно объединить 
+  def recursive_merge!(hash= nil)
+    return self unless hash.is_a?(Hash)
+    base= self
+    hash.each do |key, v|
+      if base[key.to_sym].is_a?(Hash) && hash[key.to_sym].is_a?(Hash)
+        base[key.to_sym]= base[key.to_sym].recursive_merge!(hash[key.to_sym])
+      else
+        base[key.to_sym]= hash[key.to_sym]
+      end
+    end
+    base.to_hash
+  end#recursive_merge!
   
-  a= {
-    :basic=>{
-      :show=>true,
-      :posts=>false,
-      :reports=>true,
-      :callback=>false,
-      :some_special=>false
-    }
-  }
-
-  b= {
-    :basic=>{
-      :callback=>true,
-      :some_special=>{
-        :test_one=>true,
-        :test45=>{
-          :test_one=>"my test var"
-        }
-      }
-    }
-  }
+  # Рекурсивно привести все значения к исходному состоянию
+  def recursive_set_values_on_default!(default_value= false)
+    base= self
+    base.each do |key, v|
+      if base[key.to_sym].is_a?(Hash)
+        base[key.to_sym]= base[key.to_sym].recursive_set_values_on_default!(default_value)
+      else
+        base[key.to_sym]= default_value
+      end
+    end
+  end#recursive_set_values_on_default
   
-  >a.recursive_merge(b)
-  
-  :basic: 
-    :show: true
-    :some_special: 
-      :test_one: true
-      :test45: 
-        :test_one: my test var
-    :callback: true
-    :posts: false
-    :reports: true
-=end
-   
-# ---------------------------------------------------------------
+  # Рекурсивно объединить и установить в качестве значения указанный параметр default_value
+  def recursive_merge_with_default!(hash= nil, default_value= true)
+    return self unless hash.is_a?(Hash)
+    base= self
+    hash.each do |key, v|
+      if base[key.to_sym].is_a?(Hash) && hash[key.to_sym].is_a?(Hash)
+        base[key.to_sym]= base[key.to_sym].recursive_merge_with_default!(hash[key.to_sym], default_value)
+      else
+        base[key.to_sym]= default_value
+      end
+    end
+    base.to_hash
+  end#recursive_merge_with_default
+end#Hash
+#-------------------------------------------------------------------------------------------------------
+# ~Hash
+#-------------------------------------------------------------------------------------------------------

@@ -67,6 +67,7 @@
               .block#content_block
                 -# Ввод Флеш сообщений
                 = app_flash(flash)
+                -# Ввод основного содержимого страницы
                 =yield
                   
             %td.navigation
@@ -75,61 +76,12 @@
       .footer
         .block
           .moderator
-            Редактор сайта: Иванова Лидия Петровна
-            %br
-            Редактор сайта был: 12.03.2009
-            %br
-            Обновление страниц редактором: 12.03.2009
-            = link_to "Подробнее", "#"
-            %br
-            %br
-
-            Редакторы страниц:
-            %span.nobr
-              Кузьмина Светлана Федоровна,
-            %span.nobr
-              Зарядин Александр Владимирович,
-            %span.nobr
-              Кузьмина Светлана Федоровна,
-            %span.nobr
-              Зарядин Александр Владимирович,
-            %br
+            =# render :partial=>'shared/page_stat'
             
-            Редакторы страниц были: 12.03.2009
-            %br
-            Обновление страниц: 12.03.2009
-            = link_to "Подробнее", "#"
-            %br
-          
           .portal
-            = link_to "Ивановский Региональный Школьный Интернет Портал", "#"
+            = link_to 'Ивановский Региональный Школьный Интернет Портал', 'http://iv-schools.ru'
             &nbsp;&nbsp;&nbsp;2006 &mdash; 2009 &copy;
-          ____________________________________________________________________________________________________________
-          %br
-          %br
-          Debugger
-          %br
-          ____________________________________________________________________________________________________________
-          %br
-          %br
-          
-          %div
-            Текущий пользователь:
-            = current_user.class.to_s
-            = current_user ? current_user.login : ''
-          %br  
-          %div
-            Просматриваемый пользователь:
-            = @user.class.to_s
-            = @user ? @user.login : ''
-          %br  
-          %div
-            Поддомен
-            = @subdomain.class.to_s
-            = @subdomain ? @subdomain : ''
-          %br  
-          %div
-            Контроллер
-            = [controller.controller_name, controller.action_name].join('/')
+            
+          =# render :partial=>'shared/debugger'
             
             

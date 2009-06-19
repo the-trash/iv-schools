@@ -1,0 +1,29 @@
+____________________________________________________________________________________________________________
+%br
+%br
+Debugger
+%br
+____________________________________________________________________________________________________________
+%br
+%br
+
+%div
+  Текущий пользователь:
+  = current_user.class.to_s
+  = current_user ? current_user.login : ''
+%br  
+%div
+  Просматриваемый пользователь:
+  = @user.class.to_s
+  = @user ? @user.login : ''
+%br  
+%div
+  Поддомен
+  = @subdomain.class.to_s
+  = @subdomain ? @subdomain : ''
+%br  
+%div
+  Контроллер
+  = [controller.controller_name, controller.action_name].join('/')
+            
+            

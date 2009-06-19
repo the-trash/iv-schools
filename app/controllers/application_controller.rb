@@ -1,51 +1,9 @@
 # Filters added to this controller apply to all controllers in the application.
 # Likewise, all the methods added will be available for all controllers.
 
-# Рекурсивное объединение Хеш массивов
-class Hash
-  # Рекурсивно объединить 
-  def recursive_merge!(hash= nil)
-    return self unless hash.is_a?(Hash)
-    base= self
-    hash.each do |key, v|
-      if base[key.to_sym].is_a?(Hash) && hash[key.to_sym].is_a?(Hash)
-        base[key.to_sym]= base[key.to_sym].recursive_merge!(hash[key.to_sym])
-      else
-        base[key.to_sym]= hash[key.to_sym]
-      end
-    end
-    base.to_hash
-  end
-  
-  # Рекурсивно привести все значения к исходному состоянию
-  def recursive_set_values_on_default!(default_value= false)
-    base= self
-    base.each do |key, v|
-      if base[key.to_sym].is_a?(Hash)
-        base[key.to_sym]= base[key.to_sym].recursive_set_values_on_default!(default_value)
-      else
-        base[key.to_sym]= default_value
-      end
-    end
-  end
-  
-  # Рекурсивно объединить и установить в качестве значения указанный параметр default_value
-  def recursive_merge_with_default!(hash= nil, default_value= true)
-    return self unless hash.is_a?(Hash)
-    base= self
-    hash.each do |key, v|
-      if base[key.to_sym].is_a?(Hash) && hash[key.to_sym].is_a?(Hash)
-        base[key.to_sym]= base[key.to_sym].recursive_merge_with_default!(hash[key.to_sym], default_value)
-      else
-        base[key.to_sym]= default_value
-      end
-    end
-    base.to_hash
-  end
-end
-
 class ApplicationController < ActionController::Base
   # Be sure to include AuthenticationSystem in Application Controller instead
+  # Система авторизации
   include AuthenticatedSystem
   
   helper :all # include all helpers, all the time
@@ -69,10 +27,14 @@ class ApplicationController < ActionController::Base
   
   # Определить поддомен в котором мы находимся
   def find_subdomain
+    # По умолчанию - поддомен отсутствует
     @subdomain= false
-    @user = User.find :first
+    # По умолчанию - просматриваемый пользователь - первый, который есть в системе
+    # (должен быть администаратор)
+    @user = User.find:first
+    
     if current_subdomain
-      # поскать приставку www
+      # поискать приставку www
       # вернуть чистое имя поддомена
       match= current_subdomain.match(/^www.(.+)/)
       @subdomain= match.nil? ? current_subdomain : match[1]
@@ -111,6 +73,7 @@ class ApplicationController < ActionController::Base
   end
   
   # Перенаправление взамен стандартному
+  # Используется в приложении
   def redirect_back_or(path)
     redirect_to :back
     rescue ActionController::RedirectBackError
