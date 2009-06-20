@@ -1,4 +1,4 @@
-# Данные по умолчанию для раздела афиши
+# Данные по умолчанию для сайта
 namespace :db do
   # rake db:basic_data
   desc 'create basic data'
@@ -199,6 +199,30 @@ namespace :db do
               child_page.save
               # Дочернюю страницу сделать дочкой данной страницы
               child_page.move_to_child_of page
+
+              # ТРЕТИЙ УРОВЕНЬ
+                # C вероятностью 50/50, что будут созданы подстраницы для данной (дерево строю)
+                if [true, false].rand
+                  # Пять раз
+                  5.times do
+                    # Создать дочернюю страницу
+                    level_child_page= u.pages.new(
+                      :author=>Faker::Name.name,
+                      :keywords=>Faker::Lorem.sentence(2),
+                      :description=>Faker::Lorem.sentence(2),
+                      :copyright=>Faker::Name.name,
+                      :title=>"#{u.name} #{Faker::Lorem.sentence}",
+                      :annotation=>Faker::Lorem.sentence(3),
+                      :content=>Faker::Lorem.sentence(50)
+                    )
+                    # Сохранить дочернюю страницу
+                    level_child_page.save
+                    # Дочернюю страницу сделать дочкой данной страницы
+                    level_child_page.move_to_child_of child_page
+                  end# n.times do
+                end# [true, false].rand
+              # ТРЕТИЙ УРОВЕНЬ
+              
             end# n.times do
           end# [true, false].rand
           

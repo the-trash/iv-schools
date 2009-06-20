@@ -11,14 +11,14 @@ class CreatePages < ActiveRecord::Migration
       t.string :title         # «аголовок страницы
       t.text   :annotation    # јннотаци€ (от лат. annotatio Ч замечание) Ч кратка€ характеристика издани€: рукописи, статьи или книги.
       t.text   :content       # —одержимое страницы
-
+      
+      t.text    :setting    # Ќабор различных настроек :: сериализованные данные :: YAML :: должен быть организован единый интерфейс
+      
       # ѕоведение дерева (вложенные массивы - nested sets)
       t.integer :parent_id
       t.integer :lft
       t.integer :rgt
-
-      t.text    :setting    # Ќабор различных настроек :: сериализованные данные :: YAML :: должен быть организован единый интерфейс
-      
+            
       t.timestamps
     end
   end
