@@ -1,5 +1,6 @@
 # Данные по умолчанию для раздела афиши
 namespace :db do
+  # rake db:basic_data
   desc 'create basic data'
   task :basic_data => ["db:drop", "db:create", "db:migrate", "db:users:create", "db:users:pages"]
       
@@ -170,12 +171,12 @@ namespace :db do
           # Создать страницу
           page= u.pages.new(
             :author=>Faker::Name.name,
-            :keywords=>Faker::Lorem.sentence(30),
-            :description=>Faker::Lorem.sentence(200),
+            :keywords=>Faker::Lorem.sentence(2),
+            :description=>Faker::Lorem.sentence(2),
             :copyright=>Faker::Name.name,
-            :title=>"#{u.name} #{Faker::Lorem.sentence(30)}",
-            :annotation=>Faker::Lorem.sentence(200),
-            :content=>Faker::Lorem.sentence
+            :title=>"#{u.name} #{Faker::Lorem.sentence}",
+            :annotation=>Faker::Lorem.sentence(3),
+            :content=>Faker::Lorem.sentence(50)
           )
           
           page.save # Сохранить страницу
@@ -187,12 +188,12 @@ namespace :db do
               # Создать дочернюю страницу
               child_page= u.pages.new(
                 :author=>Faker::Name.name,
-                :keywords=>Faker::Lorem.sentence(30),
-                :description=>Faker::Lorem.sentence(200),
+                :keywords=>Faker::Lorem.sentence(2),
+                :description=>Faker::Lorem.sentence(2),
                 :copyright=>Faker::Name.name,
-                :title=>"#{u.name} #{Faker::Lorem.sentence(30)}",
-                :annotation=>Faker::Lorem.sentence(200),
-                :content=>Faker::Lorem.sentence
+                :title=>"#{u.name} #{Faker::Lorem.sentence}",
+                :annotation=>Faker::Lorem.sentence(3),
+                :content=>Faker::Lorem.sentence(50)
               )
               # Сохранить дочернюю страницу
               child_page.save
