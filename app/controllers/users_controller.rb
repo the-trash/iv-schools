@@ -1,6 +1,9 @@
 class UsersController < ApplicationController
   # базова€ страница ѕользовател€ системы
   def index
+    @pages_tree= Page.find_all_by_user_id(@user.id,
+                                      :order=>"lft ASC"
+                                      )
   end
   
   # render new.rhtml

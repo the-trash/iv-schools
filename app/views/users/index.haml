@@ -1,2 +1,41 @@
 - content_for :navigation do
   =render :partial => 'navigation'
+
+:ruby
+  def parse_nested_set(set, options = {})
+    prev_level = 0
+    result = "<ul>\n"
+
+    if set
+      recurse_result_set set do |node, level|
+        #level = level node.parent_id
+        result += level == prev_level ? "</li>\n" : (level > prev_level ? "<ul style='margin: 0 0 20px 20px;'>\n" : '')
+        (prev_level-level).times { result += "</li>\n</ul>\n" } if level < prev_level
+        result += "<li style='margin: 0 0 20px '>\n"
+        result += render :partial => options[:partial], :object => node, :locals => options[:locals]
+        prev_level = level
+      end
+    end
+
+    (prev_level+1).times { result += "</li>\n</ul>\n" }
+        
+    result
+  end
+  
+  def recurse_result_set(set, &block)
+    levels = [nil]
+    set.each do |node|
+      if levels.last != node.parent_id
+        if levels.any? { |e| e == node.parent_id }
+          while levels.last != node.parent_id
+            levels.pop
+          end
+        else
+          levels.push(node.parent_id)
+        end
+      end
+      block.call(node, levels.size - 1)
+    end
+  end
+      
+= parse_nested_set @pages_tree, :partial => 'shared/tree_elem'

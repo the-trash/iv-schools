@@ -29,6 +29,8 @@ Rails::Initializer.run do |config|
   config.gem "thoughtbot-factory_girl",
              :lib    => "factory_girl",
              :source => "http://gems.github.com"
+             
+  # Для тестового заполнения данными требуется gem faker
 
   # Установка всех гемов выполняется командой
   # rake gems:install # если надо указать среду разработки RAILS_ENV=test
@@ -36,7 +38,7 @@ Rails::Initializer.run do |config|
   # Деревья страниц
   # http://github.com/collectiveidea/awesome_nested_set/tree/master
   # script/plugin install git://github.com/collectiveidea/awesome_nested_set.git
-  
+
   #-------------------------------------------------------------------------------------------------------
   # ~Информация о связанных плагинах и гемах
   #-------------------------------------------------------------------------------------------------------

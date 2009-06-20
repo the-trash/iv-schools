@@ -1,7 +1,7 @@
 # Данные по умолчанию для раздела афиши
 namespace :db do
   desc 'create basic data'
-  task :basic_data => ["db:drop", "db:create", "db:migrate", "db:users:create"]
+  task :basic_data => ["db:drop", "db:create", "db:migrate", "db:users:create", "db:users:pages"]
       
   # Раздел создания базовых пользователей системы
   namespace :users do
@@ -154,6 +154,56 @@ namespace :db do
       #-------------------------------------------------------------------------------------------------------
       
     end# db:users:create
+
+    desc 'create basic users pages'
+    # rake db:users:pages
+    task :pages => :environment do
+      require 'faker'
+      require 'factory_girl'
+      
+      # Найти всех пользователей
+      users= User.find:all
+      # Для каждого пользователя
+      users.each do |u|
+        # 10 раз сделать страницу
+        10.times do
+          # Создать страницу
+          page= u.pages.new(
+            :author=>Faker::Name.name,
+            :keywords=>Faker::Lorem.sentence(30),
+            :description=>Faker::Lorem.sentence(200),
+            :copyright=>Faker::Name.name,
+            :title=>"#{u.name} #{Faker::Lorem.sentence(30)}",
+            :annotation=>Faker::Lorem.sentence(200),
+            :content=>Faker::Lorem.sentence
+          )
+          
+          page.save # Сохранить страницу
+          
+          # C вероятностью 50/50, что будут созданы подстраницы для данной (дерево строю)
+          if [true, false].rand
+            # Пять раз
+            5.times do
+              # Создать дочернюю страницу
+              child_page= u.pages.new(
+                :author=>Faker::Name.name,
+                :keywords=>Faker::Lorem.sentence(30),
+                :description=>Faker::Lorem.sentence(200),
+                :copyright=>Faker::Name.name,
+                :title=>"#{u.name} #{Faker::Lorem.sentence(30)}",
+                :annotation=>Faker::Lorem.sentence(200),
+                :content=>Faker::Lorem.sentence
+              )
+              # Сохранить дочернюю страницу
+              child_page.save
+              # Дочернюю страницу сделать дочкой данной страницы
+              child_page.move_to_child_of page
+            end# n.times do
+          end# [true, false].rand
+          
+        end# n.times do
+      end# users.each do |u|
+    end# db:users:pages
     
   end#:users
 end#:db
