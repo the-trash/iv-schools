@@ -71,7 +71,9 @@
                 =yield
                   
             %td.navigation
-              =render :partial => 'users/navigation'
+              -# Если меню навигации не определено, то показать корневое меню
+              -# Иначе показать сформированное меню
+              = yield(:navigation_menu).blank? ? render(:partial => 'shared/root_navigation_menu') : yield(:navigation_menu)
                     
       .footer
         .block

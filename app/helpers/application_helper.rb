@@ -99,7 +99,7 @@ module ApplicationHelper
   # Отрисовка карты сайта
   def map_and_destroy! tree, node, root= false
     # Формируем ссылку
-    res= link_to(node.title, '#')
+    res= link_to node.title, page_path(node)
     # Если корневой раздел - применяем класс
     res= content_tag :li, res, :class=>(root ? 'root' : '')
     

@@ -1,7 +1,12 @@
 class CreatePages < ActiveRecord::Migration
   def self.up
     create_table :pages do |t|
-      t.integer :user_id # Владелец страницы
+      t.integer :user_id  # Владелец страницы
+      # Специальный маркер, идентифицирующий страницу.
+      # Например к любой странице можно будет обращаться
+      # site.com/pages/134-234-223-126
+      # Что должно существенно упростить адресацию при диктовке адреса по телефону например
+      t.string  :zip_code
 
       t.string :author      # Автор страницы
       t.string :keywords    # Ключевые слова страницы

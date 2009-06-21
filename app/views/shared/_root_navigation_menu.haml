@@ -1,0 +1,11 @@
+.block
+  %ul
+    - @root_pages.each do |page|
+      %li
+        - text= content_tag :span, page.title, :class=>:bar
+        = link_to text, page_path(page)
+
+    %li.system
+      - iv= content_tag :span, "iv-schools.ru", :class=>:nobr
+      - text= content_tag :span, "Регистрация в системе #{iv}", :class=>:bar
+      = link_to text, signup_path

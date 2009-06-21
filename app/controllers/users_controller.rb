@@ -1,4 +1,7 @@
 class UsersController < ApplicationController
+  # ‘ормирование данных дл€ отображени€ базового меню-навигации
+  before_filter :navigation_menu_init
+  
   # базова€ страница ѕользовател€ системы
   def index
     @pages_tree= Page.find_all_by_user_id(@user.id, :order=>"lft ASC")

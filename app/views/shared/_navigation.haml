@@ -1,0 +1,21 @@
+.block        
+  %ul
+    %li{:class=>"parent"}
+      - text= content_tag :span, "Карта сайта", :class=>:bar
+      = link_to text, map_pages_path
+
+    - @parents.each do |parent|
+      - current= (parent.id == @page.id) ? 'current' : ''
+      %li{:class=>"parent #{current}"}
+        - text= content_tag :span, parent.title, :class=>:bar
+        = link_to text, page_path(parent)
+      -if parent.id == @page.id          
+        - @siblings.each do |elem|
+          %li
+            - text= content_tag :span, elem.title, :class=>:bar
+            = link_to text, page_path(elem)
+
+    %li.system
+      - iv= content_tag :span, "iv-schools.ru", :class=>:nobr
+      - text= content_tag :span, "Регистрация в системе #{iv}", :class=>:bar
+      = link_to text, signup_path

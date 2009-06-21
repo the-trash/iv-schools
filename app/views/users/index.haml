@@ -1,9 +1,10 @@
-- content_for :navigation do
-  =render :partial => 'navigation'
+-# content_for :navigation do
+=# render :partial => 'shared/navigation'
 
 .map
   %h3 Карта сайта
-  %ul
-    -# Выбрать все корневые и для каждого сделать отрисовку
-    - @pages_tree.select{ |elem| elem.parent_id == nil }.each do |node|
-      = map_and_destroy!(@pages_tree, node, true)
+  -#
+    %ul
+      -# Выбрать все корневые и для каждого сделать отрисовку
+      - @pages_tree.select{ |elem| elem.parent_id == nil }.each do |node|
+        = map_and_destroy!(@pages_tree, node, true)

@@ -71,7 +71,13 @@ class ApplicationController < ActionController::Base
     # Вернем последнее значимое
     @user= user ? user : @user
   end
-  
+
+  # Функция, необходимая для формирования базового меню-навигации
+  # Отображаются только корневые разделы карты сайта
+  def navigation_menu_init
+    @root_pages= Page.find_all_by_user_id_and_parent_id(@user.id, nil, :order=>"lft ASC")
+  end
+    
   # Перенаправление взамен стандартному
   # Используется в приложении
   def redirect_back_or(path)
