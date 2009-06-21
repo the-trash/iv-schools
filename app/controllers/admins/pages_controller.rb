@@ -44,6 +44,14 @@ class Admins::PagesController < ApplicationController
     respond_to do |format|
       if @page.save
         flash[:notice] = 'page успешно создано.'
+        
+        # Если установлено значение родителя
+        if params[:page][:parent_id]
+          # Сделать дочерним элементом, указанного элемента, если это возможно
+          @page.move_to_child_of(params[:page][:parent_id])
+          flash[:notice] += '<br /> Успешно установлен родитель.'
+        end
+
         format.html { redirect_to(admins_page_path(@page)) }
       else
         format.html { render :action => "new" }
@@ -58,6 +66,14 @@ class Admins::PagesController < ApplicationController
     respond_to do |format|
       if @page.update_attributes(params[:page])
         flash[:notice] = 'page успешно обновлено.'
+        
+        # Если установлено значение родителя
+        if params[:page][:parent_id]
+          # Сделать дочерним элементом, указанного элемента, если это возможно
+          @page.move_to_child_of(params[:page][:parent_id])
+          flash[:notice] += '<br /> Успешно установлен родитель.'
+        end
+        
         format.html { redirect_to(admins_page_path(@page)) }
       else
         format.html { render :action => "edit" }
