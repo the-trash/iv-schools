@@ -92,3 +92,4 @@
                 = f.submit "Обновить"
                 = link_to 'Показать', admins_page_path(@page)
                 = link_to 'Полный список', admins_pages_path
+                = link_to 'Сделать дочернюю страницу', new_admins_page_path(:user_id=>@page.user.id, :parent_id=>@page.id)

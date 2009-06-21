@@ -10,33 +10,35 @@
           = f.error_messages
           %table.object_card
             
-            
-            
-            %tr
-              %td.field
-                ID
-              %td
-                = h @page.id
             %tr
               %td.field
                 Владелец
               %td
                 %span
-                  = f.text_field :user_id, :class=>:scaffold_field
-            %tr
-              %td.field
-                zip-code
-              %td
-                %span
-                  = f.text_field :zip_code, :class=>:scaffold_field
+                  -if params[:user_id]
+                    = f.hidden_field :user_id, :value=>params[:user_id]
+                    = User.find_by_id(params[:user_id]).name
+                  -else
+                    = f.select("user_id", User.find(:all).collect{|u| [u.name, u.id ] })
                   
             %tr
               %td.field
                 id родителя
               %td
                 %span
-                  = f.text_field :parent_id, :class=>:scaffold_field
-                  
+                  - if params[:parent_id]
+                    = f.hidden_field :parent_id, :value=>params[:parent_id]
+                    = Page.find_by_id(params[:parent_id]).title
+                  - else
+                    = f.text_field :parent_id, :class=>:scaffold_field
+
+            %tr
+              %td.field
+                zip-code
+              %td
+                %span
+                  = f.text_field :zip_code, :class=>:scaffold_field
+                                    
             %tr
               %td.field
                 Автор страницы

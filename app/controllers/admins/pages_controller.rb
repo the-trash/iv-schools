@@ -46,8 +46,10 @@ class Admins::PagesController < ApplicationController
         flash[:notice] = 'page успешно создано.'
         
         # Если установлено значение родителя
-        if params[:page][:parent_id]
+        if params[:page][:parent_id] && !params[:page][:parent_id].blank?
           # Сделать дочерним элементом, указанного элемента, если это возможно
+          # Нужно проверять - возможно ли перемещение в этот узел
+          # Если не возможно - обнулять индексы дерева и перемещать
           @page.move_to_child_of(params[:page][:parent_id])
           flash[:notice] += '<br /> Успешно установлен родитель.'
         end
@@ -68,8 +70,10 @@ class Admins::PagesController < ApplicationController
         flash[:notice] = 'page успешно обновлено.'
         
         # Если установлено значение родителя
-        if params[:page][:parent_id]
+        if params[:page][:parent_id] && !params[:page][:parent_id].blank?
           # Сделать дочерним элементом, указанного элемента, если это возможно
+          # Нужно проверять - возможно ли перемещение в этот узел
+          # Если не возможно - обнулять индексы дерева и перемещать
           @page.move_to_child_of(params[:page][:parent_id])
           flash[:notice] += '<br /> Успешно установлен родитель.'
         end
