@@ -1,35 +1,35 @@
 :model:
-- :id: 
+- :id:
     :title: ID
     :type: string
     :edit: false
-- :parent_id: 
-    :title: Родительский<br />раздел
+- :user_id: 
+    :title: Владелец
     :type: string
-- :position: 
-    :title: Позиция
+- :zip_code:
+    :title: zip-code
     :type: string
 - :author: 
-    :title: Автор
-    :type: string
-- :copyright: 
-    :title: Авторское<br />право
+    :title: Автор страницы
     :type: string
 - :keywords: 
     :title: Ключевые<br />слова
     :type: string
+- :copyright: 
+    :title: Авторское<br />право
+    :type: string
+- :description:
+    :title: Описание
+    :type: string
 - :title: 
     :title: Заголовок
     :type: string
-- :description: 
-    :title: Описание
+- :annotation: 
+    :title: Аннотация
     :type: text
-- :content: 
+- :content:
     :title: Содержимое
     :type: text
-
-
-
 
 
 

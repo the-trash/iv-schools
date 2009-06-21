@@ -47,6 +47,9 @@ ActionController::Routing::Routes.draw do |map|
     admin.resources :users,
     :member=>{:change_role => :post} # /admins/users/:id/change_role
     
+    # /admins/pages/new
+    # /admins/pages/:id/edit
+    admin.resources :pages
      
     # /admins/roles/new
     # /admins/roles/:id/edit
