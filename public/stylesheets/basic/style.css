@@ -80,8 +80,8 @@ h6{ font-size:12pt; }
   line-height:160%;
 }
 .content .page  h1{ font-size:20pt; }
-.content .page  h2{ font-size:16pt; }
-.content .page  h3{ font-size:14pt; }
+.content .page  h2{ font-size:15pt; }
+.content .page  h3{ font-size:13pt; }
 .content .page  h4{ font-size:10pt; }
 .content .page  h5{ font-size:8pt; }
 .content .page  h6{ font-size:7pt; }
@@ -180,7 +180,7 @@ h6{ font-size:12pt; }
   margin-bottom:10px;
 }
 a .bar{
-  font-size:9pt;
+  font-size:8pt;
   line-height:150%;
   color:#2476FF;
   font-weight:bold;
@@ -188,7 +188,6 @@ a .bar{
   display:block;
 }
 a .bar:hover{
-  font-size:9pt;
   color:#FF7211;
   font-weight:bold;
   text-decoration:underline;
@@ -347,117 +346,88 @@ ul.system_navigation{
 /* std_form */
 
 /*map*/
-.map{
-  margin:0 0 15px 0;
-}
-.map a{
-  color:#000;
-  font-size:12pt;
-  font-weight:bold;
-  text-decoration:none;
-}
 .map a:hover{
   color:#2476FF;
   text-decoration:none;
 }
-
 .map ul ul{
-  margin:0 0 0 5px;
-  border-left:1px dashed #DDD;
+  border-left:1px dashed #DDDDDD;
+  list-style-image:none;
+  list-style-position:inside;
+  list-style-type:circle;
+  -list-style-type:none;
+  -list-style-type:none;
+  margin:0 0 0 1px;
 }
 .map ul li{
   zoom:1;
   padding:3px 0 3px 12px;
 }
-.map .root a{font-size:13pt;}
-
 /*map*/
 
-/* admin map */
-.map span{zoom:1;}/* ie6 fix прыганье блоков */
-.map ul li .edit_controls a{font-size:8pt;}
-
-.map .container{
-  position:relative;
+/*admin map*/
+.map, .admin_map{ margin:0 0 15px 0; }
+.map a, .admin_map a{
+  color:#000;
+  font-size:8pt;
+  font-weight:normal;
+  text-decoration:none;
+  line-height: 150%;
 }
-.map ul li .edit_controls{
-  position:absolute;
-  top:0;
-  left:110%;
-  width:300px;
-  display:block;
+.admin_map a:hover{
+  color:#2476FF;
+  text-decoration:none;
 }
-.map ul li .edit_controls .button{
-  display:block;
-  width:15px;
-  height:15px;
-  float:left;
+.map .root a, .admin_map .root a{ font-weight:bold; }
+.admin_map .elem{
   overflow:hidden;
-  margin-right:10px;
-  background:#CCF;
+  margin:0 0 3px 0;  
 }
-.map ul li .edit_controls .new{
-  background:transparent url(/images/basic/edit_controls.gif) no-repeat scroll -57px 0;
-  cursor:pointer;
-  width:12px;
+.admin_map .elem:hover{
+  background:#EEE;
 }
-.map ul li .edit_controls .new_hover{
-  background:transparent url(/images/basic/edit_controls.gif) no-repeat scroll -57px -16px;
-  cursor:pointer;
-  width:12px;
+.admin_map .link{
+  margin:0 140px 0 0;
+  padding:5px;
 }
-.map ul li .edit_controls .edit{
-  background:transparent url(/images/basic/edit_controls.gif) no-repeat scroll -26px 0;
-  cursor:pointer;
-  width:12px;
-}
-.map ul li .edit_controls .edit_hover{
-  background:transparent url(/images/basic/edit_controls.gif) no-repeat scroll -26px -16px;
-  cursor:pointer;
-  width:12px;
-}
-.map ul li .edit_controls .show{
-  background:transparent url(/images/basic/edit_controls.gif) no-repeat scroll -70px 0;
-  cursor:pointer;
-  width:12px;
-}
-.map ul li .edit_controls .show_hover{
-  background:transparent url(/images/basic/edit_controls.gif) no-repeat scroll -70px -16px;
-  cursor:pointer;
-  width:12px;
-}
-.map ul li .edit_controls .up{
-  background:transparent url(/images/basic/edit_controls.gif) no-repeat scroll -13px 0;
-  cursor:pointer;
-  width:13px;
-}
-.map ul li .edit_controls .up_hover{
-  background:transparent url(/images/basic/edit_controls.gif) no-repeat scroll -13px -16px;
-  cursor:pointer;
-  width:13px;
-}
-.map ul li .edit_controls .down{
-  background:transparent url(/images/basic/edit_controls.gif) no-repeat scroll 0 0;
-  cursor:pointer;
-  width:13px;
-}
-.map ul li .edit_controls .down_hover{
-  background:transparent url(/images/basic/edit_controls.gif) no-repeat scroll 0 -16px;
-  cursor:pointer;
-  width:13px;
-}
-.map ul li .edit_controls .delete{
-	background: transparent url(/images/basic/edit_controls.gif) no-repeat -39px 1px;
-	cursor:pointer;
-  width:15px;
-}
-.map ul li .edit_controls .delete_hover{
-	background: transparent url(/images/basic/edit_controls.gif) no-repeat -39px -15px;
-	cursor:pointer;
-  width:15px;
-}
+.admin_map .controls{
+  width:140px;
+  float:right;
 
-/* admin map */
+}
+.admin_map .childs{
+  margin:0 0 0 20px;
+  border-left:1px dashed #DDD;
+}
+.admin_map .button{
+  width:20px;
+  height:20px;
+  display:block;
+  float:left;
+  margin:0 0 0 3px;
+  cursor:pointer;
+}
+.admin_map .button.new{ background:transparent url(/images/iconza/blue/add.png) no-repeat scroll center center; }
+.admin_map .button.new:hover{ background:transparent url(/images/iconza/red/add.png) no-repeat scroll center center;}
+
+.admin_map .button.edit{ background:transparent url(/images/iconza/blue/edit.png) no-repeat scroll center center; }
+.admin_map .button.edit:hover{ background:transparent url(/images/iconza/red/edit.png) no-repeat scroll center center;}
+
+.admin_map .button.up{ background:transparent url(/images/iconza/blue/up.png) no-repeat scroll center center; }
+.admin_map .button.up:hover{ background:transparent url(/images/iconza/red/up.png) no-repeat scroll center center;}
+
+.admin_map .button.down{ background:transparent url(/images/iconza/blue/down.png) no-repeat scroll center center; }
+.admin_map .button.down:hover{ background:transparent url(/images/iconza/red/down.png) no-repeat scroll center center;}
+
+.admin_map .button.delete{ background:transparent url(/images/iconza/blue/delete.png) no-repeat scroll center center; }
+.admin_map .button.delete:hover{ background:transparent url(/images/iconza/red/delete.png) no-repeat scroll center center;}
+
+.admin_map .undeleted{ background:transparent url(/images/iconza/gray/delete.png) no-repeat scroll center center; }
+.admin_map .cantup{ background:transparent url(/images/iconza/gray/up.png) no-repeat scroll center center; }
+.admin_map .cantdown{ background:transparent url(/images/iconza/gray/down.png) no-repeat scroll center center; }
+/*admin map*/
+
+
 
 /*data_storage*/
 .data_storage h2{

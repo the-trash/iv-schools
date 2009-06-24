@@ -32,7 +32,12 @@ ActionController::Routing::Routes.draw do |map|
   # Стандартный роутинг для страниц
   map.resources :pages,
     :collection=>{
-      :map=>:get # /pages/map
+      :map=>:get,     # /pages/map
+      :admin=>:get    # /pages/admin
+    },
+    :member=>{
+      :up=>:get,
+      :down=>:get
     }
   
   #------------------------------------------------------------------------------------#

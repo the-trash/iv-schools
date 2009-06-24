@@ -5,6 +5,10 @@ class PagesController < ApplicationController
   def map
     @pages_tree= Page.find_all_by_user_id(@user.id, :order=>"lft ASC")
   end
+  
+  def admin
+    @pages_tree= Page.find_all_by_user_id(@user.id, :order=>"lft ASC")
+  end  
 
   def show
     @page= Page.find_by_id params[:id]
