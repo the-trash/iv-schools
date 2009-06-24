@@ -3,7 +3,7 @@
     - @root_pages.each do |page|
       %li
         - text= content_tag :span, page.title, :class=>:bar
-        = link_to text, page_path(page)
+        = link_to text, page_path(page.zip)
 
     %li.system
       - iv= content_tag :span, "iv-schools.ru", :class=>:nobr

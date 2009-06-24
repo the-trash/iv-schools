@@ -1,4 +1,7 @@
 :ruby
+  #-------------------------------------------------------------------------------------------------------
+  # ~Nested Set View Helpers
+  #-------------------------------------------------------------------------------------------------------
   # Берем дерево и узел в нем
   # Рисуем узел, и удаляем его из дерева
   # Рисуем рекурсивно все элементы дерева, у которых такой же parent_id удаленного узела, и удаляем их из дерева.
@@ -6,33 +9,33 @@
   # Отрисовываем элементы
   # Отрисовка карты сайта
   def admin_controls(elem, options= {})  
-    up=         options[:up]        ? options[:up]        : true
-    down=       options[:down]      ? options[:down]      : true    
-    edit=       options[:edit]      ? options[:edit]      : true
-    childs=     options[:childs]    ? options[:childs]    : false
-    first=      options[:first]     ? options[:first]     : false
-    last=       options[:last]      ? options[:last]      : false
+    up=             options[:up]        ? options[:up]        : true
+    down=           options[:down]      ? options[:down]      : true    
+    edit=           options[:edit]      ? options[:edit]      : true
+    first=          options[:first]     ? options[:first]     : false
+    last=           options[:last]      ? options[:last]      : false
+    has_no_childs=  options[:childs]    ? options[:childs]    : false
     
     # Если первый элемент - то, ссылку вверх не генерируем
     if first
       up = link_to '', '#',:title=>"Внутри данного уровня поднять страницу невозможно", :class=>'button cantup'
     else
-      up = link_to '', up_page_path(elem), :title=>"Поднять вверх страницу: #{elem.title}", :class=>'button up'
+      up = link_to '', up_page_path(elem.zip), :title=>"Поднять вверх страницу: #{elem.title}", :class=>'button up'
     end
     
     # Если последний элемент - то, ссылку вниз не генерируем
     if last
       down=   link_to '', '#', :title=>"Внутри данного уровня опустить страницу невозможно", :class=>'button cantdown'
     else
-      down=   link_to '', down_page_path(elem), :title=>"Опустить вниз страницу: #{elem.title}", :class=>'button down'
+      down=   link_to '', down_page_path(elem.zip), :title=>"Опустить вниз страницу: #{elem.title}", :class=>'button down'
     end
 
-    edit=   link_to '', edit_page_path(elem),               :title=>"Редактировать страницу: #{elem.title}", :class=>'button edit'
-    new=    link_to '', new_page_path(:parent_id=>elem.id), :title=>"Создать дочернюю страницу для страницы: #{elem.title}", :class=>'button new'
+    edit=   link_to '', edit_page_path(elem.zip),             :title=>"Редактировать страницу: #{elem.title}", :class=>'button edit'
+    new=    link_to '', new_page_path(:parent_id=>elem.zip),  :title=>"Создать дочернюю страницу для страницы: #{elem.title}", :class=>'button new'
     
     # Если дочерние элементы отсутствуют
-    if childs
-      delete=  link_to('', page_path(elem), :method=>:delete, :title=>"Удалить страницу: #{elem.title}", :confirm=>'Вы уверены, что хотите удалить страницу безвозвратно?', :class=>'button delete') 
+    if has_no_childs
+      delete=  link_to('', page_path(elem.zip), :method=>:delete, :title=>"Удалить страницу: #{elem.title}", :confirm=>'Вы уверены, что хотите удалить страницу безвозвратно?', :class=>'button delete') 
     else
       delete=  link_to('', '#',  :title=>"Для удаления страницы необходимо удалить все подразделы", :class=>'button undeleted', :onclick=>"javascript:alert('Для удаления страницы необходимо удалить все подразделы');return false;")
     end
@@ -44,10 +47,10 @@
     result= ''
     
     # Значения по умолчанию или полученные из массива опций
-    root=   options[:root]      ? options[:root]  : false
-    node=   options[:node]      ? options[:node]  : nil
-    first=  options[:first]     ? options[:first] : false
-    last=   options[:last]      ? options[:last]  : false
+    node=   options[:node]  ? options[:node]  : nil
+    root=   options[:root]  ? options[:root]  : false
+    first=  options[:first] ? options[:first] : false
+    last=   options[:last]  ? options[:last]  : false
             
     #Предположим - пришел корень
     unless node
@@ -62,7 +65,7 @@
       roots.each do |root|
         # Если id элемента который мы рисуем совпал с id первого или последнего элементов
         # То соответствено устанавливаем флаг :first или :last
-        # Требуется для отрисовки стралов вверх/вниз, или их блокировки
+        # Требуется для отрисовки стрелок вверх/вниз, или их блокировки
         result<< render_node_and_childs_and_delete!(tree, :node=>root, :root=>true, :first=>(root.id==roots_first_id), :last=>(root.id==roots_last_id))
       end
     else
@@ -77,7 +80,7 @@
       # Флаги для admin_controls поступают из рекурсии верхнего уровня
       res<< content_tag(:div, admin_controls(node, :childs=>childs.size.zero?, :first=>first, :last=>last), :class=>:controls) #|up, down, delete, edit, new|
       # Блок с названием страницы (ссылка)
-      res<< content_tag(:div, link_to( "#{node.title}", page_path(node)), :class=>"link #{'root' if root}")
+      res<< content_tag(:div, link_to( "#{node.title}", page_path(node.zip)), :class=>"link #{'root' if root}")
       # Обернуть в один блок
       res= content_tag(:div, res, :class=>:elem)
       # Получить id узла

@@ -13,7 +13,7 @@
         - @siblings.each do |elem|
           %li
             - text= content_tag :span, elem.title, :class=>:bar
-            = link_to text, page_path(elem)
+            = link_to text, page_path(elem.zip)
 
     %li.system
       - iv= content_tag :span, "iv-schools.ru", :class=>:nobr
