@@ -2,7 +2,7 @@
 %html{:xmlns=>"http://www.w3.org/1999/xhtml", 'xml:lang'=>"en", :lang=>"en"}
   %head
     %meta{'http-equiv'=>"content-type", :content=>"text/html; charset=utf-8"}
-    %link{:href=>"favicon.ico", :rel=>"shortcut icon"}
+    %link{:href=>"/images/favicon.ico", :rel=>"shortcut icon"}
     %title
       =yield :title
     =yield :meta
@@ -53,7 +53,7 @@
         %li
           =link_to "Официально +3", url_for(:controller=>:documents)
         %li
-          =link_to "Карта", url_for(:controller=>:map)
+          =link_to "Карта", pages_path(:subdomain=>@subdomain) #url_for(:controller=>:map)
         %li
           -if current_user            
             =link_to "Выход", logout_path

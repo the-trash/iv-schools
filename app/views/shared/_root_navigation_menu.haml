@@ -1,5 +1,9 @@
 .block
   %ul
+    %li
+      - text= content_tag :span, 'Управлять страницами сайта', :class=>:bar
+      = link_to text, manager_pages_path(:subdomain=>@subdomain)
+      
     - @root_pages.each do |page|
       %li
         - text= content_tag :span, page.title, :class=>:bar

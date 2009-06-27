@@ -6,7 +6,7 @@ ActionController::Routing::Routes.draw do |map|
   map.login '/login', :controller => 'sessions', :action => 'new'
   map.logout '/logout', :controller => 'sessions', :action => 'destroy'
   
-  map.root :controller => 'users', :action => 'index'
+  map.root :controller => 'pages', :action => 'index'
 
   #------------------------------------------------------------------------------------#
   #- Ïàğíàÿ ñâÿçêà, êîòîğàÿ äîëæíà âåñòè ê îäíèì è òåì æå îáğàáîò÷èêàì
@@ -25,15 +25,15 @@ ActionController::Routing::Routes.draw do |map|
   # Äîñòóï íàïğÿìóş ÷åğåç ïîääîìåí
   map.resources :albums do |album|   #/albums, /albums/new
     album.resources :images,
-      :member=>{ :need_id=>:get },    #/albums/:album_id/images/:id/need_ids
+      :member=>{     :need_id=>:get },    #/albums/:album_id/images/:id/need_ids
       :collection=>{ :no_ids=>:get }  #/albums/:album_id/images/no_ids
   end #:albums
   
   # Ñòàíäàğòíûé ğîóòèíã äëÿ ñòğàíèö
   map.resources :pages,
     :collection=>{
-      :map=>:get,     # /pages/map
-      :admin=>:get    # /pages/admin
+      :map=>:get,       # /pages/map
+      :manager=>:get    # /pages/manager
     },
     :member=>{
       :up=>:get,

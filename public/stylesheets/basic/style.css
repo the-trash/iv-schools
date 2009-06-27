@@ -200,6 +200,9 @@ a .bar:hover{
 .parent.current .bar{
   border-bottom:2px solid #FAA85F;
 }
+.navigation li.parent.parent.current.last{
+  background-image:none;
+}
 .system .bar{background:#C2E5EA;}
 /* bar */
 
@@ -344,6 +347,83 @@ ul.system_navigation{
   width:auto;
 }
 /* std_form */
+
+/* edit_form */
+.edit_form{
+  border:5px solid #DDD;
+  margin:0;
+  padding:10px;
+  margin:0 0 30px 0;
+}
+.edit_form h3{
+  margin:0 0 10px 0;
+}
+.edit_form h5{
+  background:#EEEEEE none repeat scroll 0 0;
+  font-size:9pt;
+  padding:3px;
+}
+.edit_form h5.gray{color:#888;}
+.edit_form p{
+  margin:0 0 7px 0;
+  line-height:140%;
+}
+.edit_form form{
+  margin:15px 0 10px 0;
+}
+.edit_form form label{
+  display:block;
+  margin:0 0 3px 0;
+  font-size:8pt;
+  font-weight:bold;
+}
+.edit_form form strong{
+  color:#999;
+}
+.edit_form form p{
+  color:#999;
+  font-size:8pt;
+  margin:0 0 15px 0;
+}
+.edit_form form .input{
+  border-color:#EEEEEE #EEEEEE #EEEEEE #FFEBA4;
+  border-style:solid;
+  border-width:1px 1px 1px 4px;
+  font-family:Tahoma,Verdana,Arial;
+  font-size:8pt;
+  padding:2px 0 2px 5px;
+  width:75%;
+  margin:0 0 15px 0;
+}
+.edit_form form .check_box{
+  margin:0;
+}
+.edit_form form .textarea_small{
+  border-color:#EEEEEE #EEEEEE #EEEEEE #FFEBA4;
+  border-style:solid;
+  border-width:1px 1px 1px 4px;
+  font-family:Tahoma,Verdana,Arial;
+  font-size:8pt;
+  height:60px;
+  padding:5px 0 0 5px;
+  width:95%;
+  margin:0 0 15px 0;
+}
+.edit_form form .textarea_mid{
+  border-color:#EEEEEE #EEEEEE #EEEEEE #FFEBA4;
+  border-style:solid;
+  border-width:1px 1px 1px 4px;
+  font-family:Tahoma,Verdana,Arial;
+  font-size:8pt;
+  height:700px;
+  padding:5px 0 0 5px;
+  width:95%;
+  margin:0 0 15px 0;
+}
+.edit_form form .submit{
+  width:auto;
+}
+/* edit_form */
 
 /*map*/
 .map a:hover{

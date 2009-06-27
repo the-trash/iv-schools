@@ -1,6 +1,0 @@
-.map
-  %h5 Карта сайта
-  %ul
-    -# Выбрать все корневые и для каждого сделать отрисовку
-    - @pages_tree.select{ |elem| elem.parent_id == nil }.each do |node|
-      = map_and_destroy!(@pages_tree, node, true)

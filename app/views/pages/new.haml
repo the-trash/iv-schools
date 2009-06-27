@@ -1,0 +1,54 @@
+- content_for :navigation_menu do
+  =render :partial => "shared/navigation_menu/pages/new"
+
+= object_errors(@page)
+
+.edit_form
+  %h5
+    Создать новую страницу
+  - if @parent
+    %h5.gray
+      Данная страница будет являться дочерней по отношению к странице:
+    %h5.gray
+      = @parent.title
+
+  -form_for :page, :url => pages_path do |f|
+    %label{:for=>:title}
+      Заголовок страницы
+    %span
+      = f.text_field :title, :class=>:input
+
+    %label{:for=>:author}
+      Автор страницы
+    %span
+      = f.text_field :author, :class=>:input
+      
+    %label{:for=>:keywords}
+      Ключевые слова
+    %span
+      = f.text_field :keywords, :class=>:input
+
+    %label{:for=>:description}
+      Краткое описание
+    %span
+      = f.text_field :description, :class=>:input
+      
+    %label{:for=>:copyright}
+      Авторское право
+    %span
+      = f.text_field :copyright, :class=>:input
+
+    %label{:for=>:annotation}
+      Аннотация страницы (о чем рассказывает страница)
+    %span
+      = f.text_area :annotation, :class=>:textarea_small
+      
+    - if @parent
+      = hidden_field_tag :parent_id, @parent.zip
+  
+    %label{:for=>:content}
+      Содержимое страницы
+    %span
+      = f.text_area :content, :class=>:textarea_mid 
+ 	
+    = submit_tag 'Создать страницу', :class=>:submit
