@@ -49,8 +49,15 @@ class User < ActiveRecord::Base
   belongs_to  :profile    # У пользователя есть профайл
   has_many    :pages      # У пользователя много страниц
   
-  has_many    :personal_policies            #, :as => :resource, :class_name=>"PersonalPolicy"
-  has_many    :personal_resource_policies   #, :as => :resource, :class_name=>"PersonalPolicy"
+  has_many    :personal_policies            # Пользователь имеет много персональных политик
+  has_many    :personal_resource_policies   # Пользователь имеет много персональных политик по отношению к объектам
+  
+  # Полиморфизм работает!
+  # u= User.find:first
+  # prp= u.personal_resource_policies.new
+  # prp.resource= u
+  # prp.save => ок
+  # prp.user
 
 ###################################################################################################
 # Политики доступа

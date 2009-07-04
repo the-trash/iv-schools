@@ -31,9 +31,10 @@ Rails::Initializer.run do |config|
              :source => "http://gems.github.com"
              
   # Для тестового заполнения данными требуется gem faker
-
   # Установка всех гемов выполняется командой
   # rake gems:install # если надо указать среду разработки RAILS_ENV=test
+  # rake gems:install RAILS_ENV=test
+  # rspec - используется для тестирования
 
   # Деревья страниц
   # http://github.com/collectiveidea/awesome_nested_set/tree/master
@@ -42,7 +43,6 @@ Rails::Initializer.run do |config|
   #-------------------------------------------------------------------------------------------------------
   # ~Информация о связанных плагинах и гемах
   #-------------------------------------------------------------------------------------------------------
-             
 
   # Only load the plugins named here, in the order given (default is alphabetical).
   # :all can be used as a placeholder for all plugins not explicitly named

@@ -10,8 +10,8 @@ class CreatePersonalResourcePolicies < ActiveRecord::Migration
     create_table :personal_resource_policies do |t|
       t.integer   :user_id
       
-      t.integer   :recource_id
-      t.string    :recource_type
+      t.integer   :resource_id
+      t.string    :resource_type
       
       t.string    :section
       t.string    :action

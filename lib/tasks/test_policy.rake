@@ -15,17 +15,21 @@ namespace :db do
       # Найти первого пользователя
       user= User.find:first
       
-      # Персональная политика для данного пользователя
-      Factory.create(:personal_policy,
-        :user_id => user.id, 
-        :section => 'pages',
-        :action => 'edit',
-        :value => 'true',
-        :start_at=>DateTime.now,
-        :finish_at=>DateTime.now + 3.days,
-        :counter=>5,
-        :max_count=>15
-      )
+      ['edit', 'update', 'create', 'destroy', 'rename'].each do |act|
+        # Персональная политика для данного пользователя
+        Factory.create(:personal_policy,
+          :user_id => user.id, 
+          :section => 'pages',
+          :action => act,
+          :value => 'true',
+          :start_at=>DateTime.now,
+          :finish_at=>DateTime.now + 3.days,
+          :counter=>5,
+          :max_count=>15
+        )
+      end
+      
+      
     end# db:roles:policies
   end#:roles
 end#:db

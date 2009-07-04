@@ -10,8 +10,8 @@ class CreateGroupResourcePolicies < ActiveRecord::Migration
     create_table :group_resource_policies do |t|
       t.integer   :role_id
       
-      t.integer   :recource_id
-      t.string    :recource_type
+      t.integer   :resource_id
+      t.string    :resource_type
       
       t.string    :section
       t.string    :action

@@ -26,3 +26,11 @@ config.action_mailer.delivery_method = :test
 # This is necessary if your schema can't be completely dumped by the schema dumper,
 # like if you have constraints or database-specific column types
 # config.active_record.schema_format = :sql
+
+# Возможно нужно поменять местами эти два гема, или оставить только rspec-rails
+# Установка всех гемов выполняется командой
+# rake gems:install RAILS_ENV=test # если надо указать среду разработки RAILS_ENV=test
+# gem update rspec
+# rspec-1.2.7, rspec-rails-1.2.7.1
+config.gem 'rspec', :lib => false, :version => '>=1.2.2'
+config.gem 'rspec-rails', :lib => false, :version => '>=1.2.2'
