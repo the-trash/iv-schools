@@ -18,15 +18,8 @@ namespace :db do
       #-------------------------------------------------------------------------------------------------------
       # Правовой набор администратора портала (Групповой набор)
       policy_set={
-        'forum'=>{
-          'index'=>true,
-          'update'=>true,
-          'delete'=>true
-        },
-        'basic'=>{
-          'index'=>true,
-          'update'=>true,
-          'delete'=>true
+        'pages'=>{
+          'manager'=>true
         }
       }#policy_set
       

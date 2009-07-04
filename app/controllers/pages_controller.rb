@@ -1,6 +1,12 @@
-class PagesController < ApplicationController
+class PagesController < ApplicationController  
+  # Проверка на то, что пользователь авторизован
+  before_filter :login_required, :except=>[:index, :show]
+    
   # Формирование данных для отображения базового меню-навигации
   before_filter :navigation_menu_init, :except=>[:show]
+  
+  # Требование на наличие прав редактирования страниц данного подомена
+  before_filter :page_manager_required, :except=>[:index, :show]
   
   # Центральная страница раздела Страницы
   # Карта сайта (дерево страниц сайта)
@@ -152,4 +158,49 @@ class PagesController < ApplicationController
     end
     redirect_to(manager_pages_path(:subdomain=>@subdomain)) and return
   end# destroy
+  
+  protected
+  
+  # Требование на наличие у пользователя прав на редактирование дерева страниц
+  def page_manager_required
+  
+    # Сначала, наверное, нужно проверять самые конкретизированные права на доступ
+    # Поскольку они перекрывают права более общие
+    # Так если установлен доступ к конкретному объекту для конкретного пользователя,
+    # то безразлично, есть ли персональный набор прав или групповой набор - доступ все равно будет
+    
+    # Проверка на доступ __персоны__ к конкретному объекту - ресурсное владение |Имеет временнОе и количественное ограничение|
+    # Проверка на персональный доступ - к ресурсу не привязано - доступ __персоны__ к работе с группой объектов |Имеет временнОе и количественное ограничение|
+    # Групповой доступ - к ресурсам не привязан - доступ группы к работе с группой объектов |ВременнЫх и количественных ограничений не имеет|
+    
+    # Если установлено ресурсное правило - вернем его значение
+    # resource_policy= current_user.has_resource_policy(@page, :page, :manage)
+    # resource_policy ? (return resource_policy) : false
+    # 
+    # Если установлено персональное правило - вернем его значение
+    # personal_policy= current_user.has_personal_policy(:page, :manage)
+    # personal_policy ? (return personal_policy) : false
+    # 
+    # Если установлено групповое правило
+    # group_policy= current_user.has_group_policy_policy(:page, :manage)
+    # group_policy ? (return group_policy) : false
+    
+    # Если это владелец домена
+    unless current_user.id == @user.id
+      if current_user.has_policy(:pages, :manager)
+        # Проверим - обладает ли он правами управления страниц на своем сайте
+        # Если обладает - проверим, нет ли временного ограничения его прав
+        flash[:notice] = 'has policy'
+      else
+        # Если не обладает правами, то проверим
+        # обладает ли он правами на временное управление страницами
+        flash[:notice] = 'has no policy'
+      end
+    else
+      # Если это не владелец домена
+      # Проверим, обладет ли пользователь временным правом на управление страниц
+      # Привзка к объекту @user 
+      flash[:notice] = 'Policy alert!'
+    end# if current_user.id == @user.id
+  end
 end
