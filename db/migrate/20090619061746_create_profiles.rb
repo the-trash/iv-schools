@@ -2,40 +2,40 @@ class CreateProfiles < ActiveRecord::Migration
   def self.up
     create_table :profiles do |t|
 
-      # Àíêåòà ïîëüçîâàòåëÿ
-      t.integer   :user_id          # Êîìó ïðèíàäëåæèò
-      t.date      :birthday         # Äåíü ðîæäåíèÿ
-      t.string    :native_town      # Ðîäíîé ãîðîä
+      # ÐÐ½ÐºÐµÑ‚Ð° Ð¿Ð¾Ð»ÑŒÐ·Ð¾Ð²Ð°Ñ‚ÐµÐ»Ñ
+      t.integer   :user_id          # ÐšÐ¾Ð¼Ñƒ Ð¿Ñ€Ð¸Ð½Ð°Ð´Ð»ÐµÐ¶Ð¸Ñ‚
+      t.date      :birthday         # Ð”ÐµÐ½ÑŒ Ñ€Ð¾Ð¶Ð´ÐµÐ½Ð¸Ñ
+      t.string    :native_town      # Ð Ð¾Ð´Ð½Ð¾Ð¹ Ð³Ð¾Ñ€Ð¾Ð´
       
-      # Êîíòàêòíûå äàííûå
-      t.string    :home_phone       # Äîìàøíèé òåëåôîí
-      t.string    :cell_phone       # Ìîáèëüíûé òåëåôîí
+      # ÐšÐ¾Ð½Ñ‚Ð°ÐºÑ‚Ð½Ñ‹Ðµ Ð´Ð°Ð½Ð½Ñ‹Ðµ
+      t.string    :home_phone       # Ð”Ð¾Ð¼Ð°ÑˆÐ½Ð¸Ð¹ Ñ‚ÐµÐ»ÐµÑ„Ð¾Ð½
+      t.string    :cell_phone       # ÐœÐ¾Ð±Ð¸Ð»ÑŒÐ½Ñ‹Ð¹ Ñ‚ÐµÐ»ÐµÑ„Ð¾Ð½
       t.string    :icq              # icq
       t.string    :jabber           # jabber
-      t.string    :public_email     # ïóáëè÷íûé email
-      t.string    :web_site         # web ñàéò
+      t.string    :public_email     # Ð¿ÑƒÐ±Ð»Ð¸Ñ‡Ð½Ñ‹Ð¹ email
+      t.string    :web_site         # web ÑÐ°Ð¹Ñ‚
 
-      # Ëè÷íûå äàííûå
-      t.text    :activity         # Äåÿòåëüíîñòü
-      t.text    :interests        # Èíòåðåñû
-      t.text    :music            # ìóçûêà
-      t.text    :movies           # Ôèëüìû
-      t.text    :tv               # òâ
-      t.text    :books            # êíèãè
-      t.text    :citation         # öèòàòû
-      t.text    :about_myself     # î ñåáå
+      # Ð›Ð¸Ñ‡Ð½Ñ‹Ðµ Ð´Ð°Ð½Ð½Ñ‹Ðµ
+      t.text    :activity         # Ð”ÐµÑÑ‚ÐµÐ»ÑŒÐ½Ð¾ÑÑ‚ÑŒ
+      t.text    :interests        # Ð˜Ð½Ñ‚ÐµÑ€ÐµÑÑ‹
+      t.text    :music            # Ð¼ÑƒÐ·Ñ‹ÐºÐ°
+      t.text    :movies           # Ð¤Ð¸Ð»ÑŒÐ¼Ñ‹
+      t.text    :tv               # Ñ‚Ð²
+      t.text    :books            # ÐºÐ½Ð¸Ð³Ð¸
+      t.text    :citation         # Ñ†Ð¸Ñ‚Ð°Ñ‚Ñ‹
+      t.text    :about_myself     # Ð¾ ÑÐµÐ±Ðµ
       
-      # Ãäå ÿ ñåé÷àñ ó÷óñü
-      t.string    :study_town         # ãîðîä
-      t.string    :study_place        # ìåñòî
-      t.string    :study_status       # ñòàòóñ
+      # Ð“Ð´Ðµ Ñ ÑÐµÐ¹Ñ‡Ð°Ñ ÑƒÑ‡ÑƒÑÑŒ
+      t.string    :study_town         # Ð³Ð¾Ñ€Ð¾Ð´
+      t.string    :study_place        # Ð¼ÐµÑÑ‚Ð¾
+      t.string    :study_status       # ÑÑ‚Ð°Ñ‚ÑƒÑ
       
-      # Ãäå ÿ ñåé÷àñ ðàáîòàþ
-      t.string    :work_town         # ãîðîä
-      t.string    :work_place        # ìåñòî
-      t.string    :work_status       # ñòàòóñ (äîëæíîñòü)
+      # Ð“Ð´Ðµ Ñ ÑÐµÐ¹Ñ‡Ð°Ñ Ñ€Ð°Ð±Ð¾Ñ‚Ð°ÑŽ
+      t.string    :work_town         # Ð³Ð¾Ñ€Ð¾Ð´
+      t.string    :work_place        # Ð¼ÐµÑÑ‚Ð¾
+      t.string    :work_status       # ÑÑ‚Ð°Ñ‚ÑƒÑ (Ð´Ð¾Ð»Ð¶Ð½Ð¾ÑÑ‚ÑŒ)
       
-      t.text      :setting          # Íàáîð ðàçëè÷íûõ íàñòðîåê àíêåòû
+      t.text      :setting          # ÐÐ°Ð±Ð¾Ñ€ Ñ€Ð°Ð·Ð»Ð¸Ñ‡Ð½Ñ‹Ñ… Ð½Ð°ÑÑ‚Ñ€Ð¾ÐµÐº Ð°Ð½ÐºÐµÑ‚Ñ‹
       
       t.timestamps
     end
