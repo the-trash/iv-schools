@@ -5,4 +5,5 @@ class PersonalPolicy < ActiveRecord::Base
 # -Обеспечивает доступ персоны к группе (целому классу) объектов
 # (Пользователь может редактировать все деревья страниц проекта с ограничением по времени и кол-ву фактов доступа к функции)
 # id | user_id | section | action | value | start_at | finish_at | counter | max_count
+  belongs_to :user
 end

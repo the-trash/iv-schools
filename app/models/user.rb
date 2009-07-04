@@ -48,6 +48,9 @@ class User < ActiveRecord::Base
   belongs_to  :role       # У пользователя в системе одна роль
   belongs_to  :profile    # У пользователя есть профайл
   has_many    :pages      # У пользователя много страниц
+  
+  has_many    :personal_policies            #, :as => :resource, :class_name=>"PersonalPolicy"
+  has_many    :personal_resource_policies   #, :as => :resource, :class_name=>"PersonalPolicy"
 
 ###################################################################################################
 # Политики доступа

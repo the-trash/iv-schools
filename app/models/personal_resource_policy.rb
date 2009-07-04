@@ -5,4 +5,7 @@ class PersonalResourcePolicy < ActiveRecord::Base
 # Привязано к конкретному пользователю
 # -Обеспечивает доступ пользователя к конкретному объекту
 # id | user_id | recource_id | recource_type | section | action | value | start_at | finish_at | counter | max_count
+
+  belongs_to :user
+  belongs_to :resource, :polymorphic =>true
 end

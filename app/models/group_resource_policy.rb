@@ -6,4 +6,6 @@ class GroupResourcePolicy < ActiveRecord::Base
 # -Обеспечивает доступ группы к конкретному объекту
 # id | role_id | recource_id | recource_type | section | action | value | start_at | finish_at | counter | max_count
 
+  belongs_to :role
+  belongs_to :resource, :polymorphic =>true
 end
