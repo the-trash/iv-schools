@@ -1,6 +1,10 @@
 # This file is copied to ~/spec when you run 'ruby script/generate rspec'
 # from the project root directory.
-ENV["RAILS_ENV"] ||= 'test'
+#ENV["RAILS_ENV"] ||= 'test'
+ENV["RAILS_ENV"] = 'test'
+
+p '* SPEC CONFIG HELPER'
+
 require File.dirname(__FILE__) + "/../config/environment" unless defined?(RAILS_ROOT)
 require 'spec/autorun'
 require 'spec/rails'
@@ -9,6 +13,10 @@ require 'spec/rails'
 # in ./support/ and its subdirectories.
 Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each {|f| require f}
 
+# Общее место для всех тестов
+require 'faker'                   # Забивка рыбы в модели
+#require 'factory_girl'            # Подключаем возможность создания фабрик # Необходим гем factory_girl
+
 Spec::Runner.configure do |config|
   # If you're not using ActiveRecord you should remove these
   # lines, delete config/database.yml and disable :active_record
@@ -16,7 +24,7 @@ Spec::Runner.configure do |config|
   config.use_transactional_fixtures = true
   config.use_instantiated_fixtures  = false
   config.fixture_path = RAILS_ROOT + '/spec/fixtures/'
-
+    
   # == Fixtures
   #
   # You can declare fixtures for each example_group like this:

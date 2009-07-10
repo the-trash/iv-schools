@@ -2,5 +2,6 @@
   =render :partial => 'shared/navigation_menu/navigation'
 
 .page
-  %h2= @page.title
-  = @page.content
+  -if @page
+    %h2= @page.title
+    = @page.content

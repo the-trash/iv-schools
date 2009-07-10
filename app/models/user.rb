@@ -7,9 +7,9 @@ class User < ActiveRecord::Base
 # Валидация
 ###################################################################################################
 
-  validates_uniqueness_of   :login, :case_sensitive => false, :message=>"Данный Логин уже используется"
-  validates_uniqueness_of   :email, :case_sensitive => false, :message=>"Данный Email уже используется."
-  validates_presence_of     :login, :email, :message=>"Поля Логин и Email не могут быть пустыми"
+  validates_uniqueness_of   :login, :case_sensitive => false, :message=>"Данный Логин уже используется 111"
+  validates_uniqueness_of   :email, :case_sensitive => false, :message=>"Данный Email уже используется. 222"
+  validates_presence_of     :login, :email, :message=>"Поля Логин и Email не могут быть пустыми 333"
   
   validates_presence_of     :password,              :if => :password_required?, :message=>"Поле Пароль не может быть пустым"
   validates_presence_of     :password_confirmation, :if => :password_required?, :message=>"Необходимо подтвердить пароль"

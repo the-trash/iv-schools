@@ -1,8 +1,10 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
+p '=> Users Test'
+
 describe UsersController do
 
-  #Delete this example and add some real ones
+  #index тестирование
   it "should use UsersController" do
     controller.should be_an_instance_of(UsersController)
   end

@@ -1,5 +1,7 @@
 require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
 
+p '=> ADMIN/Pages Test'
+
 describe Admins::PagesController do
 
   #Delete these examples and add some real ones

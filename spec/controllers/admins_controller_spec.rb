@@ -1,5 +1,7 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
+p '=> ADMIN Test'
+
 describe AdminsController do
 
   #Delete these examples and add some real ones

@@ -7,19 +7,26 @@ class PagesController < ApplicationController
   
   # Требование на наличие прав редактирования страниц данного подомена
   before_filter :page_manager_required, :except=>[:index, :show]
-  
+
+  # Центральная страница раздела Страницы
+  # Карта сайта (дерево страниц сайта)
+  def test_user
+    self.current_user= User.find:first
+  end
+    
   # Центральная страница раздела Страницы
   # Карта сайта (дерево страниц сайта)
   def index
     # Выбрать дерево страниц, только те поля, которые учавствуют отображении
     @pages_tree= Page.find_all_by_user_id(@user.id, :select=>'id, title, zip, parent_id', :order=>"lft ASC")
+    @test_user= current_user
   end
 
   # Показать страницу
   def show
     @page= Page.find_by_zip params[:id]
-    @parents= @page.self_and_ancestors
-    @siblings= @page.children
+    @parents= @page.self_and_ancestors if @page
+    @siblings= @page.children if @page
   end
     
   # Защищенная часть контроллера
