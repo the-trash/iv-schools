@@ -8,10 +8,10 @@ namespace :db do
       require 'factory_girl'
       
       # Найти всех пользователей
-      users= User.find:all
+      u= User.find:first
       
       # Для каждого пользователя
-      users.each do |u|
+      #users.each do |u|
         # 10 раз сделать страницу
         10.times do
           zip= "#{(1000..9999).to_a.rand}-#{(1000..9999).to_a.rand}-#{(1000..9999).to_a.rand}"
@@ -25,7 +25,7 @@ namespace :db do
             :keywords=>Faker::Lorem.sentence(2),
             :description=>Faker::Lorem.sentence(2),
             :copyright=>Faker::Name.name,
-            :title=>"#{u.name} #{Faker::Lorem.sentence(3)}",
+            :title=>"Тестовая страница: #{Faker::Lorem.sentence(3)}",
             :annotation=>Faker::Lorem.sentence(30),
             :content=>Faker::Lorem.paragraphs(50)
           )
@@ -47,7 +47,7 @@ namespace :db do
                 :keywords=>Faker::Lorem.sentence(2),
                 :description=>Faker::Lorem.sentence(2),
                 :copyright=>Faker::Name.name,
-                :title=>"#{u.name} #{Faker::Lorem.sentence}",
+                :title=>"Тестовая страница: #{Faker::Lorem.sentence}",
                 :annotation=>Faker::Lorem.sentence(3),
                 :content=>Faker::Lorem.paragraphs(50)
               )
@@ -72,7 +72,7 @@ namespace :db do
                       :keywords=>Faker::Lorem.sentence(2),
                       :description=>Faker::Lorem.sentence(2),
                       :copyright=>Faker::Name.name,
-                      :title=>"#{u.name} #{Faker::Lorem.sentence}",
+                      :title=>"Тестовая страница: #{Faker::Lorem.sentence}",
                       :annotation=>Faker::Lorem.sentence(3),
                       :content=>Faker::Lorem.paragraphs(50)
                     )
@@ -88,7 +88,7 @@ namespace :db do
           end# [true, false].rand
           
         end# n.times do
-      end# users.each do |u|
+      #end# users.each do |u|
     end# db:pages:pages
     
   end#:pages

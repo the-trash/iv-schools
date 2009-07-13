@@ -2,7 +2,7 @@
 namespace :db do
   # rake db:basic_data
   desc 'create basic data'
-  task :basic_data => ["db:drop", "db:create", "db:migrate", "db:users:roles", "db:users:create"]
+  task :basic_data => ["db:drop", "db:create:all", "db:migrate", "db:users:roles", "db:users:create"]
       
   # Раздел создания базовых пользователей системы
   namespace :users do

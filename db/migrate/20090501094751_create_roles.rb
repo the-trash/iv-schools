@@ -1,3 +1,5 @@
+class CreateRoles < ActiveRecord::Migration
+
 # Модель Роль
 # Позволяет организовать базовый функционал распеределния по ролям
 # Все базируется на Модели Role
@@ -13,7 +15,7 @@
 # кроме того, организация структуры политик в виде хеш массива позволяет легко
 # создавать разделы прав, действия и устанавливать значения true|false
 
-class CreateRoles < ActiveRecord::Migration
+
   def self.up
     create_table :roles do |t|
       t.string    :name         # Английское имя роли

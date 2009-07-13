@@ -3,11 +3,12 @@
     %li
       - text= content_tag :span, 'Управлять страницами сайта', :class=>:bar
       = link_to text, manager_pages_path(:subdomain=>@subdomain)
-      
-    - @root_pages.each do |page|
-      %li
-        - text= content_tag :span, page.title, :class=>:bar
-        = link_to text, page_path(page.zip)
+    
+    -#  
+      - @root_pages.each do |page|
+        %li
+          - text= content_tag :span, page.title, :class=>:bar
+          = link_to text, page_path(page.zip)
 
     %li.system
       - iv= content_tag :span, "iv-schools.ru", :class=>:nobr
