@@ -1,13 +1,17 @@
-table_name= 'users'
+=begin
+  table_name= 'users'
 
-ActiveRecord::Base.connection.select_values('show tables').each do |table_name|
-  next if ['schema_migrations'].include? table_name
-  ActiveRecord::Base.connection.execute("DELETE FROM #{table_name}")
-end
+  ActiveRecord::Base.connection.select_values('show tables').each do |table_name|
+    next if ['schema_migrations'].include? table_name
+    ActiveRecord::Base.connection.execute("DELETE FROM #{table_name}")
+  end
+=end
   
 Factory.define :role do |r| end   # Создал фабрику для Ролей доступа (Role)
 Factory.define :user do |u| end   # Создал фабрику для Пользователя (User)
 Factory.define :profile do |pf| end   # Создал фабрику для Профиля пользователя (Profile)
+
+=begin
 
 #-------------------------------------------------------------------------------------------------------
 # Правовые группы
@@ -134,3 +138,5 @@ logins.each do |login|
   # Связать пользователя и его профайл
   user.update_attribute(:profile_id, profile.id)
 end#logins.each
+
+=end

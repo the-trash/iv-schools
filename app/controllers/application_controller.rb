@@ -75,6 +75,8 @@ class ApplicationController < ActionController::Base
   # Функция, необходимая для формирования базового меню-навигации
   # Отображаются только корневые разделы карты сайта
   def navigation_menu_init
+    # Должен существовать хотя бы один пользователь
+    #(render :text=>'Have n  o users in system' and return) unless @user
     @root_pages= Page.find_all_by_user_id_and_parent_id(@user.id, nil, :order=>"lft ASC")
   end
     
