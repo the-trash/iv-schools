@@ -126,14 +126,11 @@ class User < ActiveRecord::Base
 # используется PersonalResourcePolicy, определяющего доступ к данному разделу каталога и ограничение на функцию скачки в 10 единиц
 # id | user_id | obj_id | obj_type          | section   | action | value | start_at | finish_at | counter | max_count
 # 12 | 11      | 17     | doc_tree_section  | documents | load   | true  | null     | null      | 5       | 10
-# 
-# 
-# 
-# 
-# 
-# 
-# 
-# 
+
+###################################################################################################
+# Ролевая политика (Наиболее общая)
+###################################################################################################
+
   # Возвращает хеш данной роли пользователя
   def role_settings_hash
       # Если значение роли уже определено - то вновь делать запрос и искать его не нужно
@@ -142,15 +139,125 @@ class User < ActiveRecord::Base
       @role_settings_hash ||= (self.role ? (self.role.settings.is_a?(String) ? YAML::load(self.role.settings) : Hash.new) : Hash.new )
   end
   
-  # Проверка на стандартное определение доступа
-  # Через хеш массив таблицы Roles
-  def has_policy(controller, action)
-    # Если определено в массиве такое правило, то вернуть его знаение
-    if role_settings_hash[controller.to_sym] && role_settings_hash[controller.to_sym][action.to_sym]
-      role_settings_hash[controller.to_sym][action.to_sym] 
+  # Проверка политики доступа через хеш массив таблицы Roles
+  def has_policy?(section, action)
+    # Ключи хешей всегда сохранять как символы!
+    # Если не определено в массиве такое правило, то вернуть false
+    return false unless role_settings_hash[section.to_sym] && role_settings_hash[section.to_sym][action.to_sym]
+    # иначе вернем значение правила
+    role_settings_hash[section.to_sym][action.to_sym] 
+  end
+
+###################################################################################################
+# Персональная политика
+###################################################################################################
+
+  # Возвращает хеш персональных политик данного пользователя
+  def personal_policy_settings_hash(recalculate= false)
+    # Выбрать все персональные политики данного пользователя
+    # Сформировать хеш персональных политик
+    # Иногда требуется принудительный пересчет
+    @personal_policy_settings_hash= nil if recalculate
+    # Если хеш персональных политик уже сформирован - вернем его, иначе начнем его формирование
+    return @personal_policy_settings_hash if @personal_policy_settings_hash
+    result_hash= Hash.new
+    PersonalPolicy.find_all_by_user_id(self.id).each do |policy|  
+      # В любом случае создаем хеш политики
+      # здесь все значения о данной политике под ее именем
+      _action_hash={
+        policy.action.to_sym=>{
+          :value=>policy.value,
+          :start_at=>policy.start_at,
+          :finish_at=>policy.finish_at,
+          :counter=>policy.counter,
+          :max_count=>policy.max_count
+        }
+      }
+      # Если ключ(раздел политик) уже имеется, то к ключу(разделу) нужно присоединить только доп. действие(политику)
+      if result_hash.has_key?(policy.section.to_sym)
+        result_hash[policy.section.to_sym].merge!(_action_hash) # добавляем в раздел новую политику
+      else
+        _hash={ policy.section.to_sym => _action_hash }         # Если раздела нет - то создадим хеш: имя_раздела=>политика
+        result_hash.merge!(_hash)                               # Соединим с исходным хешем
+      end#if result_hash.has_key?(policy.section.to_sym)
+    end#self.personal_policies.each
+    @personal_policy_settings_hash= result_hash                 # Вернуть результат
+  end#personal_policy_settings_hash
+  
+  # Проверка политики доступа через таблицу определений дополнительных персональных политик (с временным и колличественным ограничением)
+  def has_personal_policy?(section, action, recalculate= false)
+    # Выбрать весь набор политик данного раздела
+    # Первый элемент - это и есть искомый хеш группы
+    policy_group_hash=  personal_policy_settings_hash(recalculate).values_at(section.to_sym) ? personal_policy_settings_hash(recalculate).values_at(section.to_sym).first : nil
+    # Если группа политик не существует - вернуть nil
+    return nil unless policy_group_hash
+    # Выбрать хеш данных для необходимой политики. Первый элемент массива и есть необходимый хеш
+    policy_hash= policy_group_hash.values_at(action.to_sym) ? policy_group_hash.values_at(action.to_sym).first : nil
+    # Если политика в группе политик не существует - вернуть nil
+    return nil unless policy_hash
+    # Группа политик существует и необходимая политика существует!
+    # Необходимо проверить политику на колличество доступа и на время и вернуть значение установленное политикой
+    # Значение политики
+    value=  policy_hash[:value]
+    # Актуальность по счетчику доступа
+    counter_check= policy_hash[:counter]<=policy_hash[:max_count]
+    # Актуальность по времени
+    time_check= policy_hash[:start_at].to_datetime <= DateTime.now && DateTime.now <= policy_hash[:finish_at].to_datetime
+    if counter_check && time_check
+      # Если права актуальны
+      # true - 1
+      # false - 0
+      # nil - nil
+      # Я предусматриваю вероятность того, что значения политики прав могут однажды быть не только булевыми, а иметь любое строковое значение
+      # Поэтому, значение политики является текстовой строкой
+      # В массиве - текстовое значение и булево - совпадают. В хеш массиве, по моим наблоюдениям - нет
+      # Поэтому в этом фрагменте логики - будет применено преобразование следующего вида.
+      # Если значение равно true или 1 - то будет возвращено true
+      # Если значение равно false или 0 - то будет возвращено false
+      # Если значение равно nil или 'nil' или '' - то будет возвращено nil
+      # Иначе будет возвращено строковое значение
+      return true   if (value==true   || value=='true'  || value=='1' || value==1 )
+      return false  if (value==false  || value=='false' || value=='0' || value==0 )
+      return nil    if (value==nil    || value=='nil'   || value.blank? )
+      return value
     else
-      false
-    end
+      # Если права НЕ актуальны; Схема следующая:
+      # Если было значение true или любое строковое, то возвращаем противоположное, т.е. false
+      # Если было false, то возвращаем nil (т.е. был запрет на использование политики - теперь ведем себя так, как будто политики не существует)
+      return nil  if (value==false  || value=='false' || value=='0' || value==0 )
+      return nil  if (value==nil    || value=='nil'   || value.blank? )
+      return false
+    end# if counter_check && time_check
+    nil
+  end# has_personal_policy?(section, action, recalculate= false)
+
+###################################################################################################
+# Групповая политика
+###################################################################################################
+
+  # Проверка политики доступа через таблицу определений дополнительных групповых политик (с временным и колличественным ограничением)
+  def has_group_policy?(section, action)
+    nil
+  end
+  
+###################################################################################################
+# Персональная политика к ресурсу
+###################################################################################################
+  
+  # Проверка политики доступа через таблицу определений дополнительных персональных политик (с временным и колличественным ограничением)
+  # Привязка к ресурсу
+  def has_personal_resource_policy_for?(object, section, action)
+    nil
+  end
+  
+###################################################################################################
+# Групповая политика к ресурсу
+###################################################################################################
+
+  # Проверка политики доступа через таблицу определений дополнительных групповых политик (с временным и колличественным ограничением)
+  # Привязка к ресурсу
+  def has_group_resource_policy_for?(object, section, action)
+    nil
   end
 
 ###################################################################################################

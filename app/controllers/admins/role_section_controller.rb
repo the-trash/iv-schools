@@ -1,5 +1,8 @@
 =begin
   Функционал для работы с разделами настроек
+  
+  # Ключи хешей всегда сохранять как символы!
+
 =end
 class Admins::RoleSectionController < ApplicationController
   # взять набор и перевести его в хеш

@@ -19,7 +19,7 @@ class PagesController < ApplicationController
   def index
     # Выбрать дерево страниц, только те поля, которые учавствуют отображении
     @pages_tree= Page.find_all_by_user_id(@user.id, :select=>'id, title, zip, parent_id', :order=>"lft ASC")
-    @test_user= current_user
+    @tester= current_user
   end
 
   # Показать страницу
@@ -170,7 +170,22 @@ class PagesController < ApplicationController
   
   # Требование на наличие у пользователя прав на редактирование дерева страниц
   def page_manager_required
-  
+    # Если владелец поддомена/раздела
+    if current_user == @user
+      # Если запись существует, то вернуть ее значение, иначе nil
+      # Возможно мы временно отключили данное право, или временно включили для данного пользователя
+      return current_user.has_personal_policy?(:pages, :manager) unless current_user.has_personal_policy?(:pages, :manager).nil?
+      # Если запись существует, то вернуть ее значение, иначе nil
+      # Возможно мы временно отключили данное право, или временно включили для данной группы
+      return current_user.has_group_policy?(:pages, :manager) unless current_user.has_group_policy?(:pages, :manager).nil?
+      # Если есть нужная политика а хеше роли
+      return current_user.has_policy?(:pages, :manager)
+    end
+
+    flash[:notice] = Messages::Policies[:have_no_policy]
+    access_denied
+    return
+    
     # Сначала, наверное, нужно проверять самые конкретизированные права на доступ
     # Поскольку они перекрывают права более общие
     # Так если установлен доступ к конкретному объекту для конкретного пользователя,
@@ -192,9 +207,20 @@ class PagesController < ApplicationController
     # group_policy= current_user.has_group_policy_policy(:page, :manage)
     # group_policy ? (return group_policy) : false
     
+    # current_user.has_policy?(:global, :pages_manager)                               Глобальный редактор страниц
+    # current_user.has_group_policy?(:global, :pages_manager)                         Глобальный редактор страниц, через группу
+    # current_user.has_personal_policy?(:global, :pages_manager)                      Глобальный редактор страниц, через личную правовую настройку
+    # current_user.has_group_resource_policy_for?(@user,:global, :pages_manager)      Глобальный редактор страниц, через группу и только для данного объекта
+    # current_user.has_personal_resource_policy_for?(@user,:global, :pages_manager)   Глобальный редактор страниц, через личную правовую настройку и только для данного объекта
+
+    # current_user.has_policy?(:pages, :manager) && current_user==@user               Владелец страниц обладающий правом
+    
+    # current_user.has_group_resource_policy_for?(@user,    :pages, :manager)         Может иметь доступ к данному правилу для данного пользователя через группу
+    # current_user.has_personal_resource_policy_for?(@user, :pages, :manager)         Может иметь доступ к данному правилу для данного пользователя через личную правовую настройку
+    
     # Если это владелец домена
     unless current_user.id == @user.id
-      if current_user.has_policy(:pages, :manager)
+      if current_user.has_policy?(:pages, :manager)
         # Проверим - обладает ли он правами управления страниц на своем сайте
         # Если обладает - проверим, нет ли временного ограничения его прав
         flash[:notice] = 'has policy'

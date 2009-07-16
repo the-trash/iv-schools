@@ -13,9 +13,12 @@ require 'spec/rails'
 # in ./support/ and its subdirectories.
 Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each {|f| require f}
 
+#require 'factory_girl'
+# Подключаем возможность создания фабрик # Необходим гем factory_girl
+
 # Общее место для всех тестов
-require 'faker'                   # Забивка рыбы в модели
-#require 'factory_girl'            # Подключаем возможность создания фабрик # Необходим гем factory_girl
+# Забивка рыбы в модели
+require 'faker'
 
 Spec::Runner.configure do |config|
   # If you're not using ActiveRecord you should remove these
@@ -59,8 +62,27 @@ Spec::Runner.configure do |config|
 end
 
 
-
+###################################################################################################
 # Более удобное тестирование фильтров контроллеров
+###################################################################################################
+
+=begin
+describe PostsController do
+  describe "before filters" do
+    it "should have find_post" do
+      controller.before_filters.should include(:find_post)
+    end
+    it "find_post should have options" do
+      controller.before_filter(:find_post).should have_options(:only => [:show])
+    end
+    it "find_post should find a post" do
+      Post.should_receive(:find).with("1")
+      controller.run_filter(:find_post, :id => "1")
+    end
+  end
+end
+=end
+
 module Spec
   module Rails
     module Filters
@@ -97,4 +119,9 @@ end
 
 ActionController::Base.send(:include, Spec::Rails::Filters) 
 ActionController::Filters::BeforeFilter.send(:include, Spec::Rails::BeforeFilters)
+###################################################################################################
 # Более удобное тестирование фильтров контроллеров
+###################################################################################################
+
+
+

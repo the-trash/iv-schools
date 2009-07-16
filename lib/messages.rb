@@ -4,6 +4,13 @@ module Messages
   # Сообщения генерируемые системой
   
   SITE_NAME= 'iv-schools.ru'
+
+
+  # Messages::System[:have_no_users]
+  # Сообщения для работы со страницами
+  System={
+    :have_no_users=>"В системе нет ни одного пользователя"
+  }
   
   # Messages::User[:logined]
   # Сообщения для работы со страницами
@@ -38,7 +45,8 @@ module Messages
     :section_rule_destroy=>   "Правило успешно удалено",
     :non_exists=>             "Раздел прав не существует",
     :try_to_create_section=>  "Попробуйте сперва создать раздел прав",
-    :destroy_confirm=>        "Вы уверены что хотите удалить раздел прав со всеми вложенными правилами доступа: "
+    :destroy_confirm=>        "Вы уверены что хотите удалить раздел прав со всеми вложенными правилами доступа: ",
+    :have_no_policy=>         "Раздел не существует или не доступен",
   }
   
   # Messages::NestedSet[:element][:has_children]

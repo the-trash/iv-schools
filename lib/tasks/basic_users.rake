@@ -19,6 +19,7 @@ namespace :db do
       # Правовой набор администратора портала (Групповой набор)
       policy_set={
         'pages'=>{
+          'tree'=>true,
           'manager'=>true
         }
       }#policy_set
