@@ -174,12 +174,12 @@ class PagesController < ApplicationController
     if current_user == @user
       # Если запись существует, то вернуть ее значение, иначе nil
       # Возможно мы временно отключили данное право, или временно включили для данного пользователя
-      return current_user.has_personal_policy?(:pages, :manager) unless current_user.has_personal_policy?(:pages, :manager).nil?
+      return current_user.has_personal_access?(:pages, :manager) unless current_user.has_personal_access?(:pages, :manager).nil?
       # Если запись существует, то вернуть ее значение, иначе nil
       # Возможно мы временно отключили данное право, или временно включили для данной группы
       return current_user.has_group_policy?(:pages, :manager) unless current_user.has_group_policy?(:pages, :manager).nil?
       # Если есть нужная политика а хеше роли
-      return current_user.has_policy?(:pages, :manager)
+      return current_user.has_role_policy?(:pages, :manager)
     end
 
     flash[:notice] = Messages::Policies[:have_no_policy]
@@ -200,27 +200,27 @@ class PagesController < ApplicationController
     # resource_policy ? (return resource_policy) : false
     # 
     # Если установлено персональное правило - вернем его значение
-    # personal_policy= current_user.has_personal_policy(:page, :manage)
+    # personal_policy= current_user.has_personal_access(:page, :manage)
     # personal_policy ? (return personal_policy) : false
     # 
     # Если установлено групповое правило
     # group_policy= current_user.has_group_policy_policy(:page, :manage)
     # group_policy ? (return group_policy) : false
     
-    # current_user.has_policy?(:global, :pages_manager)                               Глобальный редактор страниц
+    # current_user.has_role_policy?(:global, :pages_manager)                               Глобальный редактор страниц
     # current_user.has_group_policy?(:global, :pages_manager)                         Глобальный редактор страниц, через группу
-    # current_user.has_personal_policy?(:global, :pages_manager)                      Глобальный редактор страниц, через личную правовую настройку
+    # current_user.has_personal_access?(:global, :pages_manager)                      Глобальный редактор страниц, через личную правовую настройку
     # current_user.has_group_resource_policy_for?(@user,:global, :pages_manager)      Глобальный редактор страниц, через группу и только для данного объекта
     # current_user.has_personal_resource_policy_for?(@user,:global, :pages_manager)   Глобальный редактор страниц, через личную правовую настройку и только для данного объекта
 
-    # current_user.has_policy?(:pages, :manager) && current_user==@user               Владелец страниц обладающий правом
+    # current_user.has_role_policy?(:pages, :manager) && current_user==@user               Владелец страниц обладающий правом
     
     # current_user.has_group_resource_policy_for?(@user,    :pages, :manager)         Может иметь доступ к данному правилу для данного пользователя через группу
     # current_user.has_personal_resource_policy_for?(@user, :pages, :manager)         Может иметь доступ к данному правилу для данного пользователя через личную правовую настройку
     
     # Если это владелец домена
     unless current_user.id == @user.id
-      if current_user.has_policy?(:pages, :manager)
+      if current_user.has_role_policy?(:pages, :manager)
         # Проверим - обладает ли он правами управления страниц на своем сайте
         # Если обладает - проверим, нет ли временного ограничения его прав
         flash[:notice] = 'has policy'

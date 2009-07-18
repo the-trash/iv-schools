@@ -12,7 +12,7 @@ class CreatePersonalPolicies < ActiveRecord::Migration
       
       t.string    :section
       t.string    :action
-      t.string    :value
+      t.boolean   :value
       
       t.datetime  :start_at
       t.datetime  :finish_at

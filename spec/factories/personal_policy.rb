@@ -26,3 +26,16 @@ Factory.define  :page_tree_personal_policy, :class => PersonalPolicy do |r|
   r.counter     2
   r.max_count   11
 end
+
+# Персональная политика для данного пользователя
+Factory.define  :page_tree_personal_policy_unlimited, :class => PersonalPolicy do |r|
+  r.section     'pages'
+  r.action      'tree'
+  r.value       true
+end
+
+Factory.define  :page_manager_personal_policy_unlimited, :class => PersonalPolicy do |r|
+  r.section     'pages'
+  r.action      'manager'
+  r.value       true
+end
