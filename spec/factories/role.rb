@@ -10,7 +10,11 @@ Factory.define :page_manager_role, :class => Role do |r|
     :pages=>{
       :tree=>true,
       :manager=>true
-    }   
+    },
+    :blocked=>{
+      :yes=>false,
+      :no=>true
+    }
   }
   r.name   'self_page_manager'
   r.title 'Редактор своих страниц'

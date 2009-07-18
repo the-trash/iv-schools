@@ -396,7 +396,7 @@ class User < ActiveRecord::Base
     unless @personal_resources_policies_hash[resource_class.to_sym]
       # Выбрать все записи - сформировать Hesh      
       PersonalResourcePolicy.find_all_by_user_id_and_resource_type(self_id, resource_class).each do |policy|
-        result_hash[policy.id]= {
+        result_hash[policy.resource_id]= {
           policy.section.to_sym=>{
             policy.action.to_sym=>{
               :value=>policy.value,
@@ -446,7 +446,7 @@ class User < ActiveRecord::Base
     # >>>>> К этому моменту должен существовать хеш с записями о политиках доступа к ресурсу для данного класса объектов <<<<<
     # Если нет ни одного ресурса данной группы - вернем false (нет группы)
     # Вернуть false если раздел для данного класса существует, но пустой
-    # т.е. выборка была - но оказалась пустой - (так мы ориентируемся - была ли сделана выборка)
+    # т.е. выборка была - но оказалась пустой - (так мы ориентируемся - была ли сделана выборка)    
     return false if @personal_resources_policies_hash[object.class.to_s.to_sym].empty?
     # Если нет ресурса с данным id в данной группе - вернем false
     return false unless @personal_resources_policies_hash[object.class.to_s.to_sym][object.id]

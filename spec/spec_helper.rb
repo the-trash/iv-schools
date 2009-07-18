@@ -61,6 +61,9 @@ Spec::Runner.configure do |config|
   # For more information take a look at Spec::Runner::Configuration and Spec::Runner
 end
 
+def file_name name
+  puts '> '+name.split('/')[-1]
+end
 
 ###################################################################################################
 # Более удобное тестирование фильтров контроллеров
