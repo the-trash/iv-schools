@@ -129,21 +129,6 @@ class User < ActiveRecord::Base
     return value if counter_check && time_check
     false
   end
-  
-  def check_block(section, action, hash_fn, options = {})
-    options = {
-      :recalculate => false
-    }.merge(options)
-    section_of_policies_hash=  send("#{hash_fn}", options).values_at(section.to_sym) ? send("#{hash_fn}", options).values_at(section.to_sym).first : nil
-    return false unless section_of_policies_hash
-    policy_hash= section_of_policies_hash.values_at(action.to_sym) ? section_of_policies_hash.values_at(action.to_sym).first : nil
-    return false unless policy_hash
-    value=  policy_hash[:value]
-    time_check=     policy_actual_by_time?(policy_hash[:start_at], policy_hash[:finish_at])
-    counter_check=  policy_actual_by_counter?(policy_hash[:counter], policy_hash[:max_count])
-    return !value if counter_check && time_check
-    false
-  end
 
 # Персональная политика
 
@@ -193,8 +178,8 @@ class User < ActiveRecord::Base
   end
   
 # Tested
-# 
-# 
+# has_group_access?(section, action, options = {})
+# has_group_block?(section, action, options = {})
   
 # Персональная политика к ресурсу
 
