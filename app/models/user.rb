@@ -46,7 +46,39 @@ class User < ActiveRecord::Base
   has_many    :personal_policies            # Пользователь имеет много персональных политик
   has_many    :personal_resource_policies   # Пользователь имеет много персональных политик по отношению к объектам
 
+# Ролевая политика (Наиболее общая)
+
+  def role_policies_hash
+    @role_policies_hash ||= (self.role ? (self.role.settings.is_a?(String) ? YAML::load(self.role.settings) : Hash.new) : Hash.new )
+  end
+  
+  def has_role_policy?(section, action)
+    return false unless role_policies_hash[section.to_sym] && role_policies_hash[section.to_sym][action.to_sym]
+    role_policies_hash[section.to_sym][action.to_sym]
+  end
+
+# Tested
+# role_policies_hash
+# has_role_policy?
+
 # Базовые функции проверки доступа/блокировки
+
+  def policy_actual_by_counter?(counter, max_count)
+    return true if (!max_count || !counter)
+    counter <= max_count
+  end
+
+  def policy_actual_by_time?(start_at, finish_at)
+    return true if (!start_at && !finish_at)
+    now= DateTime.now
+    return (finish_at.to_datetime >= now) unless start_at
+    return (start_at.to_datetime  <= now) unless finish_at
+    start_at.to_datetime <= now && now <= finish_at.to_datetime
+  end
+
+# Tested
+# policy_actual_by_counter?(counter, max_count)
+# policy_actual_by_time?(start_at, finish_at)
 
   def get_policy_hash(options = {})
     options = {
@@ -56,7 +88,7 @@ class User < ActiveRecord::Base
       :recalculate => false
     }.merge(options)
     return Hash.new unless (options[:finder] || options[:hash_name])
-    eval("@#{options[:hash_name]} = nil if options[:recalculate]")
+    eval("@#{options[:hash_name]} = nil  if options[:recalculate]")
     eval("return @#{options[:hash_name]} if @#{options[:hash_name]}")
     result_hash= Hash.new
     eval("@#{options[:hash_name]} = result_hash")
@@ -80,29 +112,18 @@ class User < ActiveRecord::Base
     end
     eval("@#{options[:hash_name]}= result_hash")
   end
-
-  def policy_actual_by_counter?(counter, max_count)
-    return true unless (max_count || counter)
-    counter <= max_count
-  end
-
-  def policy_actual_by_time?(start_at, finish_at)
-    return true if (!start_at && !finish_at)
-    now= DateTime.now
-    return (finish_at.to_datetime >= now) unless start_at
-    return (start_at.to_datetime  <= now) unless finish_at
-    start_at.to_datetime <= now && now <= finish_at.to_datetime
-  end
-
-  def check_access(section, action, hash_fn, options = {})
+  
+  def check_policy(section, action, hash_fn, options = {})
     options = {
-      :recalculate => false
+      :recalculate => false,
+      :return_invert=>false
     }.merge(options)
     section_of_policies_hash=  send("#{hash_fn}", options).values_at(section.to_sym) ? send("#{hash_fn}", options).values_at(section.to_sym).first : nil
     return false unless section_of_policies_hash
     policy_hash= section_of_policies_hash.values_at(action.to_sym) ? section_of_policies_hash.values_at(action.to_sym).first : nil
     return false unless policy_hash
-    value=  policy_hash[:value]
+    # Если установлена инвертация значения политики - значит проверка на блокировку
+    value= options[:return_invert] ? !policy_hash[:value] : policy_hash[:value]
     time_check=     policy_actual_by_time?(policy_hash[:start_at], policy_hash[:finish_at])
     counter_check=  policy_actual_by_counter?(policy_hash[:counter], policy_hash[:max_count])
     return value if counter_check && time_check
@@ -124,17 +145,6 @@ class User < ActiveRecord::Base
     false
   end
 
-# Ролевая политика (Наиболее общая)
-
-  def role_policies_hash
-      @role_policies_hash ||= (self.role ? (self.role.settings.is_a?(String) ? YAML::load(self.role.settings) : Hash.new) : Hash.new )
-  end
-  
-  def has_role_policy?(section, action)
-    return false unless role_policies_hash[section.to_sym] && role_policies_hash[section.to_sym][action.to_sym]
-    role_policies_hash[section.to_sym][action.to_sym]
-  end
-
 # Персональная политика
 
   def personal_policies_hash(options = {})
@@ -146,12 +156,19 @@ class User < ActiveRecord::Base
   end
 
   def has_personal_access?(section, action, options = {})
-    check_access(section, action, 'personal_policies_hash', options)
+    check_policy(section, action, 'personal_policies_hash', options)
   end
 
   def has_personal_block?(section, action, options = {})
-    check_block(section, action, 'personal_policies_hash', options)
+    opt={
+      :return_invert=>true
+    }
+    check_policy(section, action, 'personal_policies_hash', options.merge!(opt))
   end
+  
+# Tested
+# has_personal_access?(section, action, options = {})
+# has_personal_block?(section, action, options = {})
 
 # Групповая политика
 
@@ -165,12 +182,19 @@ class User < ActiveRecord::Base
   end
 
   def has_group_access?(section, action, options = {})
-    check_access(section, action, 'group_policies_hash', options)
+    check_policy(section, action, 'group_policies_hash', options)
   end
 
   def has_group_block?(section, action, options = {})
-    check_block(section, action, 'group_policies_hash', options)
+    opt={
+      :return_invert=>true
+    }
+    check_policy(section, action, 'group_policies_hash', options.merge!(opt))
   end
+  
+# Tested
+# 
+# 
   
 # Персональная политика к ресурсу
 
@@ -196,13 +220,6 @@ class User < ActiveRecord::Base
       @personal_resources_policies_hash[resource_class.to_sym]= result_hash
     end
     @personal_resources_policies_hash
-  end
-
-  def personal_resources_policies_hash(options = {})
-    options = {
-      :recalculate => false
-    }.merge(options)
-    Hash.new
   end
 
   def has_personal_resource_access_for?(object, section, action, options = {})
@@ -241,23 +258,74 @@ class User < ActiveRecord::Base
     value=  policy_hash[:value]
     time_check=     policy_actual_by_time?(policy_hash[:start_at], policy_hash[:finish_at])
     counter_check=  policy_actual_by_counter?(policy_hash[:counter], policy_hash[:max_count])
-    return value if counter_check && time_check
+    return !value if counter_check && time_check
     false
   end
 
 # Групповая политика к ресурсу
 
+  def group_resources_policies_hash_for_class_of(resource)
+    resource_class=  resource.class.to_s
+    @group_resources_policies_hash= Hash.new unless @group_resources_policies_hash
+    result_hash= Hash.new
+    unless @group_resources_policies_hash[resource_class.to_sym]
+      (@group_resources_policies_hash[resource_class.to_sym]= result_hash and return @group_resources_policies_hash) unless self.role
+      GroupResourcePolicy.find_all_by_role_id_and_resource_type(self.role.id, resource_class).each do |policy|
+        result_hash[policy.resource_id]= {
+          policy.section.to_sym=>{
+            policy.action.to_sym=>{
+              :value=>policy.value,
+              :start_at=>policy.start_at,
+              :finish_at=>policy.finish_at,
+              :counter=>policy.counter,
+              :max_count=>policy.max_count
+            }
+          } 
+        }
+      end
+      @group_resources_policies_hash[resource_class.to_sym]= result_hash
+    end
+    @group_resources_policies_hash
+  end
+
   def has_group_resource_access_for?(object, section, action, options = {})
     options = {
-      :recalculate => false
+      :recalculate => false,
+      :reset => false
     }.merge(options)
-    nil
+    @group_resources_policies_hash= nil if (@group_resources_policies_hash && options[:reset])
+    @group_resources_policies_hash[object.class.to_s.to_sym]= nil if (@group_resources_policies_hash && @group_resources_policies_hash[object.class.to_s.to_sym] && options[:recalculate])
+    group_resources_policies_hash_for_class_of(object) if !@group_resources_policies_hash || !@group_resources_policies_hash[object.class.to_s.to_sym]
+    return false if @group_resources_policies_hash[object.class.to_s.to_sym].empty?
+    return false unless @group_resources_policies_hash[object.class.to_s.to_sym][object.id]
+    return false unless @group_resources_policies_hash[object.class.to_s.to_sym][object.id][section.to_sym]
+    return false unless @group_resources_policies_hash[object.class.to_s.to_sym][object.id][section.to_sym][action.to_sym]
+    policy_hash= @group_resources_policies_hash[object.class.to_s.to_sym][object.id][section.to_sym][action.to_sym]
+    value=  policy_hash[:value]
+    time_check=     policy_actual_by_time?(policy_hash[:start_at], policy_hash[:finish_at])
+    counter_check=  policy_actual_by_counter?(policy_hash[:counter], policy_hash[:max_count])
+    return value if counter_check && time_check
+    false
   end
+  
   def has_group_resource_block_for?(object, section, action, options = {})
     options = {
-      :recalculate => false
+      :recalculate => false,
+      :reset => false
     }.merge(options)
-    nil
+    @group_resources_policies_hash= nil if (@group_resources_policies_hash && options[:reset])
+    @group_resources_policies_hash[object.class.to_s.to_sym]= nil if (@group_resources_policies_hash && @group_resources_policies_hash[object.class.to_s.to_sym] && options[:recalculate])
+    group_resources_policies_hash_for_class_of(object) if !@group_resources_policies_hash || !@group_resources_policies_hash[object.class.to_s.to_sym]
+    return false if @group_resources_policies_hash[object.class.to_s.to_sym].empty?
+    return false unless @group_resources_policies_hash[object.class.to_s.to_sym][object.id]
+    return false unless @group_resources_policies_hash[object.class.to_s.to_sym][object.id][section.to_sym]
+    return false unless @group_resources_policies_hash[object.class.to_s.to_sym][object.id][section.to_sym][action.to_sym]
+    policy_hash= @group_resources_policies_hash[object.class.to_s.to_sym][object.id][section.to_sym][action.to_sym]
+    value=  policy_hash[:value]
+    time_check=     policy_actual_by_time?(policy_hash[:start_at], policy_hash[:finish_at])
+    counter_check=  policy_actual_by_counter?(policy_hash[:counter], policy_hash[:max_count])
+    return !value if counter_check && time_check
+    false
   end
 
 # Стандартные определения

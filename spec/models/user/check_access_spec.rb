@@ -15,8 +15,8 @@ describe '15:02 18.07.2009' do
     # временных || колличественных границ использования права
     it '23:40 16.07.2009' do
       # У пользователя две персональные политики
-      @admin.check_access(:pages, :tree, 'personal_policies_hash', :recalculate=>true)
-      @admin.check_access(:pages, :manager, 'personal_policies_hash', :recalculate=>true)
+      @admin.check_policy(:pages, :tree, 'personal_policies_hash', :recalculate=>true)
+      @admin.check_policy(:pages, :manager, 'personal_policies_hash', :recalculate=>true)
     end#23:40 16.07.2009
     
 end
