@@ -1,12 +1,12 @@
-# Создал фабрику для персональной политики для объекта (PersonalResourcePolicy)
-Factory.define :personal_resource_policy do |prp| end 
+# Создал фабрику для групповой политики для объекта (PersonalResourcePolicy)
+Factory.define :group_resource_policy do |prp| end 
   
 ###################################################################################################
-# Персональная политика к ресурсу
+# Групповая политика к ресурсу
 ###################################################################################################
 
 # Политика для данного пользователя
-Factory.define  :page_manager_personal_resource_policy, :class => PersonalResourcePolicy do |r|
+Factory.define  :page_manager_group_resource_policy, :class => PersonalResourcePolicy do |r|
   r.section     'pages'
   r.action      'manager'
   r.value       true
@@ -17,7 +17,7 @@ Factory.define  :page_manager_personal_resource_policy, :class => PersonalResour
 end
 
 # Политика для данного пользователя
-Factory.define  :page_tree_personal_resource_policy, :class => PersonalResourcePolicy do |r|
+Factory.define  :page_tree_group_resource_policy, :class => PersonalResourcePolicy do |r|
   r.section     'pages'
   r.action      'tree'
   r.value       true
@@ -28,7 +28,7 @@ Factory.define  :page_tree_personal_resource_policy, :class => PersonalResourceP
 end
 
 # Политика для данного пользователя
-Factory.define  :profile_edit_personal_resource_policy, :class => PersonalResourcePolicy do |r|
+Factory.define  :profile_edit_group_resource_policy, :class => GroupResourcePolicy do |r|
   r.section     'profile'
   r.action      'edit'
   r.value       true
@@ -38,14 +38,14 @@ Factory.define  :profile_edit_personal_resource_policy, :class => PersonalResour
   r.max_count   11
 end
 
-# Персональная политика для данного пользователя
-Factory.define  :page_tree_personal_resource_policy_unlimited, :class => PersonalResourcePolicy do |r|
+# Групповая политика для данного пользователя
+Factory.define  :page_tree_group_resource_policy_unlimited, :class => GroupResourcePolicy do |r|
   r.section     'pages'
   r.action      'tree'
   r.value       true
 end
 
-Factory.define  :page_manager_personal_resource_policy_unlimited, :class => PersonalResourcePolicy do |r|
+Factory.define  :page_manager_group_resource_policy_unlimited, :class => GroupResourcePolicy do |r|
   r.section     'pages'
   r.action      'manager'
   r.value       true

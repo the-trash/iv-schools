@@ -122,7 +122,6 @@ class User < ActiveRecord::Base
     return false unless section_of_policies_hash
     policy_hash= section_of_policies_hash.values_at(action.to_sym) ? section_of_policies_hash.values_at(action.to_sym).first : nil
     return false unless policy_hash
-    # Если установлена инвертация значения политики - значит проверка на блокировку
     value= options[:return_invert] ? !policy_hash[:value] : policy_hash[:value]
     time_check=     policy_actual_by_time?(policy_hash[:start_at], policy_hash[:finish_at])
     counter_check=  policy_actual_by_counter?(policy_hash[:counter], policy_hash[:max_count])
@@ -183,12 +182,17 @@ class User < ActiveRecord::Base
   
 # Персональная политика к ресурсу
 
+  def personal_resources_policies_hash
+    @personal_resources_policies_hash= Hash.new unless @personal_resources_policies_hash
+    @personal_resources_policies_hash
+  end
+  
   def personal_resources_policies_hash_for_class_of(resource)
     self_id=        self.id
     resource_class=  resource.class.to_s
-    @personal_resources_policies_hash= Hash.new unless @personal_resources_policies_hash
+    personal_resources_policies_hash
     result_hash= Hash.new
-    unless @personal_resources_policies_hash[resource_class.to_sym]
+    unless personal_resources_policies_hash[resource_class.to_sym]
       PersonalResourcePolicy.find_all_by_user_id_and_resource_type(self_id, resource_class).each do |policy|
         result_hash[policy.resource_id]= {
           policy.section.to_sym=>{
@@ -207,13 +211,15 @@ class User < ActiveRecord::Base
     @personal_resources_policies_hash
   end
 
-  def has_personal_resource_access_for?(object, section, action, options = {})
+  def check_resource_policy(object, section, action, hash_fn, options)
     options = {
       :recalculate => false,
       :reset => false
     }.merge(options)
-    @personal_resources_policies_hash= nil if (@personal_resources_policies_hash && options[:reset])
+    
+    @personal_resources_policies_hash= nil if (options[:reset])
     @personal_resources_policies_hash[object.class.to_s.to_sym]= nil if (@personal_resources_policies_hash && @personal_resources_policies_hash[object.class.to_s.to_sym] && options[:recalculate])
+    
     personal_resources_policies_hash_for_class_of(object) if !@personal_resources_policies_hash || !@personal_resources_policies_hash[object.class.to_s.to_sym]
     return false if @personal_resources_policies_hash[object.class.to_s.to_sym].empty?
     return false unless @personal_resources_policies_hash[object.class.to_s.to_sym][object.id]
@@ -225,6 +231,10 @@ class User < ActiveRecord::Base
     counter_check=  policy_actual_by_counter?(policy_hash[:counter], policy_hash[:max_count])
     return value if counter_check && time_check
     false
+  end
+
+  def has_personal_resource_access_for?(object, section, action, options = {})
+    check_resource_policy(object, section, action, 'group_policies_hash', options)
   end
   
   def has_personal_resource_block_for?(object, section, action, options = {})
@@ -246,12 +256,29 @@ class User < ActiveRecord::Base
     return !value if counter_check && time_check
     false
   end
+  
+  
+  
+  
+  
+  
+  
+  
+# Tested
+# personal_resources_policies_hash_for_class_of(resource)
+# has_personal_resource_access_for?(object, section, action, options = {})
+# has_personal_resource_block_for?(object, section, action, options = {})
 
 # Групповая политика к ресурсу
 
+  def group_resources_policies_hash
+    @group_resources_policies_hash= Hash.new unless @group_resources_policies_hash
+    @group_resources_policies_hash
+  end
+  
   def group_resources_policies_hash_for_class_of(resource)
     resource_class=  resource.class.to_s
-    @group_resources_policies_hash= Hash.new unless @group_resources_policies_hash
+    group_resources_policies_hash
     result_hash= Hash.new
     unless @group_resources_policies_hash[resource_class.to_sym]
       (@group_resources_policies_hash[resource_class.to_sym]= result_hash and return @group_resources_policies_hash) unless self.role
