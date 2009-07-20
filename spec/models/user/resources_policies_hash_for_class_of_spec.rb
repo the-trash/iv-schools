@@ -3,146 +3,86 @@ require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
 describe '9:58 20.07.2009' do  
     # resources_policies_hash_for_class_of
     before(:each) do
+      @page_manager_role= Factory.create(:page_manager_role)
       @admin= Factory.create(:admin)
+      @admin.update_attribute(:role_id, @page_manager_role.id)
+      
       @ivanov= Factory.create(:ivanov)
       @petrov= Factory.create(:petrov)
     end
 
     def admin_has_resources
-      @resource_ivanov=Factory.create(:page_manager_personal_resource_policy_unlimited, :user_id=>@admin.id)
-      @resource_ivanov.resource= @ivanov
-      @resource_ivanov.save
+      @p_resource_ivanov=Factory.create(:page_manager_personal_resource_policy_unlimited, :user_id=>@admin.id)
+      @p_resource_ivanov.resource= @ivanov
+      @p_resource_ivanov.save
       
-      @resource_petrov=Factory.create(:page_manager_personal_resource_policy_unlimited, :user_id=>@admin.id)
-      @resource_petrov.resource= @petrov
-      @resource_petrov.save
+      @p_resource_petrov=Factory.create(:page_manager_personal_resource_policy_unlimited, :user_id=>@admin.id)
+      @p_resource_petrov.resource= @petrov
+      @p_resource_petrov.save
+      
+      
+      @g_resource_ivanov=Factory.create(:page_manager_group_resource_policy_unlimited, :role_id=>@admin.role.id)
+      @g_resource_ivanov.resource= @ivanov
+      @g_resource_ivanov.save
+      
+      @g_resource_petrov=Factory.create(:page_manager_group_resource_policy_unlimited, :role_id=>@admin.role.id)
+      @g_resource_petrov.resource= @petrov
+      @g_resource_petrov.save
     end    
     
     # У пользователя нет персональных политик к ресурсам
     it '13:05 17.07.2009' do
-      @admin.has_personal_resource_access_for?(@ivanov, :profile, :edit, :recalculate=>true).should be_false
-      @admin.has_personal_resource_access_for?(@petrov, :profile, :edit, :recalculate=>true).should be_false
+      @admin.personal_resources_policies_hash_for_class_of(@ivanov).should be_instance_of(Hash)
+      @admin.group_resources_policies_hash_for_class_of(@ivanov).should be_instance_of(Hash)
+      
+      @admin.personal_resources_policies_hash_for_class_of(@ivanov).should have(1).item
+      @admin.group_resources_policies_hash_for_class_of(@ivanov).should have(1).item
+      
+      # personal_resources_policies_hash_for_class_of(@ivanov)
+      opt= {
+       :finder=>'PersonalResourcePolicy.find_all_by_user_id_and_resource_type(self.id, resource_class)',
+       :hash_name=>'personal_resources_policies_hash'
+      }    
+      @admin.resources_policies_hash_for_class_of(@ivanov, opt).should have(1).item
+      
+      # group_resources_policies_hash_for_class_of(@ivanov)
+      opt= {
+       :finder=>'PersonalResourcePolicy.find_all_by_user_id_and_resource_type(self.id, resource_class)',
+       :hash_name=>'personal_resources_policies_hash',
+       :before_find=>'(@group_resources_policies_hash[resource_class.to_sym]= result_hash and return @group_resources_policies_hash) unless self.role'
+      }
+      @admin.resources_policies_hash_for_class_of(@ivanov, opt).should have(1).item
     end
-    
-    # Проверить функцию создания хеша персональных политик к ресурсам
+ 
+    # У пользователя есть персональные политики к ресурсам
     it '13:05 17.07.2009' do
-      @admin.personal_resources_policies_hash.should be_instance_of(Hash)
-      @admin.personal_resources_policies_hash.should  be_empty
-    end
-    
-    # У пользоавателя нет персональных политик к ресурсам
-    # хеш персональных политик к классу объектов - пуст
-    it '15:29 19.07.2009' do
-      @admin.personal_resources_policies_hash_for_class_of(@ivanov).should be_instance_of(Hash)
-      @admin.personal_resources_policies_hash.should have(1).item
-      
-      @admin.personal_resources_policies_hash[:User].should be_instance_of(Hash)
-      @admin.personal_resources_policies_hash[:User].should be_empty
-    end
-    
-    # хеш персональных политик к классу объектов
-    it '15:29 19.07.2009' do
       admin_has_resources
       
       @admin.personal_resources_policies_hash_for_class_of(@ivanov).should be_instance_of(Hash)
-      @admin.personal_resources_policies_hash.should have(1).item
+      @admin.group_resources_policies_hash_for_class_of(@ivanov).should be_instance_of(Hash)
       
-      @admin.personal_resources_policies_hash[:User].should be_instance_of(Hash)
-      @admin.personal_resources_policies_hash[:User].should have(2).item
-    end
-    
-    # имеет две политики
-    it '15:36 19.07.2009' do
-      admin_has_resources
+      @admin.personal_resources_policies_hash_for_class_of(@ivanov).should have(1).item
+      @admin.group_resources_policies_hash_for_class_of(@ivanov).should have(1).item
       
-      @admin.has_personal_resource_access_for?(@ivanov, :pages, :manager).should be_true
-      @admin.has_personal_resource_access_for?(@petrov, :pages, :manager).should be_true
+      @admin.personal_resources_policies_hash_for_class_of(@ivanov)[:User].should have(2).item
+      @admin.group_resources_policies_hash_for_class_of(@ivanov)[:User].should have(2).item
       
-      @admin.has_personal_resource_access_for?(@petrov, 'pages', 'manager').should be_true
-      @admin.has_personal_resource_access_for?(@ivanov, :pages, 'manager').should be_true
-      @admin.has_personal_resource_access_for?(@petrov, 'pages', :manager).should be_true
-
-      @admin.has_personal_resource_access_for?(@admin, :page, :manager).should be_false
-    end
-    
-    # Счетчик
-    
-    # Установлено превышенное ограничение по кол-ву раз доступа
-    it '11:48 15.07.2009' do
-      admin_has_resources
-      @resource_ivanov.update_attributes(:counter=>15, :max_count=>14)
-      @admin.has_personal_resource_access_for?(@ivanov, :pages, :manager).should be_false
-    end
-    
-    # Счетчик не установлен
-    it '12:38 19.07.2009' do
-      admin_has_resources
-      @resource_ivanov.update_attributes(:counter=>nil, :max_count=>14)
-      @admin.has_personal_resource_access_for?(@ivanov, :pages, :manager).should be_true
-    end
-    
-    # Максимум счетчика не установлен
-    it '12:39 19.07.2009' do
-      admin_has_resources
-      @resource_ivanov.update_attributes(:counter=>10, :max_count=>nil)
-      @admin.has_personal_resource_access_for?(@ivanov, :pages, :manager).should be_true
-    end
-
-    # Рабочий счетчик
-    it '12:40 19.07.2009' do
-      admin_has_resources
-      @resource_ivanov.update_attributes(:counter=>10, :max_count=>10)
-      @admin.has_personal_resource_access_for?(@ivanov, :pages, :manager).should be_true
-    end
-    
-    # Время
-    
-    # Превышено время
-    it '11:48 15.07.2009' do
-      admin_has_resources
-      @resource_ivanov.update_attributes(:start_at=>DateTime.now-2.seconds, :finish_at=>DateTime.now-1.second)
-      @admin.has_personal_resource_access_for?(@ivanov, :pages, :manager).should be_false
-    end
-    
-    # Время не установлено
-    it '12:38 19.07.2009' do
-      admin_has_resources
-      @resource_ivanov.update_attributes(:start_at=>nil, :finish_at=>nil)
-      @admin.has_personal_resource_access_for?(@ivanov, :pages, :manager).should be_true
-    end
-    
-    # Максимум времени не установлен
-    it '12:39 19.07.2009' do
-      admin_has_resources
-      @resource_ivanov.update_attributes(:start_at=>DateTime.now-1.second, :finish_at=>nil)
-      @admin.has_personal_resource_access_for?(@ivanov, :pages, :manager).should be_true
-    end
-
-    # Рабочие рамки времени
-    it '12:40 19.07.2009' do
-      admin_has_resources
-      @resource_ivanov.update_attributes(:start_at=>DateTime.now-1.second, :finish_at=>DateTime.now+1.second)
-      @admin.has_personal_resource_access_for?(@ivanov, :pages, :manager).should be_true
-    end
-    
-    # Пересчет хеша политик
-    
-    it '12:49 19.07.2009' do
-      admin_has_resources
+      # personal_resources_policies_hash_for_class_of(@ivanov)
+      opt= {
+       :finder=>'PersonalResourcePolicy.find_all_by_user_id_and_resource_type(self.id, resource_class)',
+       :hash_name=>'personal_resources_policies_hash'
+      }    
+      @admin.resources_policies_hash_for_class_of(@ivanov, opt).should have(1).item
+      @admin.resources_policies_hash_for_class_of(@ivanov, opt)[:User].should have(2).item
       
-      @admin.has_personal_resource_access_for?(@ivanov, :pages, :manager).should be_true
-      @admin.has_personal_resource_access_for?(@petrov, :pages, :manager).should be_true
-            
-      # Обе политики обновлены
-      @resource_ivanov.update_attribute(:value, false)
-      @resource_petrov.update_attribute(:value, false)
-      
-      # хеш не пересчитан
-      @admin.has_personal_resource_access_for?(@ivanov, :pages, :manager).should be_true
-      @admin.has_personal_resource_access_for?(@petrov, :pages, :manager).should be_true
-      
-      # хеш пересчитан
-      @admin.has_personal_resource_access_for?(@ivanov, :pages, :manager, :recalculate=> true).should be_false
-      @admin.has_personal_resource_access_for?(@petrov, :pages, :manager).should be_false
+      # group_resources_policies_hash_for_class_of(@ivanov)
+      opt= {
+       :finder=>'PersonalResourcePolicy.find_all_by_user_id_and_resource_type(self.id, resource_class)',
+       :hash_name=>'personal_resources_policies_hash',
+       :before_find=>'(@group_resources_policies_hash[resource_class.to_sym]= result_hash and return @group_resources_policies_hash) unless self.role'
+      }
+      @admin.resources_policies_hash_for_class_of(@ivanov, opt).should have(1).item
+      @admin.resources_policies_hash_for_class_of(@ivanov, opt)[:User].should have(2).item
     end
+    
 end
