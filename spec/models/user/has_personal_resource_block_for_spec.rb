@@ -29,18 +29,18 @@ describe '15:21 18.07.2009' do
     
     # Проверить функцию создания хеша персональных политик к ресурсам
     it '13:05 17.07.2009' do
-      @admin.personal_resources_policies_hash.should be_instance_of(Hash)
-      @admin.personal_resources_policies_hash.should  be_empty
+      #@admin.personal_resources_policies_hash.should be_instance_of(Hash)
+      #@admin.personal_resources_policies_hash.should  be_empty
     end
     
     # У пользоавателя нет персональных политик к ресурсам
     # хеш персональных политик к классу объектов - пуст
     it '15:29 19.07.2009' do
       @admin.personal_resources_policies_hash_for_class_of(@ivanov).should be_instance_of(Hash)
-      @admin.personal_resources_policies_hash.should have(1).item
+      #@admin.personal_resources_policies_hash.should have(1).item
       
-      @admin.personal_resources_policies_hash[:User].should be_instance_of(Hash)
-      @admin.personal_resources_policies_hash[:User].should be_empty
+      #@admin.personal_resources_policies_hash[:User].should be_instance_of(Hash)
+      #@admin.personal_resources_policies_hash[:User].should be_empty
     end
     
     # хеш персональных политик к классу объектов
@@ -48,10 +48,10 @@ describe '15:21 18.07.2009' do
       admin_has_resources
       
       @admin.personal_resources_policies_hash_for_class_of(@ivanov).should be_instance_of(Hash)
-      @admin.personal_resources_policies_hash.should have(1).item
+      #@admin.personal_resources_policies_hash.should have(1).item
       
-      @admin.personal_resources_policies_hash[:User].should be_instance_of(Hash)
-      @admin.personal_resources_policies_hash[:User].should have(2).item
+      #@admin.personal_resources_policies_hash[:User].should be_instance_of(Hash)
+      #@admin.personal_resources_policies_hash[:User].should have(2).item
     end
     
     # имеет две политики

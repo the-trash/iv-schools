@@ -37,8 +37,8 @@ describe '15:13 18.07.2009' do
       @admin.role_policies_hash.should  have(2).items
       
       # персональных блокировок нет
-      @admin.personal_policies_hash.should  be_instance_of(Hash)
-      @admin.personal_policies_hash.should  be_empty
+      @admin.create_personal_policies_hash.should  be_instance_of(Hash)
+      @admin.create_personal_policies_hash.should  be_empty
       
       # Таких блокировок не существует - вернуть false
       @admin.has_personal_block?('pages', 'tree').should   be_false
@@ -104,7 +104,7 @@ describe '15:13 18.07.2009' do
     # Рабочие рамки времени
     it '12:40 19.07.2009' do
       create_personal_policies
-      @page_manager_policy.update_attributes(:start_at=>DateTime.now-1.second, :finish_at=>DateTime.now+1.second)
+      @page_manager_policy.update_attributes(:start_at=>DateTime.now-1.second, :finish_at=>DateTime.now+10.second)
       @admin.has_personal_block?(:pages, :manager).should be_true
     end
     

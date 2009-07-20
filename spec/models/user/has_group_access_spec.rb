@@ -34,8 +34,8 @@ describe '15:18 18.07.2009' do
       @admin.role_policies_hash.should  have(2).items
       
       # групповых политик нет
-      @admin.group_policies_hash.should  be_instance_of(Hash)
-      @admin.group_policies_hash.should  be_empty
+      @admin.create_group_policies_hash.should  be_instance_of(Hash)
+      @admin.create_group_policies_hash.should  be_empty
       
       # Таких прав не существует - вернуть false
       @admin.has_group_access?('pages', 'tree').should   be_false
@@ -101,7 +101,7 @@ describe '15:18 18.07.2009' do
     # Рабочие рамки времени
     it '12:40 19.07.2009' do
       create_group_policies
-      @page_manager_policy.update_attributes(:start_at=>DateTime.now-1.second, :finish_at=>DateTime.now+1.second)
+      @page_manager_policy.update_attributes(:start_at=>DateTime.now-1.second, :finish_at=>DateTime.now+10.seconds)
       @admin.has_group_access?(:pages, :manager).should be_true
     end
     

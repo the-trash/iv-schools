@@ -38,8 +38,8 @@ describe '15:17 18.07.2009' do
       @admin.role_policies_hash.should  have(2).items
       
       # групповых политик нет
-      @admin.group_policies_hash.should  be_instance_of(Hash)
-      @admin.group_policies_hash.should  be_empty
+      @admin.create_group_policies_hash.should  be_instance_of(Hash)
+      @admin.create_group_policies_hash.should  be_empty
       
       # Таких блокировок не существует - вернуть false
       @admin.has_group_block?('pages', 'tree').should   be_false
