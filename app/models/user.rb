@@ -57,11 +57,7 @@ class User < ActiveRecord::Base
     role_policies_hash[section.to_sym][action.to_sym]
   end
 
-# Tested
-# role_policies_hash
-# has_role_policy?
-
-# Базовые функции проверки доступа/блокировки
+# Базовые функции проверки актаульности
 
   def policy_actual_by_counter?(counter, max_count)
     return true if (!max_count || !counter)
@@ -76,12 +72,8 @@ class User < ActiveRecord::Base
     start_at.to_datetime <= now && now <= finish_at.to_datetime
   end
 
-# Tested
-# policy_actual_by_counter?(counter, max_count)
-# policy_actual_by_time?(start_at, finish_at)
+# Базовые функции проверки доступа/блокировки
 
-  # Эта функция в принципе не должна ничего возвращать
-  # И только формировать хеш массив
   def create_policy_hash(options = {})
     options = {
       :finder =>      false,
@@ -153,10 +145,6 @@ class User < ActiveRecord::Base
     }
     check_policy(section, action, 'personal_policies_hash', options.merge!(opt))
   end
-  
-# Tested
-# has_personal_access?(section, action, options = {})
-# has_personal_block?(section, action, options = {})
 
 # Групповая политика
 
@@ -180,25 +168,30 @@ class User < ActiveRecord::Base
     }
     check_policy(section, action, 'group_policies_hash', options.merge!(opt))
   end
-  
-# Tested
-# has_group_access?(section, action, options = {})
-# has_group_block?(section, action, options = {})
-  
-# Персональная политика к ресурсу
 
-
-  def group_resources_policies_hash
-    @group_resources_policies_hash= Hash.new unless @group_resources_policies_hash
-    @group_resources_policies_hash
+# Общие функции ресурсной политики
+  def check_resource_policy(object, section, action, hash_name, opt = {})
+    options = {
+      :recalculate => false,
+      :reset => false,
+      :return_invert=>false
+    }.merge!(opt)
+    
+    eval("#{hash_name}_for_class_of(object, options)")
+    eval("return false if     @#{hash_name}[object.class.to_s.to_sym].empty?")
+    eval("return false unless @#{hash_name}[object.class.to_s.to_sym][object.id]")
+    eval("return false unless @#{hash_name}[object.class.to_s.to_sym][object.id][section.to_sym]")
+    eval("return false unless @#{hash_name}[object.class.to_s.to_sym][object.id][section.to_sym][action.to_sym]")
+    
+    policy_hash= eval("@#{hash_name}[object.class.to_s.to_sym][object.id][section.to_sym][action.to_sym]")
+    value= options[:return_invert] ? !policy_hash[:value] : policy_hash[:value]
+    
+    time_check=     policy_actual_by_time?(policy_hash[:start_at], policy_hash[:finish_at])
+    counter_check=  policy_actual_by_counter?(policy_hash[:counter], policy_hash[:max_count])
+    return value if counter_check && time_check
+    false
   end
-  def personal_resources_policies_hash
-    @personal_resources_policies_hash= Hash.new unless @personal_resources_policies_hash
-    @personal_resources_policies_hash
-  end
-
-  # Эта функция в принципе не должна ничего возвращать
-  # И только формировать хеш массив
+  
   def create_resources_policies_hash_for_class_of(resource, options = {})
     options = {
       :finder =>      false,
@@ -232,7 +225,17 @@ class User < ActiveRecord::Base
     end
     eval("@#{options[:hash_name]}[resource_class.to_sym]= result_hash")
     return
-    #eval("@#{options[:hash_name]}")
+  end
+
+# Персональная политика к ресурсу
+
+  def group_resources_policies_hash
+    @group_resources_policies_hash= Hash.new unless @group_resources_policies_hash
+    @group_resources_policies_hash
+  end
+  def personal_resources_policies_hash
+    @personal_resources_policies_hash= Hash.new unless @personal_resources_policies_hash
+    @personal_resources_policies_hash
   end
 
   def personal_resources_policies_hash_for_class_of(resource, opt = {})
@@ -243,7 +246,27 @@ class User < ActiveRecord::Base
     create_resources_policies_hash_for_class_of(resource, options)
     @personal_resources_policies_hash
   end
+
+  def has_personal_resource_access_for?(object, section, action, opt = {})
+    options = {
+      :recalculate => false,
+      :reset => false
+    }.merge!(opt)
+    personal_resources_policies_hash_for_class_of(object, options)
+    check_resource_policy(object, section, action, 'personal_resources_policies_hash', options)
+  end
   
+  def has_personal_resource_block_for?(object, section, action, opt = {})
+    options = {
+      :recalculate => false,
+      :reset => false,
+      :return_invert=>true
+    }.merge!(opt)
+    personal_resources_policies_hash_for_class_of(object, options)
+    check_resource_policy(object, section, action, 'personal_resources_policies_hash', options)
+  end
+
+# Групповая политика к ресурсу
   def group_resources_policies_hash_for_class_of(resource, opt = {})
       options= {
        :finder=>'GroupResourcePolicy.find_all_by_role_id_and_resource_type(self.role.id, resource_class)',
@@ -254,127 +277,23 @@ class User < ActiveRecord::Base
       @group_resources_policies_hash
   end
   
-  def check_resource_policy(object, section, action, hash_name, opt = {})
-    options = {
-      :recalculate => false,
-      :reset => false,
-      :return_invert=>false
-    }.merge!(opt)
-    
-    eval("#{hash_name}_for_class_of(object, options)")
-    eval("return false if     @#{hash_name}[object.class.to_s.to_sym].empty?")
-    eval("return false unless @#{hash_name}[object.class.to_s.to_sym][object.id]")
-    eval("return false unless @#{hash_name}[object.class.to_s.to_sym][object.id][section.to_sym]")
-    eval("return false unless @#{hash_name}[object.class.to_s.to_sym][object.id][section.to_sym][action.to_sym]")
-    
-    policy_hash= eval("@#{hash_name}[object.class.to_s.to_sym][object.id][section.to_sym][action.to_sym]")
-    value= options[:return_invert] ? !policy_hash[:value] : policy_hash[:value]
-    
-    time_check=     policy_actual_by_time?(policy_hash[:start_at], policy_hash[:finish_at])
-    counter_check=  policy_actual_by_counter?(policy_hash[:counter], policy_hash[:max_count])
-    return value if counter_check && time_check
-    false
-  end
-  
-  def has_personal_resource_access_for?(object, section, action, opt = {})
-    options = {
-      :recalculate => false,
-      :reset => false
-    }.merge!(opt)
-    
-    personal_resources_policies_hash_for_class_of(object, options)
-    check_resource_policy(object, section, action, 'personal_resources_policies_hash', options)
-=begin
-    return false if     @personal_resources_policies_hash[object.class.to_s.to_sym].empty?
-    return false unless @personal_resources_policies_hash[object.class.to_s.to_sym][object.id]
-    return false unless @personal_resources_policies_hash[object.class.to_s.to_sym][object.id][section.to_sym]
-    return false unless @personal_resources_policies_hash[object.class.to_s.to_sym][object.id][section.to_sym][action.to_sym]
-    policy_hash= @personal_resources_policies_hash[object.class.to_s.to_sym][object.id][section.to_sym][action.to_sym]
-    value=  policy_hash[:value]
-    time_check=     policy_actual_by_time?(policy_hash[:start_at], policy_hash[:finish_at])
-    counter_check=  policy_actual_by_counter?(policy_hash[:counter], policy_hash[:max_count])
-    return value if counter_check && time_check
-    false
-=end
-  end
-  
-  def has_personal_resource_block_for?(object, section, action, opt = {})
-    
-    options = {
-      :recalculate => false,
-      :reset => false,
-      :return_invert=>true
-    }.merge!(opt)
-    
-    personal_resources_policies_hash_for_class_of(object, options)
-    check_resource_policy(object, section, action, 'personal_resources_policies_hash', options)
-    
-=begin
-    options = {
-      :recalculate => false,
-      :reset => false
-    }.merge!(opt)
-
-    personal_resources_policies_hash_for_class_of(object, options)
-    
-    return false if @personal_resources_policies_hash[object.class.to_s.to_sym].empty?
-    return false unless @personal_resources_policies_hash[object.class.to_s.to_sym][object.id]
-    return false unless @personal_resources_policies_hash[object.class.to_s.to_sym][object.id][section.to_sym]
-    return false unless @personal_resources_policies_hash[object.class.to_s.to_sym][object.id][section.to_sym][action.to_sym]
-    policy_hash= @personal_resources_policies_hash[object.class.to_s.to_sym][object.id][section.to_sym][action.to_sym]
-    value=  policy_hash[:value]
-    time_check=     policy_actual_by_time?(policy_hash[:start_at], policy_hash[:finish_at])
-    counter_check=  policy_actual_by_counter?(policy_hash[:counter], policy_hash[:max_count])
-    return !value if counter_check && time_check
-    false
-=end
-  end
-  
-
-# Tested
-
-# has_personal_resource_access_for?(object, section, action, options = {})
-# has_personal_resource_block_for?(object, section, action, options = {})
-
-# Групповая политика к ресурсу
   def has_group_resource_access_for?(object, section, action, opt = {})
     options = {
       :recalculate => false,
       :reset => false
     }.merge!(opt)
-
     group_resources_policies_hash_for_class_of(object, options)
-    
-    return false if @group_resources_policies_hash[object.class.to_s.to_sym].empty?
-    return false unless @group_resources_policies_hash[object.class.to_s.to_sym][object.id]
-    return false unless @group_resources_policies_hash[object.class.to_s.to_sym][object.id][section.to_sym]
-    return false unless @group_resources_policies_hash[object.class.to_s.to_sym][object.id][section.to_sym][action.to_sym]
-    policy_hash= @group_resources_policies_hash[object.class.to_s.to_sym][object.id][section.to_sym][action.to_sym]
-    value=  policy_hash[:value]
-    time_check=     policy_actual_by_time?(policy_hash[:start_at], policy_hash[:finish_at])
-    counter_check=  policy_actual_by_counter?(policy_hash[:counter], policy_hash[:max_count])
-    return value if counter_check && time_check
-    false
+    check_resource_policy(object, section, action, 'group_resources_policies_hash', options)
   end
   
   def has_group_resource_block_for?(object, section, action, opt = {})
     options = {
       :recalculate => false,
-      :reset => false
+      :reset => false,
+      :return_invert=>true
     }.merge!(opt)
-    
     group_resources_policies_hash_for_class_of(object, options)
-    
-    return false if @group_resources_policies_hash[object.class.to_s.to_sym].empty?
-    return false unless @group_resources_policies_hash[object.class.to_s.to_sym][object.id]
-    return false unless @group_resources_policies_hash[object.class.to_s.to_sym][object.id][section.to_sym]
-    return false unless @group_resources_policies_hash[object.class.to_s.to_sym][object.id][section.to_sym][action.to_sym]
-    policy_hash= @group_resources_policies_hash[object.class.to_s.to_sym][object.id][section.to_sym][action.to_sym]
-    value=  policy_hash[:value]
-    time_check=     policy_actual_by_time?(policy_hash[:start_at], policy_hash[:finish_at])
-    counter_check=  policy_actual_by_counter?(policy_hash[:counter], policy_hash[:max_count])
-    return !value if counter_check && time_check
-    false
+    check_resource_policy(object, section, action, 'group_resources_policies_hash', options)
   end
 
 # Стандартные определения
