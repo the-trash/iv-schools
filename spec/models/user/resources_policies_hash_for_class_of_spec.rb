@@ -43,7 +43,7 @@ describe '9:58 20.07.2009' do
        :finder=>'PersonalResourcePolicy.find_all_by_user_id_and_resource_type(self.id, resource_class)',
        :hash_name=>'personal_resources_policies_hash'
       }    
-      @admin.resources_policies_hash_for_class_of(@ivanov, opt).should have(1).item
+      @admin.personal_resources_policies_hash_for_class_of(@ivanov).should have(1).item
       
       # group_resources_policies_hash_for_class_of(@ivanov)
       opt= {
@@ -51,7 +51,7 @@ describe '9:58 20.07.2009' do
        :hash_name=>'personal_resources_policies_hash',
        :before_find=>'(@group_resources_policies_hash[resource_class.to_sym]= result_hash and return @group_resources_policies_hash) unless self.role'
       }
-      @admin.resources_policies_hash_for_class_of(@ivanov, opt).should have(1).item
+      @admin.group_resources_policies_hash_for_class_of(@ivanov).should have(1).item
     end
  
     # У пользователя есть персональные политики к ресурсам
@@ -72,8 +72,8 @@ describe '9:58 20.07.2009' do
        :finder=>'PersonalResourcePolicy.find_all_by_user_id_and_resource_type(self.id, resource_class)',
        :hash_name=>'personal_resources_policies_hash'
       }    
-      @admin.resources_policies_hash_for_class_of(@ivanov, opt).should have(1).item
-      @admin.resources_policies_hash_for_class_of(@ivanov, opt)[:User].should have(2).item
+      @admin.personal_resources_policies_hash_for_class_of(@ivanov).should have(1).item
+      @admin.personal_resources_policies_hash_for_class_of(@ivanov)[:User].should have(2).item
       
       # group_resources_policies_hash_for_class_of(@ivanov)
       opt= {
@@ -81,8 +81,8 @@ describe '9:58 20.07.2009' do
        :hash_name=>'personal_resources_policies_hash',
        :before_find=>'(@group_resources_policies_hash[resource_class.to_sym]= result_hash and return @group_resources_policies_hash) unless self.role'
       }
-      @admin.resources_policies_hash_for_class_of(@ivanov, opt).should have(1).item
-      @admin.resources_policies_hash_for_class_of(@ivanov, opt)[:User].should have(2).item
+      @admin.group_resources_policies_hash_for_class_of(@ivanov).should have(1).item
+      @admin.group_resources_policies_hash_for_class_of(@ivanov)[:User].should have(2).item
     end
     
 end

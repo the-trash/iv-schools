@@ -128,7 +128,7 @@ describe '15:21 18.07.2009' do
     # Рабочие рамки времени
     it '12:40 19.07.2009' do
       admin_has_resources
-      @resource_ivanov.update_attributes(:start_at=>DateTime.now-1.second, :finish_at=>DateTime.now+1.second)
+      @resource_ivanov.update_attributes(:start_at=>DateTime.now-1.second, :finish_at=>DateTime.now+10.second)
       @admin.has_group_resource_block_for?(@ivanov, :pages, :manager).should be_true
     end
     
