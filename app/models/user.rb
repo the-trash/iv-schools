@@ -182,18 +182,88 @@ class User < ActiveRecord::Base
   
 # Персональная политика к ресурсу
 
+
+  def group_resources_policies_hash
+    @group_resources_policies_hash= Hash.new unless @group_resources_policies_hash
+    @group_resources_policies_hash
+  end
   def personal_resources_policies_hash
     @personal_resources_policies_hash= Hash.new unless @personal_resources_policies_hash
     @personal_resources_policies_hash
   end
+
+  def resources_policies_hash_for_class_of(resource, options = {})
+    options = {
+      :finder =>      false,
+      :hash_name =>   false,
+      :before_find => false, 
+      :recalculate => false
+    }.merge(options)
+    resource_class=  resource.class.to_s
+    result_hash= Hash.new
+    
+    return Hash.new unless (options[:finder] || options[:hash_name])
+    
+    eval("@#{options[:hash_name]} = nil  if options[:reset]")
+    eval("@#{options[:hash_name]}[resource_class.to_s.to_sym]= nil if (@#{options[:hash_name]} && @#{options[:hash_name]}[resource_class.to_sym] && options[:recalculate])")
+    eval("return @#{options[:hash_name]}[resource_class.to_sym] if @#{options[:hash_name]} && @#{options[:hash_name]}[resource_class.to_sym]")
+    eval("@#{options[:hash_name]} = result_hash")
+    eval(options[:before_find]) if options[:before_find]
+    eval(options[:finder]).each do |policy|
+        result_hash[policy.resource_id]= {
+          policy.section.to_sym=>{
+            policy.action.to_sym=>{
+              :value=>policy.value,
+              :start_at=>policy.start_at,
+              :finish_at=>policy.finish_at,
+              :counter=>policy.counter,
+              :max_count=>policy.max_count
+            }
+          } 
+        }
+    end
+    eval("@#{options[:hash_name]}[resource_class.to_sym]= result_hash")
+    eval("@#{options[:hash_name]}")
+  end
+
+  def group_resources_policies_hash_for_class_of(resource)
+    resource_class=  resource.class.to_s
+    @group_resources_policies_hash= Hash.new unless @group_resources_policies_hash
+    result_hash= Hash.new
+    unless @group_resources_policies_hash[resource_class.to_sym]
+      (@group_resources_policies_hash[resource_class.to_sym]= result_hash and return @group_resources_policies_hash) unless self.role
+      GroupResourcePolicy.find_all_by_role_id_and_resource_type(self.role.id, resource_class).each do |policy|
+        result_hash[policy.resource_id]= {
+          policy.section.to_sym=>{
+            policy.action.to_sym=>{
+              :value=>policy.value,
+              :start_at=>policy.start_at,
+              :finish_at=>policy.finish_at,
+              :counter=>policy.counter,
+              :max_count=>policy.max_count
+            }
+          } 
+        }
+      end
+      @group_resources_policies_hash[resource_class.to_sym]= result_hash
+    end
+    @group_resources_policies_hash
+  end
   
   def personal_resources_policies_hash_for_class_of(resource)
-    self_id=        self.id
+  
+    opt= {
+      :finder=>'PersonalResourcePolicy.find_all_by_user_id_and_resource_type(self.id, resource_class)',
+      :hash_name=>'personal_resources_policies_hash'
+    }    
+    resources_policies_hash_for_class_of(resource, opt)
+=begin
+
     resource_class=  resource.class.to_s
-    personal_resources_policies_hash
+    @personal_resources_policies_hash= Hash.new unless @personal_resources_policies_hash
     result_hash= Hash.new
-    unless personal_resources_policies_hash[resource_class.to_sym]
-      PersonalResourcePolicy.find_all_by_user_id_and_resource_type(self_id, resource_class).each do |policy|
+    unless @personal_resources_policies_hash[resource_class.to_sym]
+      PersonalResourcePolicy.find_all_by_user_id_and_resource_type(self.id, resource_class).each do |policy|
         result_hash[policy.resource_id]= {
           policy.section.to_sym=>{
             policy.action.to_sym=>{
@@ -209,17 +279,27 @@ class User < ActiveRecord::Base
       @personal_resources_policies_hash[resource_class.to_sym]= result_hash
     end
     @personal_resources_policies_hash
+=end
   end
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
 
-  def check_resource_policy(object, section, action, hash_fn, options)
+  def has_personal_resource_access_for?(object, section, action, options = {})
     options = {
       :recalculate => false,
       :reset => false
     }.merge(options)
-    
-    @personal_resources_policies_hash= nil if (options[:reset])
+    @personal_resources_policies_hash= nil if (@personal_resources_policies_hash && options[:reset])
     @personal_resources_policies_hash[object.class.to_s.to_sym]= nil if (@personal_resources_policies_hash && @personal_resources_policies_hash[object.class.to_s.to_sym] && options[:recalculate])
-    
     personal_resources_policies_hash_for_class_of(object) if !@personal_resources_policies_hash || !@personal_resources_policies_hash[object.class.to_s.to_sym]
     return false if @personal_resources_policies_hash[object.class.to_s.to_sym].empty?
     return false unless @personal_resources_policies_hash[object.class.to_s.to_sym][object.id]
@@ -231,10 +311,6 @@ class User < ActiveRecord::Base
     counter_check=  policy_actual_by_counter?(policy_hash[:counter], policy_hash[:max_count])
     return value if counter_check && time_check
     false
-  end
-
-  def has_personal_resource_access_for?(object, section, action, options = {})
-    check_resource_policy(object, section, action, 'group_policies_hash', options)
   end
   
   def has_personal_resource_block_for?(object, section, action, options = {})
@@ -257,48 +333,13 @@ class User < ActiveRecord::Base
     false
   end
   
-  
-  
-  
-  
-  
-  
-  
+
 # Tested
-# personal_resources_policies_hash_for_class_of(resource)
+
 # has_personal_resource_access_for?(object, section, action, options = {})
 # has_personal_resource_block_for?(object, section, action, options = {})
 
 # Групповая политика к ресурсу
-
-  def group_resources_policies_hash
-    @group_resources_policies_hash= Hash.new unless @group_resources_policies_hash
-    @group_resources_policies_hash
-  end
-  
-  def group_resources_policies_hash_for_class_of(resource)
-    resource_class=  resource.class.to_s
-    group_resources_policies_hash
-    result_hash= Hash.new
-    unless @group_resources_policies_hash[resource_class.to_sym]
-      (@group_resources_policies_hash[resource_class.to_sym]= result_hash and return @group_resources_policies_hash) unless self.role
-      GroupResourcePolicy.find_all_by_role_id_and_resource_type(self.role.id, resource_class).each do |policy|
-        result_hash[policy.resource_id]= {
-          policy.section.to_sym=>{
-            policy.action.to_sym=>{
-              :value=>policy.value,
-              :start_at=>policy.start_at,
-              :finish_at=>policy.finish_at,
-              :counter=>policy.counter,
-              :max_count=>policy.max_count
-            }
-          } 
-        }
-      end
-      @group_resources_policies_hash[resource_class.to_sym]= result_hash
-    end
-    @group_resources_policies_hash
-  end
 
   def has_group_resource_access_for?(object, section, action, options = {})
     options = {
