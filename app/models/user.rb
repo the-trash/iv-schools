@@ -5,9 +5,9 @@ class User < ActiveRecord::Base
 
 # Валидация
 
-  validates_uniqueness_of   :login, :case_sensitive => false, :message=>"Данный Логин уже используется 111"
-  validates_uniqueness_of   :email, :case_sensitive => false, :message=>"Данный Email уже используется. 222"
-  validates_presence_of     :login, :email, :message=>"Поля Логин и Email не могут быть пустыми 333"
+  validates_uniqueness_of   :login, :case_sensitive => false, :message=>"Данный Логин уже используется"
+  validates_uniqueness_of   :email, :case_sensitive => false, :message=>"Данный Email уже используется."
+  validates_presence_of     :login, :email, :message=>"Поля Логин и Email не могут быть пустыми"
   
   validates_presence_of     :password,              :if => :password_required?, :message=>"Поле Пароль не может быть пустым"
   validates_presence_of     :password_confirmation, :if => :password_required?, :message=>"Необходимо подтвердить пароль"
@@ -75,19 +75,19 @@ class User < ActiveRecord::Base
 # Базовые функции проверки доступа/блокировки
 
   def create_policy_hash(options = {})
-    options = {
+    opts = {
       :finder =>      false,
       :hash_name =>   false,
       :before_find => false, 
       :recalculate => false
-    }.merge(options)
-    eval("@#{options[:hash_name]} = nil  if options[:recalculate]")
-    eval("return if @#{options[:hash_name]}")
+    }.merge!(options)
+    eval("@#{opts[:hash_name]} = nil  if opts[:recalculate]")
+    eval("return if @#{opts[:hash_name]}")
     result_hash= Hash.new
-    eval("@#{options[:hash_name]} = result_hash")
-    return unless (options[:finder] || options[:hash_name])
-    eval(options[:before_find]) if options[:before_find]
-    eval(options[:finder]).each do |policy|
+    eval("@#{opts[:hash_name]} = result_hash")
+    return unless (opts[:finder] || opts[:hash_name])
+    eval(opts[:before_find]) if opts[:before_find]
+    eval(opts[:finder]).each do |policy|
       _action_hash={
         policy.action.to_sym=>{
           :value=>policy.value,
@@ -104,21 +104,21 @@ class User < ActiveRecord::Base
         result_hash.merge!(_hash)                              
       end
     end
-    eval("@#{options[:hash_name]}= result_hash")
+    eval("@#{opts[:hash_name]}= result_hash")
     return
   end
   
   def check_policy(section, action, hash_name, options = {})
-    options = {
+    opts = {
       :recalculate => false,
       :return_invert=>false
-    }.merge(options)
-    send("create_#{hash_name}", options)
+    }.merge!(options)
+    send("create_#{hash_name}", opts)
     return false if !eval("@#{hash_name}").values_at(section.to_sym) || !eval("@#{hash_name}").values_at(section.to_sym).first
     section_of_policies_hash= eval("@#{hash_name}").values_at(section.to_sym).first
     return false if !section_of_policies_hash.values_at(action.to_sym) || !section_of_policies_hash.values_at(action.to_sym).first
     policy_hash= section_of_policies_hash.values_at(action.to_sym).first
-    value= options[:return_invert] ? !policy_hash[:value] : policy_hash[:value]
+    value= opts[:return_invert] ? !policy_hash[:value] : policy_hash[:value]
     time_check=     policy_actual_by_time?(policy_hash[:start_at], policy_hash[:finish_at])
     counter_check=  policy_actual_by_counter?(policy_hash[:counter], policy_hash[:max_count])
     return value if counter_check && time_check
@@ -128,11 +128,11 @@ class User < ActiveRecord::Base
 # Персональная политика
 
   def create_personal_policies_hash(options = {})
-    opt= {
+    opts= {
       :finder=>'PersonalPolicy.find_all_by_user_id(self.id)',
       :hash_name=>'personal_policies_hash',
     }
-    create_policy_hash options.merge!(opt)
+    create_policy_hash options.merge!(opts)
     @personal_policies_hash
   end
 
@@ -141,21 +141,19 @@ class User < ActiveRecord::Base
   end
 
   def has_personal_block?(section, action, options = {})
-    opt={
-      :return_invert=>true
-    }
-    check_policy(section, action, 'personal_policies_hash', options.merge!(opt))
+    opts={ :return_invert=>true }
+    check_policy(section, action, 'personal_policies_hash', options.merge!(opts))
   end
 
 # Групповая политика
 
   def create_group_policies_hash(options = {})
-    opt= {
+    opts= {
       :finder=>'GroupPolicy.find_all_by_role_id(self.role.id)',
       :hash_name=>'group_policies_hash',
       :before_find=>'return @group_policies_hash unless self.role'
     }
-    create_policy_hash options.merge!(opt)
+    create_policy_hash options.merge!(opts)
     @group_policies_hash
   end
 
@@ -164,27 +162,25 @@ class User < ActiveRecord::Base
   end
 
   def has_group_block?(section, action, options = {})
-    opt={
-      :return_invert=>true
-    }
+    opt={ :return_invert=>true }
     check_policy(section, action, 'group_policies_hash', options.merge!(opt))
   end
 
 # Общие функции ресурсной политики
 
-  def check_resource_policy(object, section, action, hash_name, opt = {})
-    options = {
+  def check_resource_policy(object, section, action, hash_name, options = {})
+    opts = {
       :recalculate => false,
       :reset => false,
       :return_invert=>false
-    }.merge!(opt)
-    send("#{hash_name}_for_class_of", object, options)
+    }.merge!(options)
+    send("#{hash_name}_for_class_of", object, opts)
     return false if     eval("@#{hash_name}")[object.class.to_s.to_sym].empty?
     return false unless eval("@#{hash_name}")[object.class.to_s.to_sym][object.id]
     return false unless eval("@#{hash_name}")[object.class.to_s.to_sym][object.id][section.to_sym]
     return false unless eval("@#{hash_name}")[object.class.to_s.to_sym][object.id][section.to_sym][action.to_sym]
     policy_hash= eval("@#{hash_name}")[object.class.to_s.to_sym][object.id][section.to_sym][action.to_sym]
-    value= options[:return_invert] ? !policy_hash[:value] : policy_hash[:value]
+    value= opts[:return_invert] ? !policy_hash[:value] : policy_hash[:value]
     time_check=     policy_actual_by_time?(policy_hash[:start_at], policy_hash[:finish_at])
     counter_check=  policy_actual_by_counter?(policy_hash[:counter], policy_hash[:max_count])
     return value if counter_check && time_check
@@ -192,20 +188,20 @@ class User < ActiveRecord::Base
   end
   
   def create_resources_policies_hash_for_class_of(resource, options = {})
-    options = {
+    opts = {
       :finder =>      false,
       :hash_name =>   false,
       :before_find => false
-    }.merge(options)
+    }.merge!(options)
     resource_class=  resource.class.to_s
     result_hash= Hash.new
-    eval("@#{options[:hash_name]}= nil") if (eval("@#{options[:hash_name]}") && options[:reset])
-    eval("@#{options[:hash_name]}")[resource_class.to_sym]= nil if (eval("@#{options[:hash_name]}") && eval("@#{options[:hash_name]}")[resource_class.to_sym] && options[:recalculate])
-    eval("@#{options[:hash_name]}= Hash.new") unless eval("@#{options[:hash_name]}")
-    return if eval("@#{options[:hash_name]}")[resource_class.to_sym]
-    return unless (options[:finder] || options[:hash_name])
-    eval(options[:before_find]) if options[:before_find]    
-    eval(options[:finder]).each do |policy|
+    eval("@#{opts[:hash_name]}= nil") if (eval("@#{opts[:hash_name]}") && opts[:reset])
+    eval("@#{opts[:hash_name]}")[resource_class.to_sym]= nil if (eval("@#{opts[:hash_name]}") && eval("@#{opts[:hash_name]}")[resource_class.to_sym] && opts[:recalculate])
+    eval("@#{opts[:hash_name]}= Hash.new") unless eval("@#{opts[:hash_name]}")
+    return if eval("@#{opts[:hash_name]}")[resource_class.to_sym]
+    return unless (opts[:finder] || opts[:hash_name])
+    eval(opts[:before_find]) if opts[:before_find]    
+    eval(opts[:finder]).each do |policy|
         result_hash[policy.resource_id]= {
           policy.section.to_sym=>{
             policy.action.to_sym=>{
@@ -218,67 +214,53 @@ class User < ActiveRecord::Base
           } 
         }
     end
-    eval("@#{options[:hash_name]}")[resource_class.to_sym]= result_hash
+    eval("@#{opts[:hash_name]}")[resource_class.to_sym]= result_hash
     return
   end
 
 # Персональная политика к ресурсу
 
-  def personal_resources_policies_hash_for_class_of(resource, opt = {})
-    options= {
+  def personal_resources_policies_hash_for_class_of(resource, options = {})
+    opts= {
      :finder=>'PersonalResourcePolicy.find_all_by_user_id_and_resource_type(self.id, resource_class)',
      :hash_name=>'personal_resources_policies_hash'
-    }.merge!(opt)
-    create_resources_policies_hash_for_class_of(resource, options)
+    }
+    create_resources_policies_hash_for_class_of(resource, options.merge!(opts))
     @personal_resources_policies_hash
   end
 
-  def has_personal_resource_access_for?(object, section, action, opt = {})
-    options = {
-      :recalculate => false,
-      :reset => false
-    }.merge!(opt)
+  def has_personal_resource_access_for?(object, section, action, options = {})
     personal_resources_policies_hash_for_class_of(object, options)
     check_resource_policy(object, section, action, 'personal_resources_policies_hash', options)
   end
   
-  def has_personal_resource_block_for?(object, section, action, opt = {})
-    options = {
-      :recalculate => false,
-      :reset => false,
-      :return_invert=>true
-    }.merge!(opt)
+  def has_personal_resource_block_for?(object, section, action, options = {})
+    opts = { :return_invert=>true }
+    options.merge!(opts)
     personal_resources_policies_hash_for_class_of(object, options)
     check_resource_policy(object, section, action, 'personal_resources_policies_hash', options)
   end
 
 # Групповая политика к ресурсу
 
-  def group_resources_policies_hash_for_class_of(resource, opt = {})
-      options= {
-       :finder=>'GroupResourcePolicy.find_all_by_role_id_and_resource_type(self.role.id, resource_class)',
-       :hash_name=>'group_resources_policies_hash',
-       :before_find=>'(@group_resources_policies_hash[resource_class.to_sym]= result_hash and return @group_resources_policies_hash) unless self.role'
-      }.merge!(opt)
-      create_resources_policies_hash_for_class_of(resource, options)
-      @group_resources_policies_hash
+  def group_resources_policies_hash_for_class_of(resource, options = {})
+    opts= {
+     :finder=>'GroupResourcePolicy.find_all_by_role_id_and_resource_type(self.role.id, resource_class)',
+     :hash_name=>'group_resources_policies_hash',
+     :before_find=>'(@group_resources_policies_hash[resource_class.to_sym]= result_hash and return @group_resources_policies_hash) unless self.role'
+    }
+    create_resources_policies_hash_for_class_of(resource, options.merge!(opts))
+    @group_resources_policies_hash
   end
   
-  def has_group_resource_access_for?(object, section, action, opt = {})
-    options = {
-      :recalculate => false,
-      :reset => false
-    }.merge!(opt)
+  def has_group_resource_access_for?(object, section, action, options = {})
     group_resources_policies_hash_for_class_of(object, options)
     check_resource_policy(object, section, action, 'group_resources_policies_hash', options)
   end
   
-  def has_group_resource_block_for?(object, section, action, opt = {})
-    options = {
-      :recalculate => false,
-      :reset => false,
-      :return_invert=>true
-    }.merge!(opt)
+  def has_group_resource_block_for?(object, section, action, options = {})
+    opts = { :return_invert=>true }
+    options.merge!(opts)
     group_resources_policies_hash_for_class_of(object, options)
     check_resource_policy(object, section, action, 'group_resources_policies_hash', options)
   end
