@@ -1,0 +1,567 @@
+acts_as_abonent
+
+Простая абонентская система для web-сайта,
+основанная на работе с обращениями к Hesh массивам
+
+==========================================================================================================
+Основные понятия:
+==========================================================================================================
+
+Политика (action)
+  Правило доступа к некоторой функции/действию (create, read, update, delete, show, hide и т.д.)
+  Имеет Булево значение true, false
+
+Группа политик (section)
+  Набор логически связанных политик, предназначенных для работы с некоторым функционалом web-сайта (blog, forum, pages и т.д.)
+  Представляет собой Hesh массив из Политик и связанных с ними Булевыми зачениями
+  
+Роль (role)
+  Набор групп политик логически связанных со статусом пользователя в системе (guest, user, moderator, manager, developer, administrator)
+
+Доступ (access)
+  Результат (Булево значение) обращения к некоторой политике и проверки ее на равенство значению true
+  Если политика имеет значение true - то доступ разрешен (возвращает true)
+  
+Блокировка (block)
+  Результат (Булево значение) обращения к некоторой политике и проверки ее на равенство значению false
+  Если политика имеет значение false - то доступ запрещен (ТОЖЕ!!! возвращает true)
+
+Актуальность политики
+  Значимость политики доступа в настоящее время или по другому признаку
+  (счетчик исполнения политики доступа не превышает макс. установленного для него значения)
+  
+Исполнение политики доступа
+  Факт обращения к политике доступа
+  
+Ограничение исполнения политики доступа по времени (АКТУАЛЬНОСТЬ ПО ВРЕМЕНИ)
+  Установка начального (start_at) и конечного (finish_at) моментов времени, определяющих актуальность политики
+  Так, например, можно установить актуальность политики с 1 сентября по 7 сентября.
+  В этот период времени пользователь будет иметь доступ к исполнению некоторого действия.
+  8 сентября политики доступа теряет актуальность по времени.
+  В результате пользователь не может более исполнять некоторое действие.
+  
+Ограничение исполнения политики доступа по факту исполнения политики доступа (АКТУАЛЬНОСТЬ ПО СЧЕТЧИКУ)
+  Установка счетчика обращения (counter) к политике доступа и максимального значения (max_count) счетчика, которые определяют актуальность политики.
+  Так, например, можно установить максимальное значение счетчика на 10 (max_count= 10), а сам счетчик на 1 (counter= 1).
+  При каждом исполнении политики доступа счетчик увеличивается на 1 (counter= counter+1).
+  После 10 обращений к политике доступа политика теряет свою актуальность (counter =< max_count => false).
+  В результате пользователь не может более исполнять некоторое действие.
+
+==========================================================================================================
+acts_as_abonent реализует:
+==========================================================================================================
+
+> РОЛЕВОЕ РАЗГРАНИЧЕНИЕ ПОЛЬЗОВАТЕЛЕЙ НА САЙТЕ (ОСНОВОПОЛАГАЮЩАЯ РЕАЛИЗАЦИЯ БЕЗ УЧЕТА АКТУАЛЬНОСТИ ДОСТУПА ПО ВРЕМЕНИ И СЧЕТЧИКУ)
+
+> РАЗГРАНИЧЕНИЕ ПО ПОЛИТИКАМ ДОСТУПА
+
+  == Группа пользователей:
+
+  - Назначение политики доступа некоторой группе пользователей (de facto: white_list of policies for group)
+    - (АКТУАЛЬНОСТЬ ДОСТУПА ПО ВРЕМЕНИ) Ограничение исполнения политики доступа некоторой группы пользователей по времени 
+    - (АКТУАЛЬНОСТЬ ДОСТУПА ПО СЧЕТЧИКУ)Ограничение исполнения политики доступа некоторой группы пользователей по факту исполнения 
+
+  - Назначение политики блокировки некоторой группе пользователей (de facto: black_list of policies for group)
+    - (АКТУАЛЬНОСТЬ БЛОКИРОВКИ ПО ВРЕМЕНИ) Ограничение исполнения политики блокировки некоторой группы пользователей по времени
+    - (АКТУАЛЬНОСТЬ БЛОКИРОВКИ ПО СЧЕТЧИКУ)Ограничение исполнения политики блокировки некоторой группы пользователей по факту исполнения
+  
+  == Конкретный пользователь:
+
+  - Назначение политики доступа пользователю (de facto: white_list of policies for person)
+    - (АКТУАЛЬНОСТЬ ДОСТУПА ПО ВРЕМЕНИ)  Ограничение исполнения политики доступа пользователя по времени
+    - (АКТУАЛЬНОСТЬ ДОСТУПА ПО СЧЕТЧИКУ) Ограничение исполнения политики доступа пользователя по факту исполнения
+
+  - Назначение политики блокировки пользователю (de facto: black_list of policies for person)
+    - (АКТУАЛЬНОСТЬ БЛОКИРОВКИ ПО ВРЕМЕНИ) Ограничение исполнения политики блокировки пользователя по времени
+    - (АКТУАЛЬНОСТЬ БЛОКИРОВКИ ПО СЧЕТЧИКУ)Ограничение исполнения политики блокировки пользователя по факту исполнения
+
+> РАЗГРАНИЧЕНИЕ ПО РЕСУРСНОМУ ВЛАДЕНИЮ И ИСПОЛНЕНИЮ ДЕЙСТВИЙ НАД РЕСУРСОМ
+
+  == Группа пользователей:
+
+  - Назначение политики доступа некоторой группе пользователей для конкретного объекта (de facto: white_list of policies for resource for group)
+    - (АКТУАЛЬНОСТЬ ДОСТУПА ПО ВРЕМЕНИ)  Ограничение исполнения политики доступа некоторой группы пользователей по времени для конкретного объекта
+    - (АКТУАЛЬНОСТЬ ДОСТУПА ПО СЧЕТЧИКУ) Ограничение исполнения политики доступа некоторой группы пользователей по факту исполнения для конкретного объекта
+    
+  - Назначение политики блокировки некоторой группе пользователей (de facto: black_list of policies for resource for group)
+    - (АКТУАЛЬНОСТЬ БЛОКИРОВКИ ПО ВРЕМЕНИ)  Ограничение исполнения политики блокировки некоторой группы пользователей по времени для конкретного объекта
+    - (АКТУАЛЬНОСТЬ БЛОКИРОВКИ ПО СЧЕТЧИКУ) Ограничение исполнения политики блокировки некоторой группы пользователей по факту исполнения для конкретного объекта
+
+  == Конкретный пользователь:
+
+  - Назначение политики доступа пользователю (de facto: white_list of policies for resource for person)
+    - (АКТУАЛЬНОСТЬ ДОСТУПА ПО ВРЕМЕНИ)  Ограничение исполнения политики доступа пользователя по времени для конкретного объекта
+    - (АКТУАЛЬНОСТЬ ДОСТУПА ПО СЧЕТЧИКУ) Ограничение исполнения политики доступа пользователя по факту исполнения для конкретного объекта
+    
+  - Назначение политики блокировки пользователю (de facto: black_list of policies for resource for person)
+    - (АКТУАЛЬНОСТЬ БЛОКИРОВКИ ПО ВРЕМЕНИ)  Ограничение исполнения политики блокировки пользователя по времени для конкретного объекта
+    - (АКТУАЛЬНОСТЬ БЛОКИРОВКИ ПО СЧЕТЧИКУ) Ограничение исполнения политики блокировки пользователя по факту исполнения для конкретного объекта
+
+==========================================================================================================
+Схема данных и Миграции
+==========================================================================================================   
+
+==========================================================================================================   
+  roles
+  
+  Запись таблицы содержит все базовые настройки политик для данной роли
+  
+  name - имя роли из латинских символов без пробелов, служит в качестве символьного идентификатора
+  title - строка с названием роли
+  description - текстовое описание роли и ее предназначения
+  settings - текстовое поле, хранящее в себе сериализованный (YAML) хеш основных групповых политик для данной роли
+  
+  settings={
+    'pages'=>{
+      'tree'=>true,
+      'manager'=>true,
+      'delete'=>true,
+      'update'=>false,
+      'up'=>true,
+      'down'=>true
+    },
+    'user'=>{
+      'profile'=>true,
+      'news'=>true,
+      'delete'=>true,
+      'password_restore'=>false,
+      'update'=>true,
+      'edit'=>true
+    }
+  }
+==========================================================================================================   
+
+  create_table "roles", :force => true do |t|
+    t.string   "name"
+    t.string   "title"
+    t.text     "description"
+    t.text     "settings"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+  
+==========================================================================================================   
+  group_policies
+  
+  Надстройка на схему данных roles (надстройка на хеш массив хранящийся в поле настроек роли - settings).
+  Обеспечивает дополнительные ролевые политики (групповые политики)
+  Реализует дополнительные политики или блокировку политик из схемы данных roles
+  Обеспечивает актуальность политик по времени и счетчику
+  
+  Запись таблицы содержит в себе отдельную политику из некоторой группы политик и ее (политики) значение true|false
+  Запись таблицы содержит в себе значения, позволяющие судить об актуальности данной политики
+  Запись таблицы привязана к конкретной роли
+  
+  Запись таблицы выглядит так:
+  
+  Current Time is - 01:01 01.01.2010
+  
+  id | role_id | section  | action  | value | start_at          | finish_at         | counter | max_count |
+  1  | 3       | blog     | index   | true  | 01:01 01.01.2009  | 01:01 01.01.2011  |10       | 12        | <<< access record - it is actual!
+  2  | 3       | blog     | show    | true  | 01:01 01.01.2009  | 01:01 01.01.2011  |13       | 12        | <<< access record - it is not actual! (by counter)
+  3  | 5       | blog     | edit    | true  | 01:01 01.03.2010  | 01:01 01.05.2010  |3        | 10        | <<< access record - it is not actual! (by time)
+  4  | 5       | blog     | drop    | true  |                   |                   |         |           | <<< access record - it is actual!     (have no bordering)
+  5  | 2       | page     | edit    | false |                   | 01:01 01.01.2011  |         |           | <<< block record - it is actual!
+  6  | 3       | page     | show    | false | 01:01 01.01.2009  | 01:01 01.01.2011  |20       | 10        | <<< block record - it is not actual!  (by counter)
+  7  | 1       | page     | edit    | false | 01:01 01.03.2010  | 01:01 01.05.2010  |5        | 10        | <<< block record - it is not actual!  (by time)
+  8  | 7       | page     | drop    | false |                   |                   |         |           | <<< block record - it is actual!      (have no bordering)
+  
+  Читаем запись 4:
+    Пользователи из ролевой группы role_id= 4,
+    имеют право (value= true) на выполнение действия  blog::drop (Удаление блога)
+    и это право актуально, поскольку не имеет ограничений.
+  Читаем запись 5:
+    Для пользователей из ролевой группы role_id= 2,
+    заблокировано право (value= false) на выполнение действия  page::edit (редактирование страницы)
+    и эта блокировка актуальна до 01:01 01.01.2011
+==========================================================================================================   
+
+  create_table "group_policies", :force => true do |t|
+    t.integer  "role_id"
+    t.string   "section"
+    t.string   "action"
+    t.boolean  "value"
+    t.datetime "start_at"
+    t.datetime "finish_at"
+    t.integer  "counter"
+    t.integer  "max_count"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+==========================================================================================================   
+  personal_policies
+  
+  Реализует дополнительные политики или блокировку политик для отдельного пользователя
+  Обеспечивает актуальность политик по времени и счетчику
+  
+  Запись таблицы содержит в себе отдельную политику из некоторой группы политик и ее (политики) значение true|false
+  Запись таблицы содержит в себе значения, позволяющие судить об актуальности данной политики
+  Запись таблицы привязана к конкретному пользователю
+  
+  Запись таблицы выглядит так:
+  
+  Current Time is - 01:01 01.01.2010
+  
+  id | user_id | section  | action  | value | start_at          | finish_at         | counter | max_count |
+  1  | 3       | blog     | index   | true  | 01:01 01.01.2009  | 01:01 01.01.2011  |10       | 12        | <<< access record - it is actual!
+  2  | 3       | blog     | show    | true  | 01:01 01.01.2009  | 01:01 01.01.2011  |13       | 12        | <<< access record - it is not actual! (by counter)
+  3  | 5       | blog     | edit    | true  | 01:01 01.03.2010  | 01:01 01.05.2010  |3        | 10        | <<< access record - it is not actual! (by time)
+  4  | 5       | blog     | drop    | true  |                   |                   |         |           | <<< access record - it is actual!     (have no bordering)
+  5  | 2       | page     | edit    | false |                   | 01:01 01.01.2011  |         |           | <<< block record - it is actual!
+  6  | 3       | page     | show    | false | 01:01 01.01.2009  | 01:01 01.01.2011  |20       | 10        | <<< block record - it is not actual!  (by counter)
+  7  | 1       | page     | edit    | false | 01:01 01.03.2010  | 01:01 01.05.2010  |5        | 10        | <<< block record - it is not actual!  (by time)
+  8  | 7       | page     | drop    | false |                   |                   |         |           | <<< block record - it is actual!      (have no bordering)
+  
+  Читаем запись 4:
+    Пользователь user_id= 4,
+    имеет право (value= true) на выполнение действия  blog::drop (Удаление блога)
+    и это право актуально, поскольку не имеет ограничений.
+  Читаем запись 5:
+    Для пользователя user_id= 2,
+    заблокировано право (value= false) на выполнение действия  page::edit (редактирование страницы)
+    и эта блокировка актуальна до 01:01 01.01.2011
+==========================================================================================================   
+
+  create_table "personal_policies", :force => true do |t|
+    t.integer  "user_id"
+    t.string   "section"
+    t.string   "action"
+    t.boolean  "value"
+    t.datetime "start_at"
+    t.datetime "finish_at"
+    t.integer  "counter"
+    t.integer  "max_count"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+  
+==========================================================================================================
+  group_resource_policies
+  
+  Реализует политики или блокировку политик группы пользователей по отношению к объектам (ресурсам)
+  Обеспечивает актуальность политик по времени и счетчику
+  Использует встроенные возможности rails по организации полиморфизма
+  
+  Запись таблицы содержит в себе отдельную политику из некоторой группы политик и ее (политики) значение true|false
+  Запись таблицы содержит в себе значения, позволяющие судить об актуальности данной политики
+  Запись таблицы привязана к конкретной роли (группе пользователей)
+  Запись таблицы содержит информацию об объекте, к которому применяется политика
+  
+  Запись таблицы выглядит так:
+  
+  Current Time is - 01:01 01.01.2010
+  
+  id | role_id	|  resource_id  |  resource_type  | section  | action  | value | start_at          | finish_at         | counter | max_count |
+  1  | 3      	|  2            |  User           | profile  | index   | true  | 01:01 01.01.2009  | 01:01 01.01.2011  |10       | 12        | <<< access record - it is actual!
+  2  | 3      	|  124          |  User           | profile  | show    | true  | 01:01 01.01.2009  | 01:01 01.01.2011  |13       | 12        | <<< access record - it is not actual! (by counter)
+  3  | 5      	|  124          |  User           | profile  | edit    | true  | 01:01 01.03.2010  | 01:01 01.05.2010  |3        | 10        | <<< access record - it is not actual! (by time)
+  4  | 5      	|  2            |  User           | profile  | drop    | true  |                   |                   |         |           | <<< access record - it is actual!     (have no bordering)
+  5  | 2      	|  124          |  Album          | album    | edit    | false |                   | 01:01 01.01.2011  |         |           | <<< block record - it is actual!
+  6  | 3      	|  143          |  Album          | album    | show    | false | 01:01 01.01.2009  | 01:01 01.01.2011  |11       | 10        | <<< block record - it is not actual!  (by counter)
+  7  | 1      	|  2            |  Album          | album    | edit    | false | 01:01 01.03.2010  | 01:01 01.05.2010  |5        | 10        | <<< block record - it is not actual!  (by time)
+  8  | 7      	|  124          |  Album          | album    | drop    | false |                   |                   |         |           | <<< block record - it is actual!      (have no bordering)
+  
+  Читаем запись 4:
+    Пользователи из ролевой группы role_id= 5,
+    имеют право (value= true) на выполнение действия  profile::drop (Удаление профиля пользователя)
+    применительно к объекту класса User с id= 2,
+    и это право актуально, поскольку не имеет ограничений.
+  Читаем запись 5:
+    Для пользователей из ролевой группы role_id= 2,
+    заблокировано право (value= false) на выполнение действия  album::edit (редактирование альбома)
+    применительно к объекту класса Album с id= 124,
+    и эта блокировка актуальна до 01:01 01.01.2011
+==========================================================================================================
+
+  create_table "group_resource_policies", :force => true do |t|
+    t.integer  "role_id"
+    t.integer  "resource_id"
+    t.string   "resource_type"
+    t.string   "section"
+    t.string   "action"
+    t.boolean  "value"
+    t.datetime "start_at"
+    t.datetime "finish_at"
+    t.integer  "counter"
+    t.integer  "max_count"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+==========================================================================================================
+  personal_resource_policies
+  
+  Реализует политики или блокировку политик пользователя по отношению к объектам (ресурсам)
+  Обеспечивает актуальность политик по времени и счетчику
+  Использует встроенные возможности rails по организации полиморфизма
+  
+  Запись таблицы содержит в себе отдельную политику из некоторой группы политик и ее (политики) значение true|false
+  Запись таблицы содержит в себе значения, позволяющие судить об актуальности данной политики
+  Запись таблицы привязана к конкретному пользователю
+  Запись таблицы содержит информацию об объекте, к которому применяется политика
+  
+  Запись таблицы выглядит так:
+  
+  id | user_id	|  resource_id  |  resource_type  | section  | action  | value | start_at          | finish_at         | counter | max_count |
+  1  | 3      	|  2            |  User           | profile  | index   | true  | 01:01 01.01.2009  | 01:01 01.01.2011  |10       | 12        | <<< access record - it is actual!
+  2  | 3      	|  124          |  User           | profile  | show    | true  | 01:01 01.01.2009  | 01:01 01.01.2011  |13       | 12        | <<< access record - it is not actual! (by counter)
+  3  | 5      	|  124          |  User           | profile  | edit    | true  | 01:01 01.03.2010  | 01:01 01.05.2010  |3        | 10        | <<< access record - it is not actual! (by time)
+  4  | 5      	|  2            |  User           | profile  | drop    | true  |                   |                   |         |           | <<< access record - it is actual!     (have no bordering)
+  5  | 2      	|  124          |  Album          | album    | edit    | false |                   | 01:01 01.01.2011  |7        | 10        | <<< block record - it is actual!
+  6  | 3      	|  143          |  Album          | album    | show    | false | 01:01 01.01.2009  | 01:01 01.01.2011  |20       | 10        | <<< block record - it is not actual!  (by counter)
+  7  | 1      	|  2            |  Album          | album    | edit    | false | 01:01 01.03.2010  | 01:01 01.05.2010  |5        | 10        | <<< block record - it is not actual!  (by time)
+  8  | 7      	|  124          |  Album          | album    | drop    | false |                   |                   |         |           | <<< block record - it is actual!      (have no bordering)
+  
+  Читаем запись 4:
+    Пользователь user_id= 5,
+    имеет право (value= true) на выполнение действия  profile::drop (Удаление профиля пользователя)
+    применительно к объекту класса User с id= 2,
+    и это право актуально, поскольку не имеет ограничений.
+  Читаем запись 5:
+    Для пользователя user_id= 2,
+    заблокировано право (value= false) на выполнение действия  album::edit (редактирование альбома)
+    применительно к объекту класса Album с id= 124,
+    и эта блокировка актуальна до 01:01 01.01.2011
+    
+==========================================================================================================
+  
+  create_table "personal_resource_policies", :force => true do |t|
+    t.integer  "user_id"
+    t.integer  "resource_id"
+    t.string   "resource_type"
+    t.string   "section"
+    t.string   "action"
+    t.boolean  "value"
+    t.datetime "start_at"
+    t.datetime "finish_at"
+    t.integer  "counter"
+    t.integer  "max_count"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+  
+==========================================================================================================
+Основы функционирования системы acts_as_abonent
+==========================================================================================================
+
+В модели User создается несколько хеш массивов, которые хранят в себе настройки доступа данного пользователя
+к различным фрагментам и ресурсам сайта. Хеш массивы выбраны потому что мне нравится простота доступа к их
+значениям и это моя реализация системы.
+(ваше отношение к моему творчеству и реализации меня интересует мало - если можете сделать лучше - просто сделайте)
+
+Всего в модели User при необходимости создается до 5 хеш массивов.
+О находящихся в них данных можно судить по названию
+
+  class User
+
+    @role_policies_hash
+
+    @personal_policies_hash
+    @group_policies_hash
+
+    @personal_resources_policies_hash
+    @group_resources_policies_hash
+    
+  end
+
+
+Для формирования данных хеш массивов используются следующие функции:
+  
+  ==========================================================================================================
+  Для @role_policies_hash
+  Получает из модели Role поле settings и формирует массив политик
+  
+  def role_policies_hash
+    @role_policies_hash ||= (self.role ? (self.role.settings.is_a?(String) ? YAML::load(self.role.settings) : Hash.new) : Hash.new )
+  end
+
+  ==========================================================================================================
+  
+  Для @personal_policies_hash и @group_policies_hash
+  
+  def create_policy_hash(options = {})
+    opts = {
+      :finder =>      false,
+      :hash_name =>   false,
+      :before_find => false, 
+      :recalculate => false
+    }.merge!(options)
+    eval("@#{opts[:hash_name]} = nil  if opts[:recalculate]")
+    eval("return if @#{opts[:hash_name]}")
+    result_hash= Hash.new
+    eval("@#{opts[:hash_name]} = result_hash")
+    return unless (opts[:finder] || opts[:hash_name])
+    eval(opts[:before_find]) if opts[:before_find]
+    eval(opts[:finder]).each do |policy|
+      _action_hash={
+        policy.action.to_sym=>{
+          :value=>policy.value,
+          :start_at=>policy.start_at,
+          :finish_at=>policy.finish_at,
+          :counter=>policy.counter,
+          :max_count=>policy.max_count
+        }
+      }
+      if result_hash.has_key?(policy.section.to_sym)
+        result_hash[policy.section.to_sym].merge!(_action_hash)
+      else
+        _hash={ policy.section.to_sym => _action_hash }        
+        result_hash.merge!(_hash)                              
+      end
+    end
+    eval("@#{opts[:hash_name]}= result_hash")
+    return
+  end
+  
+  В которую поступают соответствующие параметры из функций:
+  
+  def create_personal_policies_hash(options = {})
+    opts= {
+      :finder=>'PersonalPolicy.find_all_by_user_id(self.id)',
+      :hash_name=>'personal_policies_hash',
+    }
+    create_policy_hash options.merge!(opts)
+    @personal_policies_hash
+  end
+  
+  def create_group_policies_hash(options = {})
+    opts= {
+      :finder=>'GroupPolicy.find_all_by_role_id(self.role.id)',
+      :hash_name=>'group_policies_hash',
+      :before_find=>'return @group_policies_hash unless self.role'
+    }
+    create_policy_hash options.merge!(opts)
+    @group_policies_hash
+  end
+  
+  ==========================================================================================================
+  
+  Для @personal_resources_policies_hash и @group_resources_policies_hash
+  
+  def create_resources_policies_hash_for_class_of(resource, options = {})
+    opts = {
+      :finder =>      false,
+      :hash_name =>   false,
+      :before_find => false
+    }.merge!(options)
+    resource_class=  resource.class.to_s
+    result_hash= Hash.new
+    eval("@#{opts[:hash_name]}= nil") if (eval("@#{opts[:hash_name]}") && opts[:reset])
+    eval("@#{opts[:hash_name]}")[resource_class.to_sym]= nil if (eval("@#{opts[:hash_name]}") && eval("@#{opts[:hash_name]}")[resource_class.to_sym] && opts[:recalculate])
+    eval("@#{opts[:hash_name]}= Hash.new") unless eval("@#{opts[:hash_name]}")
+    return if eval("@#{opts[:hash_name]}")[resource_class.to_sym]
+    return unless (opts[:finder] || opts[:hash_name])
+    eval(opts[:before_find]) if opts[:before_find]    
+    eval(opts[:finder]).each do |policy|
+        result_hash[policy.resource_id]= {
+          policy.section.to_sym=>{
+            policy.action.to_sym=>{
+              :value=>policy.value,
+              :start_at=>policy.start_at,
+              :finish_at=>policy.finish_at,
+              :counter=>policy.counter,
+              :max_count=>policy.max_count
+            }
+          } 
+        }
+    end
+    eval("@#{opts[:hash_name]}")[resource_class.to_sym]= result_hash
+    return
+  end
+  
+  В которую поступают соответствующие параметры из функций:
+  
+  def personal_resources_policies_hash_for_class_of(resource, options = {})
+    opts= {
+     :finder=>'PersonalResourcePolicy.find_all_by_user_id_and_resource_type(self.id, resource_class)',
+     :hash_name=>'personal_resources_policies_hash'
+    }
+    create_resources_policies_hash_for_class_of(resource, options.merge!(opts))
+    @personal_resources_policies_hash
+  end
+  
+  def group_resources_policies_hash_for_class_of(resource, options = {})
+    opts= {
+     :finder=>'GroupResourcePolicy.find_all_by_role_id_and_resource_type(self.role.id, resource_class)',
+     :hash_name=>'group_resources_policies_hash',
+     :before_find=>'(@group_resources_policies_hash[resource_class.to_sym]= result_hash and return @group_resources_policies_hash) unless self.role'
+    }
+    create_resources_policies_hash_for_class_of(resource, options.merge!(opts))
+    @group_resources_policies_hash
+  end
+  
+После формирования хеш массивов с соответствующими политиками,
+можно выполнять проверку на наличее доступа к действию или проверку на наличее блокировки доступа к действию
+
+Для массива @role_policies_hash это выполняет функция
+
+  def has_role_policy?(section, action)
+    return false unless role_policies_hash[section.to_sym] && role_policies_hash[section.to_sym][action.to_sym]
+    role_policies_hash[section.to_sym][action.to_sym]
+  end
+  
+Для массивов @personal_policies_hash и @group_policies_hash это выполняет функция
+
+  def check_policy(section, action, hash_name, options = {})
+    opts = {
+      :recalculate => false,
+      :return_invert=>false
+    }.merge!(options)
+    send("create_#{hash_name}", opts)
+    return false if !eval("@#{hash_name}").values_at(section.to_sym) || !eval("@#{hash_name}").values_at(section.to_sym).first
+    section_of_policies_hash= eval("@#{hash_name}").values_at(section.to_sym).first
+    return false if !section_of_policies_hash.values_at(action.to_sym) || !section_of_policies_hash.values_at(action.to_sym).first
+    policy_hash= section_of_policies_hash.values_at(action.to_sym).first
+    value= opts[:return_invert] ? !policy_hash[:value] : policy_hash[:value]
+    time_check=     policy_actual_by_time?(policy_hash[:start_at], policy_hash[:finish_at])
+    counter_check=  policy_actual_by_counter?(policy_hash[:counter], policy_hash[:max_count])
+    return value if counter_check && time_check
+    false
+  end
+  
+Для массивов @personal_resources_policies_hash и @group_resources_policies_hash это выполняет функция
+  
+  def check_resource_policy(object, section, action, hash_name, options = {})
+    opts = {
+      :recalculate => false,
+      :reset => false,
+      :return_invert=>false
+    }.merge!(options)
+    send("#{hash_name}_for_class_of", object, opts)
+    return false if     eval("@#{hash_name}")[object.class.to_s.to_sym].empty?
+    return false unless eval("@#{hash_name}")[object.class.to_s.to_sym][object.id]
+    return false unless eval("@#{hash_name}")[object.class.to_s.to_sym][object.id][section.to_sym]
+    return false unless eval("@#{hash_name}")[object.class.to_s.to_sym][object.id][section.to_sym][action.to_sym]
+    policy_hash= eval("@#{hash_name}")[object.class.to_s.to_sym][object.id][section.to_sym][action.to_sym]
+    value= opts[:return_invert] ? !policy_hash[:value] : policy_hash[:value]
+    time_check=     policy_actual_by_time?(policy_hash[:start_at], policy_hash[:finish_at])
+    counter_check=  policy_actual_by_counter?(policy_hash[:counter], policy_hash[:max_count])
+    return value if counter_check && time_check
+    false
+  end
+  
+В функции проверки check_policy и check_resource_policy поступают соответствующие параметры от
+следующих интерфейсных функций проверки:
+
+  Для check_policy
+  
+  def has_personal_access?(section, action, options = {})
+    check_policy(section, action, 'personal_policies_hash', options)
+  end
+
+  def has_personal_block?(section, action, options = {})
+    opts={ :return_invert=>true }
+    check_policy(section, action, 'personal_policies_hash', options.merge!(opts))
+  end
+  
+  Для check_resource_policy
+  
+  def has_personal_resource_access_for?(object, section, action, options = {})
+    check_resource_policy(object, section, action, 'personal_resources_policies_hash', options)
+  end
+  
+  def has_personal_resource_block_for?(object, section, action, options = {})
+    opts = { :return_invert=>true }
+    check_resource_policy(object, section, action, 'personal_resources_policies_hash', options.merge!(opts))
+  end

@@ -33,7 +33,7 @@ namespace :db do
           page.save # Сохранить страницу
           
           # C вероятностью 50/50, что будут созданы подстраницы для данной (дерево строю)
-          if [true, false].rand
+          if false #[true, false].rand
             # Пять раз
             5.times do
               zip= "#{(1000..9999).to_a.rand}-#{(1000..9999).to_a.rand}-#{(1000..9999).to_a.rand}"

@@ -230,15 +230,12 @@ class User < ActiveRecord::Base
   end
 
   def has_personal_resource_access_for?(object, section, action, options = {})
-    personal_resources_policies_hash_for_class_of(object, options)
     check_resource_policy(object, section, action, 'personal_resources_policies_hash', options)
   end
   
   def has_personal_resource_block_for?(object, section, action, options = {})
     opts = { :return_invert=>true }
-    options.merge!(opts)
-    personal_resources_policies_hash_for_class_of(object, options)
-    check_resource_policy(object, section, action, 'personal_resources_policies_hash', options)
+    check_resource_policy(object, section, action, 'personal_resources_policies_hash', options.merge!(opts))
   end
 
 # Групповая политика к ресурсу
@@ -254,15 +251,12 @@ class User < ActiveRecord::Base
   end
   
   def has_group_resource_access_for?(object, section, action, options = {})
-    group_resources_policies_hash_for_class_of(object, options)
     check_resource_policy(object, section, action, 'group_resources_policies_hash', options)
   end
   
   def has_group_resource_block_for?(object, section, action, options = {})
     opts = { :return_invert=>true }
-    options.merge!(opts)
-    group_resources_policies_hash_for_class_of(object, options)
-    check_resource_policy(object, section, action, 'group_resources_policies_hash', options)
+    check_resource_policy(object, section, action, 'group_resources_policies_hash', options.merge!(opts))
   end
 
 # Стандартные определения
