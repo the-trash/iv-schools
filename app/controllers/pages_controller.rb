@@ -7,12 +7,6 @@ class PagesController < ApplicationController
   
   # Требование на наличие прав редактирования страниц данного подомена
   before_filter :page_manager_required, :except=>[:index, :show]
-
-  # Центральная страница раздела Страницы
-  # Карта сайта (дерево страниц сайта)
-  def test_user
-    self.current_user= User.find:first
-  end
     
   # Центральная страница раздела Страницы
   # Карта сайта (дерево страниц сайта)
