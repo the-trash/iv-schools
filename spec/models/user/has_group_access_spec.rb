@@ -23,6 +23,9 @@ describe '15:18 18.07.2009' do
       @admin.has_group_access?('pages', :tree).should      be_true
       @admin.has_group_access?('pages', 'manager').should  be_true
       
+      @admin.group_policy_exists?('pages', 'manager').should  be_true
+      @admin.group_policy_exists?('pages0', 'manager').should  be_false
+      
       @admin.has_group_access?(:pages0, :tree).should    be_false
       @admin.has_group_access?(:pages, :duck).should     be_false
     end#9:17 15.07.2009

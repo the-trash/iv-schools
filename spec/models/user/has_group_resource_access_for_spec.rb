@@ -61,6 +61,10 @@ describe '15:21 18.07.2009' do
       @admin.has_group_resource_access_for?(@ivanov, :pages, :manager).should be_true
       @admin.has_group_resource_access_for?(@petrov, :pages, :manager).should be_true
       
+      @admin.group_resource_policy_exists?(@ivanov, :pages, :manager).should be_true
+      @admin.group_resource_policy_exists?(@petrov, 'pages0', :manager).should be_false
+      @admin.group_resource_policy_exists?(@petrov, 'pages', 'manager0').should be_false
+      
       @admin.has_group_resource_access_for?(@petrov, 'pages', 'manager').should be_true
       @admin.has_group_resource_access_for?(@ivanov, :pages, 'manager').should be_true
       @admin.has_group_resource_access_for?(@petrov, 'pages', :manager).should be_true

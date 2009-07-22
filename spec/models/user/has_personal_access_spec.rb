@@ -23,6 +23,9 @@ describe '15:13 18.07.2009' do
       @admin.has_personal_access?('pages', :tree).should      be_true
       @admin.has_personal_access?('pages', 'manager').should  be_true
       
+      @admin.personal_policy_exists?('pages', 'manager').should  be_true
+      @admin.personal_policy_exists?('pages0', 'manager').should  be_false
+      
       @admin.has_personal_access?(:pages0, :tree).should    be_false
       @admin.has_personal_access?(:pages, :duck).should     be_false
     end#9:17 15.07.2009

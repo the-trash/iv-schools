@@ -56,6 +56,9 @@ describe '15:21 18.07.2009' do
       
       @admin.has_personal_resource_access_for?(@ivanov, :pages, :manager).should be_true
       @admin.has_personal_resource_access_for?(@petrov, :pages, :manager).should be_true
+
+      @admin.personal_resource_policy_exists?(@petrov, 'pages', 'manager').should be_true
+      @admin.personal_resource_policy_exists?(@petrov, 'pages0', 'manager').should be_false
       
       @admin.has_personal_resource_access_for?(@petrov, 'pages', 'manager').should be_true
       @admin.has_personal_resource_access_for?(@ivanov, :pages, 'manager').should be_true

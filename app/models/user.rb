@@ -52,6 +52,7 @@ class User < ActiveRecord::Base
     @role_policies_hash ||= (self.role ? (self.role.settings.is_a?(String) ? YAML::load(self.role.settings) : Hash.new) : Hash.new )
   end
   
+  # interfaces
   def has_role_policy?(section, action)
     return false unless role_policies_hash[section.to_sym] && role_policies_hash[section.to_sym][action.to_sym]
     role_policies_hash[section.to_sym][action.to_sym]
@@ -124,6 +125,17 @@ class User < ActiveRecord::Base
     return value if counter_check && time_check
     false
   end
+  
+  def policy_exists(section, action, hash_name, options = {})
+    opts = {
+      :recalculate => false
+    }.merge!(options)
+    send("create_#{hash_name}", opts)
+    return false if !eval("@#{hash_name}").values_at(section.to_sym) || !eval("@#{hash_name}").values_at(section.to_sym).first
+    section_of_policies_hash= eval("@#{hash_name}").values_at(section.to_sym).first
+    return false if !section_of_policies_hash.values_at(action.to_sym) || !section_of_policies_hash.values_at(action.to_sym).first
+    true
+  end
 
 # Персональная политика
 
@@ -135,7 +147,12 @@ class User < ActiveRecord::Base
     create_policy_hash options.merge!(opts)
     @personal_policies_hash
   end
-
+  
+  # interfaces
+  def personal_policy_exists?(section, action, options = {})
+    policy_exists(section, action, 'personal_policies_hash', options)
+  end
+  
   def has_personal_access?(section, action, options = {})
     check_policy(section, action, 'personal_policies_hash', options)
   end
@@ -156,7 +173,12 @@ class User < ActiveRecord::Base
     create_policy_hash options.merge!(opts)
     @group_policies_hash
   end
-
+  
+  # interfaces
+  def group_policy_exists?(section, action, options = {})
+    policy_exists(section, action, 'group_policies_hash', options)
+  end
+  
   def has_group_access?(section, action, options = {})
     check_policy(section, action, 'group_policies_hash', options)
   end
@@ -168,25 +190,6 @@ class User < ActiveRecord::Base
 
 # Общие функции ресурсной политики
 
-  def check_resource_policy(object, section, action, hash_name, options = {})
-    opts = {
-      :recalculate => false,
-      :reset => false,
-      :return_invert=>false
-    }.merge!(options)
-    send("#{hash_name}_for_class_of", object, opts)
-    return false if     eval("@#{hash_name}")[object.class.to_s.to_sym].empty?
-    return false unless eval("@#{hash_name}")[object.class.to_s.to_sym][object.id]
-    return false unless eval("@#{hash_name}")[object.class.to_s.to_sym][object.id][section.to_sym]
-    return false unless eval("@#{hash_name}")[object.class.to_s.to_sym][object.id][section.to_sym][action.to_sym]
-    policy_hash= eval("@#{hash_name}")[object.class.to_s.to_sym][object.id][section.to_sym][action.to_sym]
-    value= opts[:return_invert] ? !policy_hash[:value] : policy_hash[:value]
-    time_check=     policy_actual_by_time?(policy_hash[:start_at], policy_hash[:finish_at])
-    counter_check=  policy_actual_by_counter?(policy_hash[:counter], policy_hash[:max_count])
-    return value if counter_check && time_check
-    false
-  end
-  
   def create_resources_policies_hash_for_class_of(resource, options = {})
     opts = {
       :finder =>      false,
@@ -217,6 +220,38 @@ class User < ActiveRecord::Base
     eval("@#{opts[:hash_name]}")[resource_class.to_sym]= result_hash
     return
   end
+  
+  def check_resource_policy(object, section, action, hash_name, options = {})
+    opts = {
+      :recalculate => false,
+      :reset => false,
+      :return_invert=>false
+    }.merge!(options)
+    send("#{hash_name}_for_class_of", object, opts)
+    return false if     eval("@#{hash_name}")[object.class.to_s.to_sym].empty?
+    return false unless eval("@#{hash_name}")[object.class.to_s.to_sym][object.id]
+    return false unless eval("@#{hash_name}")[object.class.to_s.to_sym][object.id][section.to_sym]
+    return false unless eval("@#{hash_name}")[object.class.to_s.to_sym][object.id][section.to_sym][action.to_sym]
+    policy_hash= eval("@#{hash_name}")[object.class.to_s.to_sym][object.id][section.to_sym][action.to_sym]
+    value= opts[:return_invert] ? !policy_hash[:value] : policy_hash[:value]
+    time_check=     policy_actual_by_time?(policy_hash[:start_at], policy_hash[:finish_at])
+    counter_check=  policy_actual_by_counter?(policy_hash[:counter], policy_hash[:max_count])
+    return value if counter_check && time_check
+    false
+  end
+
+  def resource_policy_exists(object, section, action, hash_name, options = {})
+    opts = {
+      :recalculate => false,
+      :reset => false
+    }.merge!(options)
+    send("#{hash_name}_for_class_of", object, opts)
+    return false if     eval("@#{hash_name}")[object.class.to_s.to_sym].empty?
+    return false unless eval("@#{hash_name}")[object.class.to_s.to_sym][object.id]
+    return false unless eval("@#{hash_name}")[object.class.to_s.to_sym][object.id][section.to_sym]
+    return false unless eval("@#{hash_name}")[object.class.to_s.to_sym][object.id][section.to_sym][action.to_sym]
+    true
+  end
 
 # Персональная политика к ресурсу
 
@@ -228,7 +263,12 @@ class User < ActiveRecord::Base
     create_resources_policies_hash_for_class_of(resource, options.merge!(opts))
     @personal_resources_policies_hash
   end
-
+  
+  # interfaces
+  def personal_resource_policy_exists?(object, section, action, options = {})
+    resource_policy_exists(object, section, action, 'personal_resources_policies_hash', options)
+  end
+  
   def has_personal_resource_access_for?(object, section, action, options = {})
     check_resource_policy(object, section, action, 'personal_resources_policies_hash', options)
   end
@@ -248,6 +288,11 @@ class User < ActiveRecord::Base
     }
     create_resources_policies_hash_for_class_of(resource, options.merge!(opts))
     @group_resources_policies_hash
+  end
+  
+  # interfaces
+  def group_resource_policy_exists?(object, section, action, options = {})
+    resource_policy_exists(object, section, action, 'group_resources_policies_hash', options)
   end
   
   def has_group_resource_access_for?(object, section, action, options = {})
