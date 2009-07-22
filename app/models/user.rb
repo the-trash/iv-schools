@@ -40,7 +40,7 @@ class User < ActiveRecord::Base
 # Пользовательский раздел
 
   belongs_to  :role                         # У пользователя в системе одна роль
-  belongs_to  :profile                      # У пользователя есть профайл
+  has_one     :profile                      # У пользователя есть профайл
   has_many    :pages                        # У пользователя много страниц
   
   has_many    :personal_policies            # Пользователь имеет много персональных политик

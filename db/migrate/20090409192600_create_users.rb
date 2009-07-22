@@ -24,7 +24,6 @@ class CreateUsers < ActiveRecord::Migration
       t.datetime  :last_login_at      # Был на сайте
       
       t.integer  :role_id             # Ссылка на Роль пользователя в системе
-      t.integer  :profile_id          # Ссылка на Профиль пользователя
 
       t.timestamps
     end
