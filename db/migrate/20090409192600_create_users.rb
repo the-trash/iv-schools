@@ -23,8 +23,8 @@ class CreateUsers < ActiveRecord::Migration
       t.integer   :sex, :default=>0   # Пол 1-женщина, 2-мужчина, иначе - не установлено
       t.datetime  :last_login_at      # Был на сайте
       
-      t.integer  "role_id"      # Ссылка на Роль пользователя в системе
-      t.integer  "profile_id"   # Ссылка на Профиль пользователя
+      t.integer  :role_id             # Ссылка на Роль пользователя в системе
+      t.integer  :profile_id          # Ссылка на Профиль пользователя
 
       t.timestamps
     end
