@@ -60,18 +60,20 @@ module AuthenticatedSystem
     # behavior in case the user is not authorized
     # to access the requested action.  For example, a popup window might
     # simply close itself.
+    
+    #respond_to do |format|
+    #  format.html do
+    #    store_location
+    #    redirect_to new_session_path
+    #  end
+    #  format.any do
+    #    request_http_basic_authentication 'Web Password'
+    #  end
+    #end
+
     def access_denied
-      respond_to do |format|
-        format.html do
-          store_location
-          redirect_to new_session_path
-        end
-        format.any do
-          store_location
-          redirect_to new_session_path
-          #request_http_basic_authentication 'Web Password'
-        end
-      end
+      store_location
+      redirect_to new_session_path
     end
 
     # Store the URI of the current request in the session.
