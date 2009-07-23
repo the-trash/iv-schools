@@ -305,7 +305,13 @@ class User < ActiveRecord::Base
   end
 
 # Стандартные определения
-
+  
+  # Установить пользователю указанную роль
+  def set_role(role)
+    return unless role
+    self.role_id= role.id
+  end
+  
   # prevents a user from submitting a crafted form that bypasses activation
   # anything else you want your user to change should be added here.
   attr_accessible :login, :email, :password, :password_confirmation

@@ -68,5 +68,25 @@ describe User do
       profile.user.should  be_instance_of(User)
     end
     
+    # Создание пользователя, назначение проли, создание профайла
+    it '15:00 23.07.2009' do
+      Factory.create(:registrated_user_role)
+      valid_attributes= {
+       'login'=>'qwerty',
+       'password'=>'qwerty',
+       'password_confirmation'=>'qwerty',
+       'email'=>'qwerty@qwerty.ru'
+      }
+      user = User.new(valid_attributes)
+      user.set_role(Role.find_by_name('registrated_user'))
+      user.save.should be_true
+      
+      user.role_id.should be_instance_of(Fixnum)
+      user.role.should be_instance_of(Role)
+      
+      Profile.new(:user_id=>user.id).save.should be_true
+      user.profile.should be_instance_of(Profile)
+    end
+    
   end#PersonalResourcePolicy
 end

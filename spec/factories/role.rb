@@ -104,7 +104,7 @@ Factory.define :guaranted_user_role, :class => Role do |r|
       :show=>true
     }
   }
-  r.name   'guaranted_user_role'
+  r.name   'guaranted_user'
   r.title 'Заверенный пользователь'
   r.description 'Правовой набор заверенного пользователя'
   r.settings(policy.to_yaml)
@@ -162,7 +162,7 @@ Factory.define :site_administrator_role, :class => Role do |r|
       :destroy=>true
     }
   }
-  r.name   'site_administrator_role'
+  r.name   'site_administrator'
   r.title 'Администратор школьного сайта'
   r.description 'Правовой набор администратора школьного сайта'
   r.settings(policy.to_yaml)

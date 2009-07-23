@@ -1,19 +1,19 @@
 class PagesController < ApplicationController  
-  # Проверка на то, что пользователь авторизован
-  before_filter :login_required, :except=>[:index, :show]
-    
   # Формирование данных для отображения базового меню-навигации
-  before_filter :navigation_menu_init, :except=>[:show]
+  before_filter :navigation_menu_init, :except=>[:show]  
   
-  # Требование на наличие прав редактирования страниц данного подомена
-  before_filter :page_manager_required, :except=>[:index, :show]
+  # Проверка на регистрацию
+  before_filter :login_required, :except=>[:index, :show]
+  # Проверка доступ к действию контроллера
+  before_filter :controller_action_policy_required, :except=>[:index, :show]
+  # Доступ только владельцу (если ему не заблокирован доступ) или административному персоналу
+  # before_filter :only_for_owner_or_moderators, :except=>[:index, :show]
     
   # Центральная страница раздела Страницы
   # Карта сайта (дерево страниц сайта)
   def index
     # Выбрать дерево страниц, только те поля, которые учавствуют отображении
     @pages_tree= Page.find_all_by_user_id(@user.id, :select=>'id, title, zip, parent_id', :order=>"lft ASC")
-    @tester= current_user
   end
 
   # Показать страницу
@@ -153,81 +153,21 @@ class PagesController < ApplicationController
     @page= Page.find_by_zip(params[:id])
     if @page.children.count.zero?
       @page.destroy
-      flash[:notice] = Messages::NestedSet[:element][:deleted]
+      flash[:notice]= Messages::NestedSet[:element][:deleted]
     else
-      flash[:notice] = Messages::NestedSet[:element][:has_children]
+      flash[:notice]= Messages::NestedSet[:element][:has_children]
     end
     redirect_to(manager_pages_path(:subdomain=>@subdomain)) and return
   end# destroy
   
   protected
   
-  # Требование на наличие у пользователя прав на редактирование дерева страниц
-  def page_manager_required
-    # Если владелец поддомена/раздела
-    if current_user == @user
-      # Если запись существует, то вернуть ее значение, иначе nil
-      # Возможно мы временно отключили данное право, или временно включили для данного пользователя
-      return current_user.has_personal_access?(:pages, :manager) unless current_user.has_personal_access?(:pages, :manager).nil?
-      # Если запись существует, то вернуть ее значение, иначе nil
-      # Возможно мы временно отключили данное право, или временно включили для данной группы
-      return current_user.has_group_policy?(:pages, :manager) unless current_user.has_group_policy?(:pages, :manager).nil?
-      # Если есть нужная политика а хеше роли
-      return current_user.has_role_policy?(:pages, :manager)
+  # Проверка на доступ к действию данного контроллера
+  def controller_action_policy_required
+    unless current_user.has_role_policy?(controller_name, action_name)
+      flash[:error]= Messages::Access[:denied]
+      access_denied and return
     end
-
-    flash[:notice] = Messages::Policies[:have_no_policy]
-    access_denied
-    return
-    
-    # Сначала, наверное, нужно проверять самые конкретизированные права на доступ
-    # Поскольку они перекрывают права более общие
-    # Так если установлен доступ к конкретному объекту для конкретного пользователя,
-    # то безразлично, есть ли персональный набор прав или групповой набор - доступ все равно будет
-    
-    # Проверка на доступ __персоны__ к конкретному объекту - ресурсное владение |Имеет временнОе и количественное ограничение|
-    # Проверка на персональный доступ - к ресурсу не привязано - доступ __персоны__ к работе с группой объектов |Имеет временнОе и количественное ограничение|
-    # Групповой доступ - к ресурсам не привязан - доступ группы к работе с группой объектов |ВременнЫх и количественных ограничений не имеет|
-    
-    # Если установлено ресурсное правило - вернем его значение
-    # resource_policy= current_user.has_resource_policy(@page, :page, :manage)
-    # resource_policy ? (return resource_policy) : false
-    # 
-    # Если установлено персональное правило - вернем его значение
-    # personal_policy= current_user.has_personal_access(:page, :manage)
-    # personal_policy ? (return personal_policy) : false
-    # 
-    # Если установлено групповое правило
-    # group_policy= current_user.has_group_policy_policy(:page, :manage)
-    # group_policy ? (return group_policy) : false
-    
-    # current_user.has_role_policy?(:global, :pages_manager)                               Глобальный редактор страниц
-    # current_user.has_group_policy?(:global, :pages_manager)                         Глобальный редактор страниц, через группу
-    # current_user.has_personal_access?(:global, :pages_manager)                      Глобальный редактор страниц, через личную правовую настройку
-    # current_user.has_group_resource_policy_for?(@user,:global, :pages_manager)      Глобальный редактор страниц, через группу и только для данного объекта
-    # current_user.has_personal_resource_policy_for?(@user,:global, :pages_manager)   Глобальный редактор страниц, через личную правовую настройку и только для данного объекта
-
-    # current_user.has_role_policy?(:pages, :manager) && current_user==@user               Владелец страниц обладающий правом
-    
-    # current_user.has_group_resource_policy_for?(@user,    :pages, :manager)         Может иметь доступ к данному правилу для данного пользователя через группу
-    # current_user.has_personal_resource_policy_for?(@user, :pages, :manager)         Может иметь доступ к данному правилу для данного пользователя через личную правовую настройку
-    
-    # Если это владелец домена
-    unless current_user.id == @user.id
-      if current_user.has_role_policy?(:pages, :manager)
-        # Проверим - обладает ли он правами управления страниц на своем сайте
-        # Если обладает - проверим, нет ли временного ограничения его прав
-        flash[:notice] = 'has policy'
-      else
-        # Если не обладает правами, то проверим
-        # обладает ли он правами на временное управление страницами
-        flash[:notice] = 'has no policy'
-      end
-    else
-      # Если это не владелец домена
-      # Проверим, обладет ли пользователь временным правом на управление страниц
-      # Привзка к объекту @user 
-      flash[:notice] = 'Policy alert!'
-    end# if current_user.id == @user.id
   end
+
 end
