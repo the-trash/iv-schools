@@ -71,3 +71,5 @@ ActionController::Base.session_options[:session_domain] = Site::COOKIES_SCOPE
 
 # Данное определение можно убрать после запуска rake файлов, подготовливающих систему к запуску
 require 'factory_girl'
+require 'faker'
+# Данное определение можно убрать после запуска rake файлов, подготовливающих систему к запуску

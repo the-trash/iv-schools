@@ -4,14 +4,11 @@ namespace :db do
     desc 'create test pages for users'
     # rake db:pages:create
     task :create => :environment do
-      require 'faker'
-      require 'factory_girl'
-      
       # Найти всех пользователей
-      u= User.find:first
+      users= User.find(:all)
       
       # Для каждого пользователя
-      #users.each do |u|
+      users.each do |u|
         # 10 раз сделать страницу
         10.times do
           zip= "#{(1000..9999).to_a.rand}-#{(1000..9999).to_a.rand}-#{(1000..9999).to_a.rand}"
@@ -88,7 +85,7 @@ namespace :db do
           end# [true, false].rand
           
         end# n.times do
-      #end# users.each do |u|
+      end# users.each do |u|
     end# db:pages:pages
     
   end#:pages

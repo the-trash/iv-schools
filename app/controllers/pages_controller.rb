@@ -116,6 +116,30 @@ class PagesController < ApplicationController
   # Карта сайта редактора
   def manager
     @pages_tree= Page.find_all_by_user_id(@user.id, :order=>"lft ASC")
+        
+    @user.has_role_policy?('blocked', :yes)
+
+    @user.has_personal_access?('pages', 'manager')
+    @user.has_group_access?('pages', 'manager')
+    
+    @user.has_personal_access?('pages0', 'manager')
+    @user.has_group_access?('pages0', 'manager0')
+    @user.has_personal_access?('pages0', 'manager')
+    @user.has_group_access?('pages0', 'manager0')
+    @user.has_personal_access?('pages0', 'manager')
+    @user.has_group_access?('pages0', 'manager0')
+    @user.has_personal_access?('pages0', 'manager')
+    @user.has_group_access?('pages0', 'manager0')
+    
+    @user.has_personal_resource_access_for?(@user, :profile, :edit)
+    @user.has_group_resource_access_for?(@user, :profile, :edit)
+    @user.has_personal_resource_access_for?(@user, :profile, :edit)
+    @user.has_group_resource_access_for?(@user, :profile, :edit)
+    @user.has_personal_resource_access_for?(@user, :profile, :edit)
+    @user.has_group_resource_access_for?(@user, :profile, :edit)
+    @user.has_personal_resource_access_for?(@user, :profile, :edit)
+    @user.has_group_resource_access_for?(@user, :profile, :edite)
+    
   end# admin
   
   # Переместить страницу вниз

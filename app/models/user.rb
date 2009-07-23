@@ -1,36 +1,36 @@
 require 'digest/sha1'
 class User < ActiveRecord::Base
-  # Virtual attribute for the unencrypted password
+# Virtual attribute for the unencrypted password
   attr_accessor :password
 
 # Валидация
 
-  validates_uniqueness_of   :login, :case_sensitive => false, :message=>"Данный Логин уже используется"
-  validates_uniqueness_of   :email, :case_sensitive => false, :message=>"Данный Email уже используется."
-  validates_presence_of     :login, :email, :message=>"Поля Логин и Email не могут быть пустыми"
+  validates_uniqueness_of   :login, :case_sensitive => false, :message=>Messages::UserValidation[:uniqueness_of_login]
+  validates_uniqueness_of   :email, :case_sensitive => false, :message=>Messages::UserValidation[:uniqueness_of_email]
+  validates_presence_of     :login, :email, :message=>Messages::UserValidation[:presence_of_login_email]
   
-  validates_presence_of     :password,              :if => :password_required?, :message=>"Поле Пароль не может быть пустым"
-  validates_presence_of     :password_confirmation, :if => :password_required?, :message=>"Необходимо подтвердить пароль"
-  validates_confirmation_of :password,              :if => :password_required?, :message=>"Пароль не подтвердился"
+  validates_presence_of     :password,              :if => :password_required?, :message=>Messages::UserValidation[:presence_of_password]
+  validates_presence_of     :password_confirmation, :if => :password_required?, :message=>Messages::UserValidation[:presence_of_password_confirmation]
+  validates_confirmation_of :password,              :if => :password_required?, :message=>Messages::UserValidation[:confirmation_of_password]
 
   validates_length_of :password,
     :within => 4..40,
     :if => :password_required?,
-    :message=>"Длина Пароля должна быть иной",
-    :too_short=>"Пароль слишком короткий",
-    :too_long=>"Пароль слишком длинный"
+    :message=>Messages::UserValidation[:length_of_password],
+    :too_short=>Messages::UserValidation[:length_of_password_too_short],
+    :too_long=>Messages::UserValidation[:length_of_password_too_long]
 
   validates_length_of :login,
     :within => 4..20,
-    :message=>"Логин должен содержать от 4 до 20 символов",
-    :too_short=>"Логин должен содержать не менее 4 символов",
-    :too_long=>"Логин должен содержать не более 20 символов"
+    :message=>Messages::UserValidation[:length_of_login],
+    :too_short=>Messages::UserValidation[:length_of_login_too_short],
+    :too_long=>Messages::UserValidation[:length_of_login_too_long]
   
   validates_length_of :email,
     :within => 6..50,
-    :message=>"Email должен содержать от 6 до 50 символов",
-    :too_short=>"Email должен содержать не менее 5 символов",
-    :too_long=>"Email должен содержать не более 50 символов"
+    :message=>Messages::UserValidation[:length_of_email],
+    :too_short=>Messages::UserValidation[:length_of_email_too_long],
+    :too_long=>Messages::UserValidation[:length_of_email_too_long]
 
 # Пользовательские фильтры
 

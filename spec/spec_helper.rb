@@ -3,7 +3,7 @@
 #ENV["RAILS_ENV"] ||= 'test'
 ENV["RAILS_ENV"] = 'test'
 
-p '* SPEC CONFIG HELPER'
+p 'SPEC CONFIG HELPER'
 
 require File.dirname(__FILE__) + "/../config/environment" unless defined?(RAILS_ROOT)
 require 'spec/autorun'
@@ -12,13 +12,6 @@ require 'spec/rails'
 # Requires supporting files with custom matchers and macros, etc,
 # in ./support/ and its subdirectories.
 Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each {|f| require f}
-
-#require 'factory_girl'
-# Подключаем возможность создания фабрик # Необходим гем factory_girl
-
-# Общее место для всех тестов
-# Забивка рыбы в модели
-require 'faker'
 
 Spec::Runner.configure do |config|
   # If you're not using ActiveRecord you should remove these
@@ -59,10 +52,6 @@ Spec::Runner.configure do |config|
   # == Notes
   #
   # For more information take a look at Spec::Runner::Configuration and Spec::Runner
-end
-
-def file_name name
-  puts '> '+name.split('/')[-1]
 end
 
 ###################################################################################################

@@ -61,5 +61,12 @@ describe User do
       @admin.policy_actual_by_time?(DateTime.now-1.second, DateTime.now-2.second).should  be_false
     end
     
+    # У пользователя есть профайл и они друг с другом связаны
+    it '23:12 22.07.2009' do
+      profile= Factory.create(:empty_profile, :user_id=>@admin.id)
+      @admin.profile.should  be_instance_of(Profile)
+      profile.user.should  be_instance_of(User)
+    end
+    
   end#PersonalResourcePolicy
 end
