@@ -13,7 +13,7 @@ class SessionsController < ApplicationController
       if params[:remember_me] == "1"
         current_user.remember_me unless current_user.remember_token?
         cookies[:auth_token] = {
-          :value => self.current_user.remember_token ,
+          :value => self.current_user.remember_token,
           :expires => self.current_user.remember_token_expires_at,
           # look at! lib/authenticated_system.rb
           # look at! config/environment.rb

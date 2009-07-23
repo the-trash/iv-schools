@@ -339,7 +339,7 @@ class User < ActiveRecord::Base
   def encrypt(password)
     self.class.encrypt(password, salt)
   end
-
+  
   def authenticated?(password)
     crypted_password == encrypt(password)
   end
@@ -352,9 +352,16 @@ class User < ActiveRecord::Base
     remember_me_until time.from_now.utc
   end
 
+  # Данную функцию я добавил, для генерации token'а
+  # поскольку отключено шифрование пароля пользователя
+  def encryptSHA(word)
+    Digest::SHA1.hexdigest(word)
+  end
+  
   def remember_me_until(time)
     self.remember_token_expires_at = time
-    self.remember_token            = encrypt("#{email}--#{remember_token_expires_at}")
+    self.remember_token            = encryptSHA("#{email}--#{remember_token_expires_at}")
+    #self.remember_token           = encrypt("#{email}--#{remember_token_expires_at}")
     save(false)
   end
 
