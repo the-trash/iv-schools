@@ -4,6 +4,7 @@ class PagesController < ApplicationController
   
   # Проверка на регистрацию
   before_filter :login_required, :except=>[:index, :show]
+  
   # Проверка доступ к действию контроллера
   before_filter :controller_action_policy_required, :except=>[:index, :show]
   # Доступ только владельцу (если ему не заблокирован доступ) или административному персоналу
@@ -162,12 +163,46 @@ class PagesController < ApplicationController
   
   protected
   
+  
   # Проверка на доступ к действию данного контроллера
   def controller_action_policy_required
-    unless current_user.has_role_policy?(controller_name, action_name)
-      flash[:error]= Messages::Access[:denied]
-      access_denied and return
-    end
-  end
-
+    # Инкрементацию счетчика инкапсулировать в функцию проверки (инкрементация по необходимости)
+    # Написание комплкесных функций проверки complex_block_check(obj, section, action)
+    # complex_block_check(obj, section, action)
+    # complex_access_check(obj, section, action)
+    
+    # access_denied if current_user.complex_block_check(@user, :administrator, :pages)
+    # access_denied if current_user.complex_block_check(@page, :pages, :edit)
+    #
+    # return true if current_user.complex_access_check(@user, :administrator, :pages)
+    # return true if current_user.complex_access_check(@page, :pages, :edit)
+    
+    # Текущий пользователь имеет блок на исполнение администраторских прав к данному пользователю
+    access_denied if current_user.has_personal_resource_block_for?(@user, :administrator, :pages)
+    access_denied if current_user.has_group_resource_block_for?(@user, :administrator, :pages)
+    access_denied if current_user.has_personal_block?(:administrator, :pages)
+    access_denied if current_user.has_group_block?(:administrator, :pages)
+    
+    # Текущий пользователь имеет блок на исполнение редакторских прав к данному объекту  
+    access_denied if current_user.has_personal_resource_block_for?(@page, :pages, :edit)
+    access_denied if current_user.has_group_resource_block_for?(@page, :pages, :edit)
+    access_denied if current_user.has_personal_block?(:pages, :edit)
+    access_denied if current_user.has_group_block?(:pages, :edit)
+    
+    # Текущий пользователь имеет блок к исполнению администраторских прав к данному пользователю  
+    return true if current_user.has_personal_resource_access_for?(@user, :administrator, :pages)
+    return true if current_user.has_group_resource_access_for?(@user, :administrator, :pages)
+    return true if current_user.has_personal_access?(:administrator, :pages)
+    return true if current_user.has_group_access?(:administrator, :pages)
+    
+    # Текущий пользователь имеет доступ к исполнению редакторских прав к данному объекту  
+    return true if current_user.has_personal_resource_access_for?(@page, :pages, :edit)
+    return true if current_user.has_group_resource_access_for?(@page, :pages, :edit)
+    return true if current_user.has_personal_access?(:pages, :edit)
+    return true if current_user.has_group_access?(:pages, :edit)
+    
+    # если ни одно из данных правил не выполнено, то проверяем на общую ролевую политику и владение
+    access_denied unless current_user.has_role_policy?(:pages, :edit) && current_user.is_owner_of?(@page)
+    
+  end#controller_action_policy_required
 end

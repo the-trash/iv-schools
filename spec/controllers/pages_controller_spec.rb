@@ -31,20 +31,7 @@ describe PagesController do
       controller.before_filters.should include(:navigation_menu_init)
       controller.before_filter(:navigation_menu_init).should have_options(:except=>[:show])
     end#11:00 14.07.2009
-      
-    # Проверить роуты для контроллера pages
-    it "10:35 14.07.2009, should be successful" do
-      route_for(:controller => 'pages', :action => 'index').should == '/pages/'
-      route_for(:controller => 'pages', :action => 'show', :id=>'1').should == '/pages/show/1'
-    end#10:35 14.07.2009
-    
-    # Проверить формирование путей контроллера pages
-    it "10:46 14.07.2009, should be successful" do      
-      params_from(:get, "/pages/show/2").should == {:controller => 'pages', :action => 'show', :id=>'2'}
-      params_from(:get, "/pages/show/17").should == {:controller => 'pages', :action => 'show', :id=>'17'}
-    end#10:46 14.07.2009    
-  end# describe "PagesController Basic Tests"
-  
+
 ###################################################################################################
 # PagesController Anomaly Tests
 ###################################################################################################

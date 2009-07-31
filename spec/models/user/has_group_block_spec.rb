@@ -109,6 +109,21 @@ describe '15:17 18.07.2009' do
       @admin.has_group_block?(:pages, :manager).should be_true
     end
     
+    
+    # тест на актуальность времени
+    it '1:00 25.07.2009' do
+      create_group_policies
+      @page_manager_policy.update_attributes(:start_at=>DateTime.now-1.second, :finish_at=>DateTime.now+1.second)
+      @admin.has_group_block?(:pages, :manager).should be_true
+    end
+    
+    # тест на просроченное время
+    it '1:00 25.07.2009' do
+      create_group_policies
+      @page_manager_policy.update_attributes(:start_at=>DateTime.now-10.second, :finish_at=>DateTime.now-5.second)
+      @admin.has_group_block?(:pages, :manager).should be_false
+    end
+    
     # Пересчет хеша политик
     
     it '12:49 19.07.2009' do

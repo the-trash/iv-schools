@@ -61,7 +61,7 @@ class User < ActiveRecord::Base
 # Базовые функции проверки актаульности
 
   def policy_actual_by_counter?(counter, max_count)
-    return true if (!max_count || !counter)
+    return true unless max_count && counter
     counter <= max_count
   end
 
@@ -73,8 +73,29 @@ class User < ActiveRecord::Base
     start_at.to_datetime <= now && now <= finish_at.to_datetime
   end
 
+# Базовые функции работы со счетчиком
+  
+  def counter_should_be_updated?(policy_hash)
+    return false unless policy_hash.is_a?(Hash)
+    return false unless policy_hash[:counter] && policy_hash[:max_count]
+    policy_hash[:counter] <= policy_hash[:max_count]
+  end
+  
+  def update_policy_counter(options = {}) 
+    opts = {
+      :update_table=>false,
+      :updated_policy=>false,
+      :counter_increment=>1
+    }.merge!(options)
+    return if !opts[:update_table] || !opts[:updated_policy] || !opts[:counter_increment]
+    return unless opts[:updated_policy].is_a?(Hash)
+    return unless opts[:updated_policy][:id]
+    eval("#{opts[:update_table]}.update_counters(#{opts[:updated_policy][:id]}, :counter=>#{opts[:counter_increment]})")
+    opts[:updated_policy][:counter]= opts[:updated_policy][:counter]+opts[:counter_increment]
+  end
+  
 # Базовые функции проверки доступа/блокировки
-
+  
   def create_policy_hash(options = {})
     opts = {
       :finder =>      false,
@@ -91,6 +112,7 @@ class User < ActiveRecord::Base
     eval(opts[:finder]).each do |policy|
       _action_hash={
         policy.action.to_sym=>{
+          :id=>policy.id,
           :value=>policy.value,
           :start_at=>policy.start_at,
           :finish_at=>policy.finish_at,
@@ -112,7 +134,8 @@ class User < ActiveRecord::Base
   def check_policy(section, action, hash_name, options = {})
     opts = {
       :recalculate => false,
-      :return_invert=>false
+      :return_invert=>false,
+      :policy_table=>false
     }.merge!(options)
     send("create_#{hash_name}", opts)
     return false if !eval("@#{hash_name}").values_at(section.to_sym) || !eval("@#{hash_name}").values_at(section.to_sym).first
@@ -122,6 +145,9 @@ class User < ActiveRecord::Base
     value= opts[:return_invert] ? !policy_hash[:value] : policy_hash[:value]
     time_check=     policy_actual_by_time?(policy_hash[:start_at], policy_hash[:finish_at])
     counter_check=  policy_actual_by_counter?(policy_hash[:counter], policy_hash[:max_count])
+    update_opts={ :update_table=>opts[:update_table], :updated_policy=>policy_hash}
+    update_opts[:counter_increment]= opts[:counter_increment] if opts[:counter_increment]
+    update_policy_counter(update_opts) if counter_should_be_updated?(policy_hash)
     return value if counter_check && time_check
     false
   end
@@ -142,7 +168,7 @@ class User < ActiveRecord::Base
   def create_personal_policies_hash(options = {})
     opts= {
       :finder=>'PersonalPolicy.find_all_by_user_id(self.id)',
-      :hash_name=>'personal_policies_hash',
+      :hash_name=>'personal_policies_hash'
     }
     create_policy_hash options.merge!(opts)
     @personal_policies_hash
@@ -154,11 +180,12 @@ class User < ActiveRecord::Base
   end
   
   def has_personal_access?(section, action, options = {})
-    check_policy(section, action, 'personal_policies_hash', options)
+    opts={ :update_table=>'PersonalPolicy' }
+    check_policy(section, action, 'personal_policies_hash', options.merge!(opts))
   end
 
   def has_personal_block?(section, action, options = {})
-    opts={ :return_invert=>true }
+    opts={ :update_table=>'PersonalPolicy', :return_invert=>true }
     check_policy(section, action, 'personal_policies_hash', options.merge!(opts))
   end
 
@@ -180,12 +207,13 @@ class User < ActiveRecord::Base
   end
   
   def has_group_access?(section, action, options = {})
-    check_policy(section, action, 'group_policies_hash', options)
+    opts={ :update_table=>'GroupPolicy' }
+    check_policy(section, action, 'group_policies_hash', options.merge!(opts))
   end
 
   def has_group_block?(section, action, options = {})
-    opt={ :return_invert=>true }
-    check_policy(section, action, 'group_policies_hash', options.merge!(opt))
+    opts={ :update_table=>'GroupPolicy', :return_invert=>true }
+    check_policy(section, action, 'group_policies_hash', options.merge!(opts))
   end
 
 # Общие функции ресурсной политики
@@ -208,6 +236,7 @@ class User < ActiveRecord::Base
         result_hash[policy.resource_id]= {
           policy.section.to_sym=>{
             policy.action.to_sym=>{
+              :id=>policy.id,
               :value=>policy.value,
               :start_at=>policy.start_at,
               :finish_at=>policy.finish_at,
@@ -236,6 +265,9 @@ class User < ActiveRecord::Base
     value= opts[:return_invert] ? !policy_hash[:value] : policy_hash[:value]
     time_check=     policy_actual_by_time?(policy_hash[:start_at], policy_hash[:finish_at])
     counter_check=  policy_actual_by_counter?(policy_hash[:counter], policy_hash[:max_count])
+    update_opts={ :update_table=>opts[:update_table], :updated_policy=>policy_hash}
+    update_opts[:counter_increment]= opts[:counter_increment] if opts[:counter_increment]
+    update_policy_counter(update_opts) if counter_should_be_updated?(policy_hash)
     return value if counter_check && time_check
     false
   end
@@ -270,11 +302,12 @@ class User < ActiveRecord::Base
   end
   
   def has_personal_resource_access_for?(object, section, action, options = {})
-    check_resource_policy(object, section, action, 'personal_resources_policies_hash', options)
+    opts={ :update_table=>'PersonalResourcePolicy' }
+    check_resource_policy(object, section, action, 'personal_resources_policies_hash', options.merge!(opts))
   end
   
   def has_personal_resource_block_for?(object, section, action, options = {})
-    opts = { :return_invert=>true }
+    opts={ :update_table=>'PersonalResourcePolicy', :return_invert=>true }
     check_resource_policy(object, section, action, 'personal_resources_policies_hash', options.merge!(opts))
   end
 
@@ -296,11 +329,12 @@ class User < ActiveRecord::Base
   end
   
   def has_group_resource_access_for?(object, section, action, options = {})
-    check_resource_policy(object, section, action, 'group_resources_policies_hash', options)
+    opts={ :update_table=>'GroupResourcePolicy' }
+    check_resource_policy(object, section, action, 'group_resources_policies_hash', options.merge!(opts))
   end
   
   def has_group_resource_block_for?(object, section, action, options = {})
-    opts = { :return_invert=>true }
+    opts={ :update_table=>'GroupResourcePolicy', :return_invert=>true }
     check_resource_policy(object, section, action, 'group_resources_policies_hash', options.merge!(opts))
   end
 
