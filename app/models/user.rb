@@ -1,5 +1,6 @@
 require 'digest/sha1'
 class User < ActiveRecord::Base
+  # Действуй как абонент
   acts_as_abonent
   
   # Virtual attribute for the unencrypted password
