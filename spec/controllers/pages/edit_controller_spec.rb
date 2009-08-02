@@ -163,157 +163,50 @@ describe PagesController do
       
       assigns[:user].should eql(@admin)
       response.should_not be_success
-      response.should redirect_to(new_session_path)  
-    end
-    
-=begin
-        
-#---------------------------------------------------------------
-# АДМИНИСТРАТОРА ШКОЛЬНОГО САЙТА
-#---------------------------------------------------------------
-
-    # Администратор школьного сайта заходит к себе
-    # current_user= @site_administrator
-    # @user= @site_administrator
-    it "15:43 02.08.2009" do
-      controller.stub!(:current_user).and_return(@site_administrator)
-      controller.stub!(:current_subdomain).and_return(@site_administrator.login)
-
-      # de facto: get 'http://site_administrator.test.host/pages/new'
-      get :new
-      
-      assigns[:user].should eql(@site_administrator)
-      response.should render_template("pages/new.haml")
-      response.should be_success
-    end
-    
-    # Администратор школьного сайта заходит к себе
-    # current_user= @site_administrator
-    # @user= @site_administrator
-    it "15:43 02.08.2009" do
-      controller.stub!(:current_user).and_return(@site_administrator)
-
-      # de facto: get 'http://test.host/users/site_administrator/pages/new'
-      get :new, :user_id=>'site_administrator'
-      
-      assigns[:user].should eql(@site_administrator)
-      response.should render_template("pages/new.haml")
-      response.should be_success
-    end
-    
-    # Администратор школьного сайта заходит к себе
-    # current_user= @site_administrator
-    # @user= @site_administrator
-    it "15:43 02.08.2009" do
-      controller.stub!(:current_user).and_return(@site_administrator)
-
-      # de facto: get 'http://test.host/pages/new'
-      get :new
-      
-      assigns[:user].should eql(@site_administrator)
-      response.should render_template("pages/new.haml")
-      response.should be_success
-    end
-
-    # Администратор школьного сайта заходит к администратору портала
-    # current_user= @site_administrator
-    # @user= @admin
-    it "15:43 02.08.2009" do
-      controller.stub!(:current_user).and_return(@site_administrator)
-      controller.stub!(:current_subdomain).and_return(@admin.login)
-      
-      # de facto: get 'http://admin.test.host/pages/new'
-      get :new
-      
-      assigns[:user].should eql(@admin)
-      response.should_not be_success
       response.should redirect_to(new_session_path)
     end
-    
-    # Администратор школьного сайта заходит к администратору
-    # current_user= @site_administrator
-    # @user= @admin
-    it "15:43 02.08.2009" do
-      controller.stub!(:current_user).and_return(@site_administrator)
-      #controller.stub!(:current_subdomain).and_return(@admin.login)
-      
-      # de facto: get 'http://test.host/users/admin/pages/new'
-      get :new, :user_id=>'admin'
-      
-      assigns[:user].should eql(@admin)
-      response.should_not be_success
-      response.should redirect_to(new_session_path)
-    end
-    
-    # Администратор школьного сайта заходит к себе
-    # current_user= @site_administrator
-    # @user= @site_administrator
-    it "15:43 02.08.2009" do
-      controller.stub!(:current_user).and_return(@site_administrator)
-      controller.stub!(:current_subdomain).and_return(@admin.login)
-      
-      # de facto: get 'http://admin.test.host/users/site_administrator/pages/new'
-      get :new, :user_id=>@site_administrator.login
-      
-      assigns[:user].should eql(@site_administrator)
-      response.should render_template("pages/new.haml")
-      response.should be_success
-    end
-    
-    # Администратор школьного сайта заходит к admin
-    # current_user= @site_administrator
-    # @user= @site_administrator
-    it "15:43 02.08.2009" do
-      controller.stub!(:current_user).and_return(@site_administrator)
-      controller.stub!(:current_subdomain).and_return(@admin.login)
-      
-      # de facto: get 'http://site_administrator.test.host/users/admin/pages/new'
-      get :new, :user_id=>@admin.login
-      
-      assigns[:user].should eql(@admin)
-      response.should_not be_success
-      response.should redirect_to(new_session_path)
-    end
-    
+
 #---------------------------------------------------------------
 # ГОСТЬ
 #---------------------------------------------------------------
-  
-    # Гость заходит к адмиистратору
+
+    # Гость заходит редактировать страницу Администратора
     # current_user= nil
     # @user= @admin
     it "14:02 02.08.2009" do
       controller.stub!(:current_subdomain).and_return(@admin.login)
 
-      get :new # de facto: get 'http://admin.test.host/pages/new'
+      # de facto: get 'http://admin.test.host/pages/:id/edit'
+      get :edit, :id=>@admin_page.zip
       
       assigns[:user].should eql(@admin)
       response.should_not be_success
       response.should redirect_to(new_session_path)
     end
     
-    # Гость заходит к адмиистратору
+    # Гость заходит редактировать не существующую страницу
     # current_user= nil
     # @user= @admin
     it "14:02 02.08.2009" do
-      # de facto: get 'http://test.host/users/admin/pages/new'
-      get :new, :user_id=>'admin'
+      # de facto: get 'http://admin.test.host/pages/:id/edit'
+      get :edit, :id=>123454321
       
       assigns[:user].should eql(@admin)
       response.should_not be_success
       response.should redirect_to(new_session_path)
     end
     
-    # Гость заходит к адмиистратору (@user=User.find(:first))
-    # current_user= nil
-    # @user= @admin
-    it "14:02 02.08.2009" do
-      # de facto: get 'http://test.host/pages/new'
-      get :new
-      
-      assigns[:user].should eql(@admin)
-      response.should_not be_success
-      response.should redirect_to(new_session_path)
-    end
-=end
+    # Следующее что предстоит сделать
+    # Это отследить персональные политики и
+    # Проверить функционирование счетчиков,
+    # Которые при исполнении политики должны инкрементироваться
+    # только в тех хешах, в которых актуальны и обновляться в БД
+    
+    # Поведенческое тестирование должно
+    # Проверить как функционирую хеши в зависимости от приоритета
+    # который залохен в логике фильтров
+    
+    # На данный момент я предполагаю, что все функционирует верно
+    # Начинаю работу по запуску прототипа
+    # 20:09 02.08.2009
 end
