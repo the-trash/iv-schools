@@ -6,7 +6,7 @@ class PagesController < ApplicationController
   before_filter :login_required, :except=>[:index, :show]
   
   # Проверка на общую политику доступа к действию контроллера
-  before_filter :access_to_controller_action_required, :only=>[:index, :new, :create, :manager]
+  before_filter :access_to_controller_action_required, :only=>[:new, :create, :manager]
   
   # Проверка доступа к действию над ресурсом
   before_filter :page_resourсe_access_required, :only=>[:show, :edit, :update, :destroy, :up, :down]
@@ -127,7 +127,7 @@ class PagesController < ApplicationController
     (access_denied and return) if current_user.has_personal_resource_block_for?(@page, controller_name, action_name)
     (access_denied and return) if current_user.has_group_resource_block_for?(@page, controller_name, action_name)
     
-    # Есть персональные или групповые разрешения к ресурсу (они выше по приоритету, чем не ресурсные блокировки)
+    # Есть персональные или групповые разрешения к ресурсу (они выше по приоритету, чем общие блокировки)
     return true if current_user.has_personal_resource_access_for?(@page, controller_name, action_name)
     return true if current_user.has_group_resource_access_for?(@page, controller_name, action_name)
     

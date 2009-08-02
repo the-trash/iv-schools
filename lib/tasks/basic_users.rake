@@ -6,7 +6,6 @@ namespace :db do
       
   # Раздел создания базовых пользователей системы
   namespace :users do
-    
     # rake db:users:create
     desc 'create basic users'
     task :create => :environment do
@@ -35,11 +34,25 @@ namespace :db do
           :crypted_password=>"#{login}",
           :salt=>'salt',
           :name=>"Администратор сайта #{login}.iv-schools.ru",
-          :role_id=>Role.find_by_name('site_administrator_role').id
+          :role_id=>Role.find_by_name('site_administrator').id
         )
         profile= Factory.create(:empty_profile, :user_id => user.id)
       end#logins.each
+      
+      # Администраторы страниц портала
+      logins= %w{ page-administrator001 page-administrator002 page-administrator003 } 
+      logins.each do |login|
+        user= Factory.create(:user,
+          :login => "#{login}",
+          :email => "#{login}@iv-schools.ru",
+          :crypted_password=>"#{login}",
+          :salt=>'salt',
+          :name=>"Администратор страниц портала #{login}.iv-schools.ru",
+          :role_id=>Role.find_by_name('page_administrator').id
+        )
+        profile= Factory.create(:empty_profile, :user_id => user.id)
+      end#logins.each
+      
     end# db:users:create
-     
   end#:users
 end#:db

@@ -6,8 +6,7 @@ class User < ActiveRecord::Base
   # Virtual attribute for the unencrypted password
   attr_accessor :password
 
-# Валидация
-
+  # Валидация
   validates_uniqueness_of   :login, :case_sensitive => false, :message=>Messages::UserValidation[:uniqueness_of_login]
   validates_uniqueness_of   :email, :case_sensitive => false, :message=>Messages::UserValidation[:uniqueness_of_email]
   validates_presence_of     :login, :email, :message=>Messages::UserValidation[:presence_of_login_email]
@@ -24,7 +23,7 @@ class User < ActiveRecord::Base
     :too_long=>Messages::UserValidation[:length_of_password_too_long]
 
   validates_length_of :login,
-    :within => 4..20,
+    :within => 4..30,
     :message=>Messages::UserValidation[:length_of_login],
     :too_short=>Messages::UserValidation[:length_of_login_too_short],
     :too_long=>Messages::UserValidation[:length_of_login_too_long]
@@ -35,13 +34,11 @@ class User < ActiveRecord::Base
     :too_short=>Messages::UserValidation[:length_of_email_too_long],
     :too_long=>Messages::UserValidation[:length_of_email_too_long]
 
-# Пользовательские фильтры
-
+  # Пользовательские фильтры
   before_save :encrypt_password
   before_save :fields_downcase
 
-# Пользовательский раздел
-
+  # Пользовательский раздел
   belongs_to  :role                         # У пользователя в системе одна роль
   has_one     :profile                      # У пользователя есть профайл
   has_many    :pages                        # У пользователя много страниц
@@ -49,7 +46,13 @@ class User < ActiveRecord::Base
   has_many    :personal_policies            # Пользователь имеет много персональных политик
   has_many    :personal_resource_policies   # Пользователь имеет много персональных политик по отношению к объектам
 
+#----------------------------------------------------------------------------
 # Стандартные определения
+#----------------------------------------------------------------------------
+  
+  # prevents a user from submitting a crafted form that bypasses activation
+  # anything else you want your user to change should be added here.
+  attr_accessible :login, :email, :password, :password_confirmation
   
   # Установить пользователю указанную роль
   def set_role(role)
@@ -57,10 +60,18 @@ class User < ActiveRecord::Base
     self.role_id= role.id
   end
   
-  # prevents a user from submitting a crafted form that bypasses activation
-  # anything else you want your user to change should be added here.
-  attr_accessible :login, :email, :password, :password_confirmation
+  def update_role(role)
+    return false unless role
+    return false unless role.is_a?(Role)
+    self.update_attribute(:role, role) and return true
+  end
 
+  # Перевести в нижний регистр логин и email
+  def fields_downcase
+    login.downcase!
+    email.downcase!
+  end
+    
   # Authenticates a user by their login name and unencrypted password.  Returns the user or nil.
   def self.authenticate(login, password)
     u = find_by_login(login) # need to get the salt
@@ -78,12 +89,6 @@ class User < ActiveRecord::Base
   def remember_me
     # Сколько дней хранить данные об авторизации
     remember_me_for 3.days
-  end
-    
-  # Перевести в нижний регистр логин и email
-  def fields_downcase
-    login.downcase!
-    email.downcase!
   end
 
   # Encrypts the password with the user salt

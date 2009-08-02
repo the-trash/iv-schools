@@ -38,6 +38,13 @@ Factory.define :petrov, :class => User do |u|
   u.salt 'salt'
   u.name 'Петров Иван Андреевич'
 end
+
+# EmptyUser
+Factory.define :empty_user, :class => User do |u|
+  u.crypted_password 'test'
+  u.salt 'salt'
+  u.name 'NoName'
+end
 ###################################################################################################
 # Пользователи
 ###################################################################################################
