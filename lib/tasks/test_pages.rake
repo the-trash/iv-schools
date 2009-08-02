@@ -22,13 +22,14 @@ namespace :db do
             :keywords=>Faker::Lorem.sentence(2),
             :description=>Faker::Lorem.sentence(2),
             :copyright=>Faker::Name.name,
-            :title=>"Тестовая страница: #{Faker::Lorem.sentence(3)}",
+            :title=>"#{u.login} : #{Faker::Lorem.sentence(3)}",
             :annotation=>Faker::Lorem.sentence(30),
             :content=>Faker::Lorem.paragraphs(50)
           )
           
           page.save # Сохранить страницу
           
+=begin
           # C вероятностью 50/50, что будут созданы подстраницы для данной (дерево строю)
           if false #[true, false].rand
             # Пять раз
@@ -83,6 +84,7 @@ namespace :db do
               
             end# n.times do
           end# [true, false].rand
+=end
           
         end# n.times do
       end# users.each do |u|

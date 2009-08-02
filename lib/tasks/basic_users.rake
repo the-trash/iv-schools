@@ -2,7 +2,7 @@
 namespace :db do
   # rake db:basic_data
   desc 'create basic data'
-  task :basic_data => ["db:drop", "db:create:all", "db:migrate", "db:roles:create", "db:users:create"]
+  task :basic_data => ['db:drop', 'db:create:all', 'db:migrate', 'db:roles:create', 'db:users:create', 'db:pages:create']
       
   # Раздел создания базовых пользователей системы
   namespace :users do
@@ -12,7 +12,7 @@ namespace :db do
 
       # Создать администратора
       user= Factory.create(:user,
-        :login => 'admin',
+        :login => 'portal',
         :email => 'admin@iv-schools.ru',
         :crypted_password=>'admin',
         :salt=>'salt',

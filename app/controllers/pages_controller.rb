@@ -12,7 +12,11 @@ class PagesController < ApplicationController
   before_filter :page_resourсe_access_required, :only=>[:edit, :update, :destroy, :up, :down]
 
   # Карта сайта
-  def index  
+  def index
+    # Для определенности отправим пользователя, заходящего на центральную страницу
+    # В центральный поддомен
+    redirect_to(root_path(:subdomain=>@user.login)) and return if (!current_subdomain && @user==User.find(:first))
+    
     # Выбрать дерево страниц, только те поля, которые учавствуют отображении
     @pages_tree= Page.find_all_by_user_id(@user.id, :select=>'id, title, zip, parent_id', :order=>"lft ASC")
   end
