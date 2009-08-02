@@ -75,25 +75,27 @@ describe PagesController do
       params_from(:get, '/pages/1/edit').should == {:controller => 'pages', :action => 'edit', :id=>'1'}
       params_from(:get, '/users/admin/pages/1/edit').should == {:controller => 'pages', :action => 'edit', :user_id=>'admin', :id=>'1'}
     end
-=begin
+
 #---------------------------------------------------------------
 # АДМИНИСТРАТОР
 #---------------------------------------------------------------
     
-    # Администратор заходит к себе
+    # Администратор заходит редактировать свою страницу
     # current_user= @admin
     # @user= @admin
     it "14:02 02.08.2009" do
       controller.stub!(:current_user).and_return(@admin)
       controller.stub!(:current_subdomain).and_return(@admin.login)
 
-      # de facto: get 'http://admin.test.host/pages/new'
-      get :new 
+      # de facto: get 'http://admin.test.host/pages/:id/edit'
+      get :edit, :id=>@admin_page.zip
       
       assigns[:user].should eql(@admin)
-      response.should render_template("pages/new.haml")
+      response.should render_template("pages/edit.haml")
       response.should be_success
     end
+
+=begin
     
     # Администратор заходит к себе
     # current_user= @admin
