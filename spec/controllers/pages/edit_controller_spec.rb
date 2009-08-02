@@ -137,14 +137,29 @@ describe PagesController do
       response.should render_template("pages/edit.haml")
       response.should be_success
       
-      # А вот сам администратора сайта зайти в edit страницы администратора портала не может
-    # current_user= @site_administrator
-    # @user= @admin
+      # А вот сам администратор сайта зайти в edit страницы администратора портала не может
+      # current_user= @site_administrator
+      # @user= @admin
       controller.stub!(:current_user).and_return(@site_administrator)
       controller.stub!(:current_subdomain).and_return(@admin.login)
       
       # de facto: get 'http://admin.test.host/pages/:id/edit'
       get :edit, :id=>@admin_page.zip
+      
+      assigns[:user].should eql(@admin)
+      response.should_not be_success
+      response.should redirect_to(new_session_path)  
+    end
+    
+    # Администратор заходит редактировать страницу которой не существует
+    # current_user= @admin
+    # @user= @admin
+    it "14:02 02.08.2009" do
+      controller.stub!(:current_user).and_return(@admin)
+      controller.stub!(:current_subdomain).and_return(@admin.login)
+
+      # de facto: get 'http://admin.test.host/pages/:id/edit'
+      get :edit, :id=>123454321
       
       assigns[:user].should eql(@admin)
       response.should_not be_success
