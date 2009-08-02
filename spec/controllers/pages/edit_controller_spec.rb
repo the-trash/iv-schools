@@ -95,65 +95,64 @@ describe PagesController do
       response.should be_success
     end
 
-=begin
-    
-    # Администратор заходит к себе
+    # Администратор заходит редактировать свою страницу
     # current_user= @admin
     # @user= @admin
-    it "14:35 02.08.2009" do
-      controller.stub!(:current_user).and_return(@admin)
-      
-      # de facto: get 'http://test.host/users/admin/pages/new'
-      get :new, :user_id=>'admin'
-      
-      assigns[:user].should eql(@admin)
-      response.should render_template("pages/new.haml")
-      response.should be_success
-    end
-    
-    # Администратор заходит к себе
-    # current_user= @admin
-    # @user= @admin
-    it "14:35 02.08.2009" do
-      controller.stub!(:current_user).and_return(@admin)
-      
-      # de facto: get 'http://test.host/pages/new'
-      get :new
-      
-      assigns[:user].should eql(@admin)
-      response.should render_template("pages/new.haml")
-      response.should be_success
-    end
-    
-    # Администратор заходит к зарегистрированному пользователю
-    # current_user= @admin
-    # @user= @registrated_user
     it "14:02 02.08.2009" do
       controller.stub!(:current_user).and_return(@admin)
-      controller.stub!(:current_subdomain).and_return(@registrated_user.login)
 
-      # de facto: get 'http://registrated_user.test.host/pages/new'
-      get :new
+      # de facto: get 'http://test.host/users/admin/pages/:id/edit'
+      get :edit, :user_id=>'admin', :id=>@admin_page.zip
       
-      assigns[:user].should eql(@registrated_user)
-      response.should render_template("pages/new.haml")
+      assigns[:user].should eql(@admin)
+      response.should render_template("pages/edit.haml")
       response.should be_success
-
-      # А вот сам зарегистрированный пользователь зайти в new не может не может
-      # current_user= @registrated_user
-      # @user= @registrated_user
-          
-      controller.stub!(:current_user).and_return(@registrated_user)
-      controller.stub!(:current_subdomain).and_return(@registrated_user.login)
-
-      # de facto: get 'http://registrated_user.test.host/pages/new'
-      get :new
-      
-      assigns[:user].should eql(@registrated_user)
-      response.should_not be_success
-      response.should redirect_to(new_session_path)      
     end
     
+    # Администратор заходит редактировать свою страницу
+    # current_user= @admin
+    # @user= @admin
+    it "14:02 02.08.2009" do
+      controller.stub!(:current_user).and_return(@admin)
+
+      # de facto: get 'http://test.host/pages/:id/edit'
+      get :edit, :id=>@admin_page.zip
+      
+      assigns[:user].should eql(@admin)
+      response.should render_template("pages/edit.haml")
+      response.should be_success
+    end
+    
+    # Администратор заходит редактировать страницу администратора сайта пользователя
+    # current_user= @admin
+    # @user= @admin
+    it "14:02 02.08.2009" do
+      controller.stub!(:current_user).and_return(@admin)
+      controller.stub!(:current_subdomain).and_return(@site_administrator.login)
+
+      # de facto: get 'http://site_administrator.test.host/pages/:id/edit'
+      get :edit, :id=>@site_administrator_page.zip
+      
+      assigns[:user].should eql(@site_administrator)
+      response.should render_template("pages/edit.haml")
+      response.should be_success
+      
+      # А вот сам администратора сайта зайти в edit страницы администратора портала не может
+    # current_user= @site_administrator
+    # @user= @admin
+      controller.stub!(:current_user).and_return(@site_administrator)
+      controller.stub!(:current_subdomain).and_return(@admin.login)
+      
+      # de facto: get 'http://admin.test.host/pages/:id/edit'
+      get :edit, :id=>@admin_page.zip
+      
+      assigns[:user].should eql(@admin)
+      response.should_not be_success
+      response.should redirect_to(new_session_path)  
+    end
+    
+=begin
+        
 #---------------------------------------------------------------
 # АДМИНИСТРАТОРА ШКОЛЬНОГО САЙТА
 #---------------------------------------------------------------
