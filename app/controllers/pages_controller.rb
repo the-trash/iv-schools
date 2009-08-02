@@ -9,7 +9,7 @@ class PagesController < ApplicationController
   before_filter :access_to_controller_action_required, :only=>[:new, :create, :manager]
   
   # Проверка доступа к действию над ресурсом
-  before_filter :page_resourсe_access_required, :only=>[:show, :edit, :update, :destroy, :up, :down]
+  before_filter :page_resourсe_access_required, :only=>[:edit, :update, :destroy, :up, :down]
 
   # Карта сайта
   def index  
@@ -109,13 +109,21 @@ class PagesController < ApplicationController
   protected
 
   def access_to_controller_action_required
+    # TODO: оптимизировать. Написать функцию в act_as_abonent подготавливающую
+    # необходимые хеши для различных прав доступа
+    
+    # :administrator, :pages
+    (access_denied and return) if current_user.has_personal_block?(:administrator, controller_name)
+    (access_denied and return) if current_user.has_group_block?(:administrator, controller_name)
+    return true if current_user.has_personal_access?(:administrator, controller_name)
+    return true if current_user.has_group_access?(:administrator, controller_name)
+    return true if current_user.has_role_policy?(:administrator, controller_name)
+    # :pages, :new
     (access_denied and return) if current_user.has_personal_block?(controller_name, action_name)
     (access_denied and return) if current_user.has_group_block?(controller_name, action_name)
-    
     return true if current_user.has_personal_access?(controller_name, action_name)
     return true if current_user.has_group_access?(controller_name, action_name)
-    
-    (access_denied and return) unless current_user.has_role_policy?(controller_name, action_name)
+    (access_denied and return) unless current_user.has_role_policy?(controller_name, action_name) && current_user.is_owner_of?(@user)
   end
 
   def page_resourсe_access_required
@@ -140,6 +148,6 @@ class PagesController < ApplicationController
     return true if current_user.has_group_access?(controller_name, action_name)
     
     # Пользователь - владелец объекта и имеет соответствующие ролевые политики
-    (access_denied and return) unless current_user.is_owner_of?(@page) && current_user.has_role_policy?(controller_name, action_name)
+    (access_denied and return) unless current_user.has_role_policy?(controller_name, action_name) && current_user.is_owner_of?(@page)
   end
 end

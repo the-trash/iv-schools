@@ -64,7 +64,7 @@ class ApplicationController < ActionController::Base
     # если мы зарегистрированы в системе, то по умолчанию, просматриваемый пользователь - это мы
     # например /pages/index ведет на просмотр нашего дерева страниц,
     # а для не зарегистрированного пользователя /pages/index ведет на центральное дерево страниц портала
-    @user = current_user ? current_user : User.find:first
+    @user = current_user ? current_user : User.find(:first)
     
     if current_subdomain
       # поискать приставку www
