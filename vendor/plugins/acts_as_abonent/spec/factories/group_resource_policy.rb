@@ -6,7 +6,7 @@ Factory.define :group_resource_policy do |prp| end
 ###################################################################################################
 
 # Политика для данного пользователя
-Factory.define  :page_manager_group_resource_policy, :class => PersonalResourcePolicy do |r|
+Factory.define  :page_manager_group_resource_policy, :class => GroupResourcePolicy do |r|
   r.section     'pages'
   r.action      'manager'
   r.value       true
@@ -17,7 +17,7 @@ Factory.define  :page_manager_group_resource_policy, :class => PersonalResourceP
 end
 
 # Политика для данного пользователя
-Factory.define  :page_tree_group_resource_policy, :class => PersonalResourcePolicy do |r|
+Factory.define  :page_tree_group_resource_policy, :class => GroupResourcePolicy do |r|
   r.section     'pages'
   r.action      'tree'
   r.value       true

@@ -13,12 +13,13 @@ module Killich #:nodoc:
       
       module AbonentMethods
       
-        # Установить пользователю указанную роль
+        #belongs_to  :role
         def set_role(role)
           return unless role
+          return false unless role.is_a?(Role)
           self.role_id= role.id
         end
-        
+        #belongs_to  :role
         def update_role(role)
           return false unless role
           return false unless role.is_a?(Role)
@@ -174,7 +175,7 @@ module Killich #:nodoc:
           policy_exists(section, action, 'personal_policies_hash', options)
         end
         
-        def get_personal_policy(section, action, options = {})
+        def get_personal_policy_hash(section, action, options = {})
           get_policy_hash(section, action, 'personal_policies_hash', options)
         end
         
@@ -204,7 +205,7 @@ module Killich #:nodoc:
           policy_exists(section, action, 'group_policies_hash', options)
         end
         
-        def get_group_policy(section, action, options = {})
+        def get_group_policy_hash(section, action, options = {})
           get_policy_hash(section, action, 'group_policies_hash', options)
         end
         
