@@ -12,6 +12,19 @@ module Killich #:nodoc:
       end# SingletonMethods
       
       module AbonentMethods
+      
+        # Установить пользователю указанную роль
+        def set_role(role)
+          return unless role
+          self.role_id= role.id
+        end
+        
+        def update_role(role)
+          return false unless role
+          return false unless role.is_a?(Role)
+          self.update_attribute(:role, role) and return true
+        end
+  
         # Ролевая политика (Наиболее общая)
         def role_policies_hash
           @role_policies_hash ||= (self.role ? (self.role.settings.is_a?(String) ? YAML::load(self.role.settings) : Hash.new) : Hash.new )

@@ -54,18 +54,6 @@ class User < ActiveRecord::Base
   # anything else you want your user to change should be added here.
   attr_accessible :login, :email, :password, :password_confirmation
   
-  # Установить пользователю указанную роль
-  def set_role(role)
-    return unless role
-    self.role_id= role.id
-  end
-  
-  def update_role(role)
-    return false unless role
-    return false unless role.is_a?(Role)
-    self.update_attribute(:role, role) and return true
-  end
-
   # Перевести в нижний регистр логин и email
   def fields_downcase
     login.downcase!
