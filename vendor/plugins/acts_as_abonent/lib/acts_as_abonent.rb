@@ -135,6 +135,17 @@ module Killich #:nodoc:
           true
         end
 
+        def get_policy_hash(section, action, hash_name, options = {})
+          opts = {
+            :recalculate => false,
+          }.merge!(options)
+          send("create_#{hash_name}", opts)
+          return nil if !eval("@#{hash_name}").values_at(section.to_sym) || !eval("@#{hash_name}").values_at(section.to_sym).first
+          section_of_policies_hash= eval("@#{hash_name}").values_at(section.to_sym).first
+          return nil if !section_of_policies_hash.values_at(action.to_sym) || !section_of_policies_hash.values_at(action.to_sym).first
+          section_of_policies_hash.values_at(action.to_sym).first
+        end
+        
         # Персональная политика
         def create_personal_policies_hash(options = {})
           opts= {
@@ -148,6 +159,10 @@ module Killich #:nodoc:
         # interfaces
         def personal_policy_exists?(section, action, options = {})
           policy_exists(section, action, 'personal_policies_hash', options)
+        end
+        
+        def get_personal_policy(section, action, options = {})
+          get_policy_hash(section, action, 'personal_policies_hash', options)
         end
         
         def has_personal_access?(section, action, options = {})
@@ -174,6 +189,10 @@ module Killich #:nodoc:
         # interfaces
         def group_policy_exists?(section, action, options = {})
           policy_exists(section, action, 'group_policies_hash', options)
+        end
+        
+        def get_group_policy(section, action, options = {})
+          get_policy_hash(section, action, 'group_policies_hash', options)
         end
         
         def has_group_access?(section, action, options = {})
@@ -254,6 +273,19 @@ module Killich #:nodoc:
           true
         end
 
+        def get_resource_policy_hash(object, section, action, hash_name, options = {})
+          opts = {
+            :recalculate => false,
+            :reset => false
+          }.merge!(options)
+          send("#{hash_name}_for_class_of", object, opts)
+          return nil if     eval("@#{hash_name}")[object.class.to_s.to_sym].empty?
+          return nil unless eval("@#{hash_name}")[object.class.to_s.to_sym][object.id]
+          return nil unless eval("@#{hash_name}")[object.class.to_s.to_sym][object.id][section.to_sym]
+          return nil unless eval("@#{hash_name}")[object.class.to_s.to_sym][object.id][section.to_sym][action.to_sym]
+          eval("@#{hash_name}")[object.class.to_s.to_sym][object.id][section.to_sym][action.to_sym]
+        end
+        
         # Персональная политика к ресурсу
         def personal_resources_policies_hash_for_class_of(resource, options = {})
           opts= {
@@ -267,6 +299,10 @@ module Killich #:nodoc:
         # interfaces
         def personal_resource_policy_exists?(object, section, action, options = {})
           resource_policy_exists(object, section, action, 'personal_resources_policies_hash', options)
+        end
+        
+        def get_personal_resource_policy_hash(object, section, action, options = {})
+          get_resource_policy_hash(object, section, action, 'personal_resources_policies_hash', options)
         end
         
         def has_personal_resource_access_for?(object, section, action, options = {})
@@ -293,6 +329,10 @@ module Killich #:nodoc:
         # interfaces
         def group_resource_policy_exists?(object, section, action, options = {})
           resource_policy_exists(object, section, action, 'group_resources_policies_hash', options)
+        end
+        
+        def get_group_resource_policy_hash(object, section, action, options = {})
+          get_resource_policy_hash(object, section, action, 'group_resources_policies_hash', options)
         end
         
         def has_group_resource_access_for?(object, section, action, options = {})

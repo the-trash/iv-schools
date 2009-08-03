@@ -304,6 +304,7 @@ ul.system_navigation{
 .std_form p{
   margin:0 0 7px 0;
   line-height:140%;
+  text-indent:0;
 }
 .std_form form{
   margin:15px 0 10px 0;
