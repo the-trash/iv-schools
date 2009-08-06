@@ -63,7 +63,7 @@ Rails::Initializer.run do |config|
   
   #config.i18n.load_path += Dir[Rails.root.join('config', 'locales', 'en', '*.{rb,yml}')]
   config.i18n.load_path += Dir[Rails.root.join('config', 'locales', '*', '*.{rb,yml}')]
-  config.i18n.default_locale = :en
+  config.i18n.default_locale = :ru
 end
 
 # Убирает в формах дивы обрамляющие поля с ошибками

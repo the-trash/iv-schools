@@ -23,26 +23,26 @@ module PagesHelper
       
       # Если первый элемент - то, ссылку вверх не генерируем
       if first
-        up = link_to '', '#',:title=>"Внутри данного уровня поднять страницу невозможно", :class=>'button cantup'
+        up = link_to '', '#',:title=>t('page.cant_be_move'), :class=>'button cantup'
       else
-        up = link_to '', up_page_path(elem.zip), :title=>"Поднять вверх страницу: #{elem.title}", :class=>'button up'
+        up = link_to '', up_page_path(elem.zip), :title=>"#{t('page.move_up')} #{elem.title}", :class=>'button up'
       end
       
       # Если последний элемент - то, ссылку вниз не генерируем
       if last
-        down=   link_to '', '#', :title=>"Внутри данного уровня опустить страницу невозможно", :class=>'button cantdown'
+        down=   link_to '', '#', :title=>t('page.cant_be_move'), :class=>'button cantdown'
       else
-        down=   link_to '', down_page_path(elem.zip), :title=>"Опустить вниз страницу: #{elem.title}", :class=>'button down'
+        down=   link_to '', down_page_path(elem.zip), :title=>"#{t('page.move_down')} #{elem.title}", :class=>'button down'
       end
 
-      edit=   link_to '', edit_page_path(elem.zip),             :title=>"Редактировать страницу: #{elem.title}", :class=>'button edit'
-      new=    link_to '', new_page_path(:parent_id=>elem.zip),  :title=>"Создать дочернюю страницу для страницы: #{elem.title}", :class=>'button new'
+      edit=   link_to '', edit_page_path(elem.zip),             :title=>"#{t('page.edit')} #{elem.title}", :class=>'button edit'
+      new=    link_to '', new_page_path(:parent_id=>elem.zip),  :title=>"#{t('page.create_child')} #{elem.title}", :class=>'button new'
       
       # Если дочерние элементы отсутствуют
       if has_no_childs
-        delete=  link_to('', page_path(elem.zip), :method=>:delete, :title=>"Удалить страницу: #{elem.title}", :confirm=>'Вы уверены, что хотите удалить страницу безвозвратно?', :class=>'button delete') 
+        delete=  link_to('', page_path(elem.zip), :method=>:delete, :title=>"#{t('page.delete')} #{elem.title}", :confirm=>t('page.delete_confirm'), :class=>'button delete') 
       else
-        delete=  link_to('', '#',  :title=>"Для удаления страницы необходимо удалить все подразделы", :class=>'button undeleted', :onclick=>"javascript:alert('Для удаления страницы необходимо удалить все подразделы');return false;")
+        delete=  link_to('', '#',  :title=>t('page.sub_sections_must_be_deleted'), :class=>'button undeleted', :onclick=>"javascript:alert('#{t('page.sub_sections_must_be_deleted')}');return false;")
       end
           
       up+down+edit+new+delete
@@ -85,7 +85,7 @@ module PagesHelper
         # Флаги для admin_controls поступают из рекурсии верхнего уровня
         res<< content_tag(:div, admin_controls(node, :childs=>childs.size.zero?, :first=>first, :last=>last), :class=>:controls) #|up, down, delete, edit, new|
         # Блок с названием страницы (ссылка)
-        res<< content_tag(:div, link_to(node.title, page_path(node.zip), :title=>"zip код страницы: #{node.zip}"), :class=>"link #{'root' if root}")
+        res<< content_tag(:div, link_to(node.title, page_path(node.zip), :title=>t('page.zip_of_page') + "#{node.zip}"), :class=>"link #{'root' if root}")
         # Обернуть в один блок
         res= content_tag(:div, res, :class=>:elem)
         # Получить id узла
@@ -130,7 +130,7 @@ module PagesHelper
         roots= tree.select{ |elem| elem.parent_id == nil }                                                    # Выбераем из дерева корневые элементы
         roots.each { |root| result<< pages_tree!(tree, :node=>root, :root=>true) }                            # Отрисовать каждый элемент и его дочерние элементы
       else
-        res= content_tag :li, link_to( node.title, page_path(node.zip), :title=>"zip код страницы: #{node.zip}"), :class=>(root ? 'root' : '')
+        res= content_tag :li, link_to( node.title, page_path(node.zip), :title=>t('page.zip_of_page')+"#{node.zip}"), :class=>(root ? 'root' : '')
         child_res= ''
         childs= tree.select{ |elem| elem.parent_id == node.id }                                               # Получаем дочерние элементы узла
         tree.delete(node)                                                                                     # Удаляем узел из дерева, при следующей рекурсии придется обходить меньше элементов =)

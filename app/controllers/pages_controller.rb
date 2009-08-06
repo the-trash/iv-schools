@@ -51,7 +51,7 @@ class PagesController < ApplicationController
     respond_to do |format|
       if @page.save
         @page.move_to_child_of(@parent) if @parent
-        flash[:notice] = t('pages.created')
+        flash[:notice] = t('page.created')
         format.html { redirect_to(edit_page_path(@page.zip)) }
       else
         format.html { render :action => "new" }
@@ -67,7 +67,7 @@ class PagesController < ApplicationController
   def update
     respond_to do |format|
       if @page.update_attributes(params[:page])
-        flash[:notice] = t('pages.updated')
+        flash[:notice] = t('page.updated')
         format.html { redirect_back_or(manager_pages_path(:subdomain=>@subdomain)) }
       else
         format.html { render :action => "edit" }
@@ -78,9 +78,9 @@ class PagesController < ApplicationController
   def up
     if @page.move_possible?(@page.left_sibling)                     # Если возможно переместить вверх
       @page.move_left                                               # Перемещаем
-      flash[:notice] = t('nested_set.element.up')
+      flash[:notice] = t('page.up')
     else
-      flash[:notice] = t('nested_set.element.cant_move')
+      flash[:notice] = t('page.cant_move')
     end
     redirect_to(manager_pages_path(:subdomain=>@subdomain)) and return
   end
@@ -88,10 +88,10 @@ class PagesController < ApplicationController
   def down
     if @page.move_possible?(@page.right_sibling)                    # Если возможно переместить вниз
       @page.move_right                                              # Перемещаем
-      flash[:notice] = t('nested_set.element.down')
+      flash[:notice] = t('page.down')
       redirect_to(manager_pages_path(:subdomain=>@subdomain)) and return
     else
-      flash[:notice] = t('nested_set.element.cant_be_move')
+      flash[:notice] = t('page.cant_be_move')
       redirect_to(manager_pages_path(:subdomain=>@subdomain)) and return
     end
   end
@@ -99,9 +99,9 @@ class PagesController < ApplicationController
   def destroy
     if @page.children.count.zero?
       @page.destroy
-      flash[:notice]= t('nested_set.element.deleted')
+      flash[:notice]= t('page.deleted')
     else
-      flash[:notice]= t('nested_set.element.has_children')
+      flash[:notice]= t('page.has_children')
     end
     redirect_to(manager_pages_path(:subdomain=>@subdomain)) and return
   end

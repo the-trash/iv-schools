@@ -85,7 +85,7 @@ class ApplicationController < ActionController::Base
       @subdomain= match.nil? ? current_subdomain : match[1]
       user= User.find_by_login(@subdomain)
       unless user
-        flash[:system_warnings].push(Site::DOMAIN_DOES_NOT_EXIST)
+        flash[:system_warnings].push(t('system.domain_does_not_exist'))
         @subdomain= false
       end
       @user= user ? user : @user
@@ -107,7 +107,7 @@ class ApplicationController < ActionController::Base
       elsif params[:user_id].match(Format::LOGIN) # id cовпал с login        
         user= User.find_by_login(params[:user_id])
       end #params[:user_id].match
-      user ? nil : flash[:system_warnings].push(Site::SECTION_NOT_FOUND+params[:user_id].to_s)
+      user ? nil : flash[:system_warnings].push(t('system.section_not_found')+params[:user_id].to_s)
     end #params[:user_id]
     # Просматриваем ресурсы
     # Пользователя ранее найденного по поддомену или того, которого нашли по id || login || zip

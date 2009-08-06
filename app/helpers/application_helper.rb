@@ -8,7 +8,7 @@ module ApplicationHelper
     res= ""
 
     obj.errors.each do |name, value|
-      res<< content_tag(:li, t("fields.#{obj.class}.#{name}") + " : " + value)
+      res<< content_tag(:li, t("#{obj.class.to_s.downcase}.field.#{name}") + " : " + value)
     end
     
     res= content_tag :ul, res

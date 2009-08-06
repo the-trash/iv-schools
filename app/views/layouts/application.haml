@@ -41,7 +41,7 @@
         - if @subdomain.blank?
           = link_to "Ивановский школьный портал iv-schools.ru", "#" 
         - else
-          = link_to @subdomain.to_s + ".iv-schools.ru", "#" 
+          = link_to @subdomain.to_s + ".iv-schools.ru", "#"
 
       %ul.system_navigation
         %li
@@ -65,7 +65,6 @@
           %tr
             %td.content#content_column
               .block#content_block
-                = t(:site_description)
                 -# Ввод Флеш сообщений
                 = app_flash(flash)
                 -# Ввод основного содержимого страницы
