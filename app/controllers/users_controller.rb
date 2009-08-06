@@ -32,10 +32,10 @@ class UsersController < ApplicationController
       
       self.current_user = @user
       redirect_back_or_default('/')
-      flash[:notice] = Messages::User[:logined]
+      flash[:notice] = t('user.entered')
     else
-      flash[:notice] = Messages::User[:cant_be_create]
-      flash[:warning] = Messages::Server[:error]
+      flash[:notice] = t('user.cant_be_create')
+      flash[:warning] = t('server.error')
       render :action => 'new'
     end
   end

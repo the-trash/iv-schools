@@ -7,32 +7,17 @@ class User < ActiveRecord::Base
   attr_accessor :password
 
   # Валидация
-  validates_uniqueness_of   :login, :case_sensitive => false, :message=>Messages::UserValidation[:uniqueness_of_login]
-  validates_uniqueness_of   :email, :case_sensitive => false, :message=>Messages::UserValidation[:uniqueness_of_email]
-  validates_presence_of     :login, :email, :message=>Messages::UserValidation[:presence_of_login_email]
+  validates_uniqueness_of   :login, :case_sensitive => false
+  validates_uniqueness_of   :email, :case_sensitive => false
+  validates_presence_of     :login, :email
   
-  validates_presence_of     :password,              :if => :password_required?, :message=>Messages::UserValidation[:presence_of_password]
-  validates_presence_of     :password_confirmation, :if => :password_required?, :message=>Messages::UserValidation[:presence_of_password_confirmation]
-  validates_confirmation_of :password,              :if => :password_required?, :message=>Messages::UserValidation[:confirmation_of_password]
+  validates_presence_of     :password,              :if => :password_required?
+  validates_presence_of     :password_confirmation, :if => :password_required?
+  validates_confirmation_of :password,              :if => :password_required?
 
-  validates_length_of :password,
-    :within => 4..40,
-    :if => :password_required?,
-    :message=>Messages::UserValidation[:length_of_password],
-    :too_short=>Messages::UserValidation[:length_of_password_too_short],
-    :too_long=>Messages::UserValidation[:length_of_password_too_long]
-
-  validates_length_of :login,
-    :within => 4..30,
-    :message=>Messages::UserValidation[:length_of_login],
-    :too_short=>Messages::UserValidation[:length_of_login_too_short],
-    :too_long=>Messages::UserValidation[:length_of_login_too_long]
-  
-  validates_length_of :email,
-    :within => 6..50,
-    :message=>Messages::UserValidation[:length_of_email],
-    :too_short=>Messages::UserValidation[:length_of_email_too_long],
-    :too_long=>Messages::UserValidation[:length_of_email_too_long]
+  validates_length_of :password, :within => 4..40, :if => :password_required?
+  validates_length_of :login, :within => 4..30  
+  validates_length_of :email, :within => 6..50
 
   # Пользовательские фильтры
   before_save :encrypt_password

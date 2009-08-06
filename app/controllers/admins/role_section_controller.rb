@@ -15,7 +15,7 @@ class Admins::RoleSectionController < ApplicationController
         
     # Если кодер установил пустое имя раздела прав    
     if section_name.blank?
-      flash[:warning] =  Messages::Policies[:empty_section_name]
+      flash[:warning] =  t('policies.empty_section_name')
       redirect_to admins_roles_path
       return
     end
@@ -30,7 +30,7 @@ class Admins::RoleSectionController < ApplicationController
     
     respond_to do |format|
       if @role.update_attributes({:settings=>base_role})
-        flash[:notice] = Messages::Policies[:section_destroy]
+        flash[:notice] = t('policies.section_destroy')
         format.html { redirect_back_or(admins_role_path(@role)) }
       else
         format.html { render :action => "edit" }
@@ -42,7 +42,7 @@ class Admins::RoleSectionController < ApplicationController
     @role = Role.find(params[:role_id])
     
     if params[:id].blank? || params[:name].blank?
-      flash[:warning] = Messages::Server[:data_are_required]
+      flash[:warning] = t('policies.data_are_required')
       redirect_back_or(admins_role_path(@role))
       return
     end
@@ -55,13 +55,13 @@ class Admins::RoleSectionController < ApplicationController
     
     # Если вдруг оказалось не хешем, то сообщим об этом
     unless base_role[section_name.to_sym].is_a?(Hash)
-      flash[:warning] = Messages::Policies[:section_is_not_hash]
+      flash[:warning] = t('policies.section_is_not_hash')
       redirect_back_or(admins_role_path(@role))
       return
     end
     
     unless base_role[section_name.to_sym].has_key?(rule_name.to_sym)
-      flash[:warning] = Messages::Policies[:section_hasnt_rule] 
+      flash[:warning] = t('policies.section_hasnt_rule')
       redirect_back_or(admins_role_path(@role))
       return
     end
@@ -71,7 +71,7 @@ class Admins::RoleSectionController < ApplicationController
     
     respond_to do |format|
       if @role.update_attributes({:settings=>base_role})
-        flash[:notice] = Messages::Policies[:section_rule_destroy]
+        flash[:notice] = t('policies.section_rule_destroy')
         format.html { redirect_back_or(admins_role_path(@role)) }
       else
         format.html { render :action => "edit" }

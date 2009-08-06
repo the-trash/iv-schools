@@ -21,9 +21,9 @@ class SessionsController < ApplicationController
         }
       end
       redirect_back_or_default('/')
-      flash[:notice] = Messages::User[:entered]
+      flash[:notice] = t('user.entered')
     else
-      flash[:warning] = Messages::User[:enter_error]
+      flash[:warning] = t('user.enter_error')
       render :action => 'new'
     end
   end
@@ -35,7 +35,7 @@ class SessionsController < ApplicationController
       :domain=>Site::COOKIES_SCOPE
     )
     reset_session
-    flash[:notice] = Messages::User[:logouted]
+    flash[:notice] = t('user.logouted')
     redirect_back_or_default('/')
   end
 end

@@ -1,0 +1,81 @@
+en:
+  :site_name: 'iv-schools.ru'
+  :site_description: "Ivanovo region's Internet Portal of Schools"
+    
+  :fields:
+    :User:
+      :password: 'Password'
+      :password_confirmation: 'Password confirmation'
+      :login: 'Login (name of account)'
+      :email: 'Email (your email box)'
+
+    :Page:
+      :title: 'Заголовок страницы'
+      :author: 'Автор страницы'
+      :description: 'Краткое описание страницы' 
+      :copyright: 'Авторское право' 
+      :keywords: 'Ключевые слова' 
+
+  :system:
+    :have_no_users: 'there are no users in system'
+    :domain_does_not_exist: 'Domain does not exists.'
+    :section_not_found: 'Have no section'
+
+  :flash:
+    :notice:
+      :title: 'Notice'
+      :system: 'System Notice'
+      :many_title: 'Noticies'
+    :error:
+      :title: 'Error'
+      :system: 'System Error'
+      :many_title: 'Errors'
+    :warning:
+      :title: 'Warning'
+      :system: 'System Warning'
+      :many_title: 'Warning'
+
+  :access:
+    :denied: "access denied"
+
+  :user:
+    :updated: "thank you for signup in iv-schools.ru"
+    :cant_be_create: 'user can not be create'
+    :entered: "wellcome to iv-schools.ru"
+    :logouted: "Good bay! iv-schools.ru waiting for you visit again"
+    :enter_error: "Login or Email - incorrected"
+ 
+  :server:
+    :error: 'Server side error'
+    :data_are_required: 'need for additional data'
+
+  :policies:
+    :empty_section_name:      'section have no name'
+    :section_wrong_name:      'incorrect section name'
+    :section_rule_wrong_name: 'incorrect policy name in section'
+    :section_destroy:         'section deleted'
+    :section_is_not_hash:     'Section is not a Hash - probably it is database damage'
+    :section_hasnt_rule:      'section have no policy'
+    :array_forming_error:     'Error of forming policy Hash - probably it is database damage'
+    :section_exists:          'section exists'
+    :section_create:          'section created'
+    :section_rule_create:     'policy created and activated'
+    :section_rule_destroy:    'policy deleted'
+    :non_exists:              'section is not exists'
+    :try_to_create_section:   'try to create section'
+    :destroy_confirm:         'do you want delete section with all policies? '
+    :have_no_policy:          'policy not exists'
+
+  :nested_set:
+    :element:
+      :up: 'node moved up'
+      :down: 'node moved down'
+      :cant_be_move: 'node cant_be_move'
+      :deleted: 'node deleted'
+      :has_children: 'node has a childs and can not be deleted'
+
+  :pages:
+    :updated: 'Page was updated'
+    :created: 'Page was created'
+
+

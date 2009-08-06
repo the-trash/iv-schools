@@ -4,15 +4,15 @@ module ApplicationHelper
   # Вывод ошибок валидации данного объекта
   def object_errors(obj)
     # Если переданный объект пустой или пустое поле ошибки
-    (obj.nil? || obj.errors.empty?) ? (return nil) : nil
+    return if (obj.nil? || obj.errors.empty?)
     res= ""
 
     obj.errors.each do |name, value|
-      res<< content_tag(:li, value)
-    end #obj.errors.each
+      res<< content_tag(:li, t("fields.#{obj.class}.#{name}") + " : " + value)
+    end
     
     res= content_tag :ul, res
-    err_header= ((obj.errors.size>1) ? Site::ERRORS : Site::ERROR)
+    err_header= ((obj.errors.size>1) ? t('flash.error.many_title') : t('flash.error.title'))
     res= content_tag(:h3, err_header)+res
     res= content_tag :div, res, :class=>:error
     res= content_tag :div, res, :class=>:system_messages
@@ -28,7 +28,7 @@ module ApplicationHelper
       flash_= ''
       flash_= content_tag(:li, flash[:notice])
       flash_= content_tag :ul, flash_
-      flash_= content_tag(:h3, Site::NOTICE)+flash_
+      flash_= content_tag(:h3, t('flash.warning.title'))+flash_
       flash_= content_tag :div, flash_, :class=>:notice
       flash_= content_tag :div, flash_, :class=>:system_messages
       # Обнулим флеш - иногда он имеет свойство проявляться
@@ -40,7 +40,7 @@ module ApplicationHelper
       warn_= ''
       warn_= content_tag(:li, flash[:warning])
       warn_= content_tag :ul, warn_
-      warn_= content_tag(:h3, Site::SYSTEM_WARNING)+warn_
+      warn_= content_tag(:h3, t('flash.warning.system'))+warn_
       warn_= content_tag :div, warn_, :class=>:warning
       warn_= content_tag :div, warn_, :class=>:system_messages
       # Обнулим флеш - иногда он имеет свойство проявляться
@@ -55,7 +55,7 @@ module ApplicationHelper
       end
       
       sys_warn_= content_tag :ul, sys_warn_
-      sys_warn_= content_tag(:h3, Site::SYSTEM_NOTICE)+sys_warn_
+      sys_warn_= content_tag(:h3, t('flash.notice.system'))+sys_warn_
       sys_warn_= content_tag :div, sys_warn_, :class=>:warning
       sys_warn_= content_tag :div, sys_warn_, :class=>:system_messages
       # Обнулим флеш - иногда он имеет свойство проявляться

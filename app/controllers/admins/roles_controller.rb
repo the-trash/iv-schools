@@ -123,7 +123,7 @@ class Admins::RolesController < ApplicationController
     
     # Если имя установлено
     if params[:section_name].nil? || params[:section_name].blank?
-      flash[:warning] = Messages::Policies[:empty_section_name]
+      flash[:warning] = t('policies.empty_section_name')
       redirect_back_or(admins_role_path(@role))
       return
     end
@@ -134,7 +134,7 @@ class Admins::RolesController < ApplicationController
     #Валидация на английские символы
     correct_section_name= section_name.match(Format::LATIN_AND_SAFETY_SYMBOLS) 
     unless correct_section_name
-      flash[:warning] = Messages::Policies[:section_wrong_name] 
+      flash[:warning] = t('policies.section_wrong_name')
       redirect_back_or(admins_role_path(@role))
       return
     end
@@ -146,14 +146,14 @@ class Admins::RolesController < ApplicationController
     role_settings= role_settings ? role_settings : Hash.new # если YAML не загружен, то будет пустой HASH
     
     unless role_settings
-      flash[:warning] = Messages::Policies[:array_forming_error]
+      flash[:warning] = t('policies.array_forming_error')
       redirect_back_or(admins_role_path(@role))
       return
     end
     
     # Если такая группа прав уже существует
     if role_settings[section_name.to_sym]
-      flash[:warning] = Messages::Policies[:section_exists]
+      flash[:warning] = t('policies.section_exists')
       redirect_back_or(admins_role_path(@role))
       return
     else
@@ -162,7 +162,7 @@ class Admins::RolesController < ApplicationController
     
     respond_to do |format|
       if @role.update_attributes({:settings=>role_settings})
-        flash[:notice] = Messages::Policies[:section_create]
+        flash[:notice] = t('policies.section_create')
         format.html { redirect_back_or(admins_role_path(@role)) }
       else
         format.html { render :action => "edit" }
@@ -174,7 +174,7 @@ class Admins::RolesController < ApplicationController
     @role = Role.find(params[:id])
 
     if params[:section_rule].nil? || params[:section_name].nil?
-      flash[:warning] = Messages::Server[:data_are_required]
+      flash[:warning] = t('policies.data_are_required')
       redirect_back_or(admins_role_path(@role))
       return
     end
@@ -185,7 +185,7 @@ class Admins::RolesController < ApplicationController
     #Валидация на английские символы
     correct_section_rule_name= params[:section_rule].match(Format::LATIN_AND_SAFETY_SYMBOLS) 
     unless correct_section_rule_name
-      flash[:warning] = Messages::Policies[:section_rule_wrong_name] + params[:section_name]
+      flash[:warning] = t('policies.section_rule_wrong_name') + params[:section_name]
       redirect_back_or(admins_role_path(@role))
       return
     end
@@ -194,14 +194,14 @@ class Admins::RolesController < ApplicationController
     # Если по какой то причине получился nil, то пусть пользователь
     # сперва создаст группу, там хеш формируется почти принудительно и ошибка должна пропасть
     unless role_settings
-      flash[:warning] = Messages::Policies[:try_to_create_section]
+      flash[:warning] = t('policies.try_to_create_section')
       redirect_back_or(admins_role_path(@role))
       return
     end
     
     # Если такого ключа нет (нет такой группы)
     unless role_settings.has_key?(params[:section_name].to_sym)
-      flash[:warning] = Messages::Policies[:try_to_create_section]
+      flash[:warning] = t('policies.try_to_create_section')
       redirect_back_or(admins_role_path(@role))
       return
     end
@@ -211,7 +211,7 @@ class Admins::RolesController < ApplicationController
 
     respond_to do |format|
       if @role.update_attributes({:settings=>role_settings})
-        flash[:notice] = Messages::Policies[:section_rule_create]
+        flash[:notice] = t('policies.section_rule_create')
         format.html { redirect_back_or(admins_role_path(@role)) }
       else
         format.html { render :action => "edit" }

@@ -17,13 +17,18 @@ class ApplicationController < ActionController::Base
   before_filter :system_init    # Инициализация системных переменных
   before_filter :find_subdomain # Определить поддомен в котором мы находимся
   before_filter :find_user      # Определить пользователя системы, к которому мы пытаемся получить доступ (первый уровень поиска)
-
-  protected
+  #before_filter :set_user_language # i18n интернационализация
   
+  protected
+
   def system_init 
     # Инициализировать флеш массив с системными уведомлениями
     flash[:system_warnings]= []
   end
+
+  #def set_user_language
+  #  I18n.locale = current_user.language if logged_in?
+  #end
   
   #-------------------------------------------------------------------------------------
   #> Я - НЕ зарегистрированный пользователь
@@ -113,7 +118,7 @@ class ApplicationController < ActionController::Base
   # Отображаются только корневые разделы карты сайта
   def navigation_menu_init
     # Должен существовать хотя бы один пользователь
-    (render :text=>Messages::System[:have_no_users] and return) unless @user
+    (render :text=>t('system.have_no_users') and return) unless @user
     # Должен существовать хотя бы один пользователь
     @root_pages= Page.find_all_by_user_id_and_parent_id(@user.id, nil, :order=>"lft ASC")
   end
