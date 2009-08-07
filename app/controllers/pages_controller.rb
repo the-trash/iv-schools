@@ -76,8 +76,8 @@ class PagesController < ApplicationController
   end
 
   def up
-    if @page.move_possible?(@page.left_sibling)                     # Если возможно переместить вверх
-      @page.move_left                                               # Перемещаем
+    if @page.move_possible?(@page.left_sibling)
+      @page.move_left
       flash[:notice] = t('page.up')
     else
       flash[:notice] = t('page.cant_move')
@@ -86,8 +86,8 @@ class PagesController < ApplicationController
   end
   
   def down
-    if @page.move_possible?(@page.right_sibling)                    # Если возможно переместить вниз
-      @page.move_right                                              # Перемещаем
+    if @page.move_possible?(@page.right_sibling)
+      @page.move_right
       flash[:notice] = t('page.down')
       redirect_to(manager_pages_path(:subdomain=>@subdomain)) and return
     else
@@ -109,69 +109,50 @@ class PagesController < ApplicationController
   protected
 
   # for :show, :edit, :update, :destroy, :up, :down
+  # Поиск ресурса
   def find_page
-    # Поиск ресурса
     @page= Page.find_by_zip(params[:id])
-    (access_denied and return) unless @page
+    access_denied and return unless @page
   end
   
   # for :new, :create, :manager
+  # :administrator, :pages
+  # :pages, :new
+  # Пользователь - владелец объекта и имеет соответствующие ролевые политики
+  # Под объектом предполагается просматриваемый пользователь (текущий и просматриваемый должны совпадать)
   def access_to_controller_action_required
-    # TODO: оптимизировать. Написать функцию в act_as_abonent подготавливающую
-    # необходимые хеши для различных прав доступа
-    
-    # :administrator, :pages
-    (access_denied and return) if current_user.has_personal_block?(:administrator, controller_name)
-    (access_denied and return) if current_user.has_group_block?(:administrator, controller_name)
-    return true if current_user.has_personal_access?(:administrator, controller_name)
-    return true if current_user.has_group_access?(:administrator, controller_name)
-    return true if current_user.has_role_policy?(:administrator, controller_name)
-    # :pages, :new
-    (access_denied and return) if current_user.has_personal_block?(controller_name, action_name)
-    (access_denied and return) if current_user.has_group_block?(controller_name, action_name)
-    return true if current_user.has_personal_access?(controller_name, action_name)
-    return true if current_user.has_group_access?(controller_name, action_name)
-    
-    # Пользователь - владелец объекта и имеет соответствующие ролевые политики
-    # Под объектом предполагается просматриваемый пользователь (текущий и просматриваемый должны совпадать)
-    (access_denied and return) unless current_user.has_role_policy?(controller_name, action_name) && current_user.is_owner_of?(@user)
+    access_denied and return  if current_user.has_complex_block?(:administrator, controller_name)
+    return true               if current_user.has_complex_access?(:administrator, controller_name)
+    access_denied and return  if current_user.has_complex_block?(controller_name, action_name)
+    return true               if current_user.has_complex_access?(controller_name, action_name) && current_user.is_owner_of?(@user)
+    return true               if current_user.has_role_policy?(controller_name, action_name) && current_user.is_owner_of?(@user)
+    access_denied
   end
   
   # for :edit, :update, :destroy, :up, :down
+  # :administrator, :pages
+    # Есть персональные или групповые блокировки к ресурсу
+    # Есть персональные или групповые разрешения к ресурсу (они выше по приоритету, чем общие блокировки)
+    # Есть персональные или групповые блокировки
+    # Есть персональные или групповые разрешения
+  # :pages, :edit
+    # Есть персональные или групповые блокировки к ресурсу
+    # Есть персональные или групповые разрешения к ресурсу (они выше по приоритету, чем общие блокировки)
+    # Есть персональные или групповые блокировки
+    # Есть персональные или групповые разрешения
+    # Пользователь - владелец ресурса и имеет соответствующие ролевые политики
+    # Под ресурсом предполагается объект принадлежащий пользователю (текущий пользователь редактирует состояния своих объектов)
   def page_resourсe_access_required
-    # :administrator, :pages
-      # Есть персональные или групповые блокировки к ресурсу
-      (access_denied and return) if current_user.has_personal_resource_block_for?(@page, :administrator, controller_name)
-      (access_denied and return) if current_user.has_group_resource_block_for?(@page, :administrator, controller_name)
-      # Есть персональные или групповые разрешения к ресурсу (они выше по приоритету, чем общие блокировки)
-      return true if current_user.has_personal_resource_access_for?(@page, :administrator, controller_name)
-      return true if current_user.has_group_resource_access_for?(@page, :administrator, controller_name)
-      return true if current_user.has_role_policy?(:administrator, controller_name)
-      # Есть персональные или групповые блокировки
-      (access_denied and return) if current_user.has_personal_block?(:administrator, controller_name)
-      (access_denied and return) if current_user.has_group_block?(:administrator, controller_name)
-      # Есть персональные или групповые разрешения
-      return true if current_user.has_personal_access?(:administrator, controller_name)
-      
-      # Пользователь - владелец администраторских прав над контроллером
-      return true if current_user.has_group_access?(:administrator, controller_name)
-        
-    # :pages, :edit
-      # Есть персональные или групповые блокировки к ресурсу
-      (access_denied and return) if current_user.has_personal_resource_block_for?(@page, controller_name, action_name)
-      (access_denied and return) if current_user.has_group_resource_block_for?(@page, controller_name, action_name)  
-      # Есть персональные или групповые разрешения к ресурсу (они выше по приоритету, чем общие блокировки)
-      return true if current_user.has_personal_resource_access_for?(@page, controller_name, action_name)
-      return true if current_user.has_group_resource_access_for?(@page, controller_name, action_name)
-      # Есть персональные или групповые блокировки
-      (access_denied and return) if current_user.has_personal_block?(controller_name, action_name)
-      (access_denied and return) if current_user.has_group_block?(controller_name, action_name)
-      # Есть персональные или групповые разрешения
-      return true if current_user.has_personal_access?(controller_name, action_name)
-      return true if current_user.has_group_access?(controller_name, action_name)
-      
-      # Пользователь - владелец ресурса и имеет соответствующие ролевые политики
-      # Под ресурсом предполагается объект принадлежащий пользователю (текущий пользователь редактирует состояния своих объектов)
-      (access_denied and return) unless current_user.has_role_policy?(controller_name, action_name) && current_user.is_owner_of?(@page)
+      access_denied and return  if current_user.has_complex_resource_block_for?(@page, :administrator, controller_name)
+      return true               if current_user.has_complex_resource_access_for?(@page, :administrator, controller_name)
+      return true               if current_user.has_role_policy?(:administrator, controller_name)
+      access_denied and return  if current_user.has_complex_block?(:administrator, controller_name)
+      return true               if current_user.has_complex_access?(:administrator, controller_name)
+      access_denied and return  if current_user.has_complex_resource_block_for?(@page, controller_name, action_name)
+      return true               if current_user.has_complex_resource_access_for?(@page, controller_name, action_name)
+      access_denied and return  if current_user.has_complex_block?(controller_name, action_name)
+      return true               if current_user.has_complex_access?(controller_name, action_name)
+      return true               if current_user.has_role_policy?(controller_name, action_name) && current_user.is_owner_of?(@page)
+      access_denied
   end
 end

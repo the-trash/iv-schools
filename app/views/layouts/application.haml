@@ -45,20 +45,20 @@
 
       %ul.system_navigation
         %li
-          =link_to "Новости +7", url_for(:controller=>:reports)
+          =link_to t('news'), url_for(:controller=>:reports)
         %li
-          =link_to "Задать вопрос +4", url_for(:controller=>:questions)
+          =link_to t('questions'), url_for(:controller=>:questions)
         %li
-          =link_to "Фотоальбом +45", url_for(:controller=>:albums)
+          =link_to t('albums'), url_for(:controller=>:albums)
         %li
-          =link_to "Официально +3", url_for(:controller=>:documents)
+          =link_to t('documents'), url_for(:controller=>:documents)
         %li
-          =link_to "Карта", pages_path(:subdomain=>@subdomain) #url_for(:controller=>:map)
+          =link_to t('site_map'), pages_path(:subdomain=>@subdomain) #url_for(:controller=>:map)
         %li
-          -if current_user            
-            =link_to "Выход", logout_path
+          -if current_user         
+            =link_to t('exit'), logout_path
           -else
-            =link_to "Вход", login_path(:subdomain => @subdomain)
+            =link_to t('signup'), login_path(:subdomain => @subdomain)
 
       %table.main#main
         %tbody

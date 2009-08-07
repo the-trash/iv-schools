@@ -213,12 +213,13 @@ ul.system_navigation{
   zoom:1;
   height:30px;
   border-bottom:1px solid #EEE;
+  text-align:center;
 }
 .system_navigation li{
   height:20px;
-  float:left;
+  display:inline;
   margin:0 10px;
-  padding:0 20px;
+  padding:5px 20px;
   text-align:left;
 }
 .system_navigation li:hover{

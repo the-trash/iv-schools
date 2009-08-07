@@ -117,17 +117,30 @@ module Killich #:nodoc:
           return
         end
         
+        def get_policy_hash(section, action, hash_name, options = {})
+          opts = {
+            :recalculate => false
+          }.merge!(options)
+          send("create_#{hash_name}", opts)
+          return nil if !eval("@#{hash_name}").values_at(section.to_sym) || !eval("@#{hash_name}").values_at(section.to_sym).first
+          section_of_policies_hash= eval("@#{hash_name}").values_at(section.to_sym).first
+          return nil if !section_of_policies_hash.values_at(action.to_sym) || !section_of_policies_hash.values_at(action.to_sym).first
+          section_of_policies_hash.values_at(action.to_sym).first
+        end
+                
         def check_policy(section, action, hash_name, options = {})
           opts = {
             :recalculate => false,
             :return_invert=>false,
             :policy_table=>false
           }.merge!(options)
-          send("create_#{hash_name}", opts)
-          return false if !eval("@#{hash_name}").values_at(section.to_sym) || !eval("@#{hash_name}").values_at(section.to_sym).first
-          section_of_policies_hash= eval("@#{hash_name}").values_at(section.to_sym).first
-          return false if !section_of_policies_hash.values_at(action.to_sym) || !section_of_policies_hash.values_at(action.to_sym).first
-          policy_hash= section_of_policies_hash.values_at(action.to_sym).first
+          #send("create_#{hash_name}", opts)
+          #return false if !eval("@#{hash_name}").values_at(section.to_sym) || !eval("@#{hash_name}").values_at(section.to_sym).first
+          #section_of_policies_hash= eval("@#{hash_name}").values_at(section.to_sym).first
+          #return false if !section_of_policies_hash.values_at(action.to_sym) || !section_of_policies_hash.values_at(action.to_sym).first
+          #policy_hash= section_of_policies_hash.values_at(action.to_sym).first
+          policy_hash= get_policy_hash(section, action, hash_name, opts)
+          return false unless policy_hash
           value= opts[:return_invert] ? !policy_hash[:value] : policy_hash[:value]
           time_check=     policy_actual_by_time?(policy_hash[:start_at], policy_hash[:finish_at])
           counter_check=  policy_actual_by_counter?(policy_hash[:counter], policy_hash[:max_count])
@@ -147,17 +160,6 @@ module Killich #:nodoc:
           section_of_policies_hash= eval("@#{hash_name}").values_at(section.to_sym).first
           return false if !section_of_policies_hash.values_at(action.to_sym) || !section_of_policies_hash.values_at(action.to_sym).first
           true
-        end
-
-        def get_policy_hash(section, action, hash_name, options = {})
-          opts = {
-            :recalculate => false,
-          }.merge!(options)
-          send("create_#{hash_name}", opts)
-          return nil if !eval("@#{hash_name}").values_at(section.to_sym) || !eval("@#{hash_name}").values_at(section.to_sym).first
-          section_of_policies_hash= eval("@#{hash_name}").values_at(section.to_sym).first
-          return nil if !section_of_policies_hash.values_at(action.to_sym) || !section_of_policies_hash.values_at(action.to_sym).first
-          section_of_policies_hash.values_at(action.to_sym).first
         end
         
         # Персональная политика
@@ -252,18 +254,33 @@ module Killich #:nodoc:
           return
         end
         
+        def get_resource_policy_hash(object, section, action, hash_name, options = {})
+          opts = {
+            :recalculate => false,
+            :reset => false
+          }.merge!(options)
+          send("#{hash_name}_for_class_of", object, opts)
+          return nil if     eval("@#{hash_name}")[object.class.to_s.to_sym].empty?
+          return nil unless eval("@#{hash_name}")[object.class.to_s.to_sym][object.id]
+          return nil unless eval("@#{hash_name}")[object.class.to_s.to_sym][object.id][section.to_sym]
+          return nil unless eval("@#{hash_name}")[object.class.to_s.to_sym][object.id][section.to_sym][action.to_sym]
+          eval("@#{hash_name}")[object.class.to_s.to_sym][object.id][section.to_sym][action.to_sym]
+        end
+        
         def check_resource_policy(object, section, action, hash_name, options = {})
           opts = {
             :recalculate => false,
             :reset => false,
             :return_invert=>false
           }.merge!(options)
-          send("#{hash_name}_for_class_of", object, opts)
-          return false if     eval("@#{hash_name}")[object.class.to_s.to_sym].empty?
-          return false unless eval("@#{hash_name}")[object.class.to_s.to_sym][object.id]
-          return false unless eval("@#{hash_name}")[object.class.to_s.to_sym][object.id][section.to_sym]
-          return false unless eval("@#{hash_name}")[object.class.to_s.to_sym][object.id][section.to_sym][action.to_sym]
-          policy_hash= eval("@#{hash_name}")[object.class.to_s.to_sym][object.id][section.to_sym][action.to_sym]
+          #send("#{hash_name}_for_class_of", object, opts)
+          #return false if     eval("@#{hash_name}")[object.class.to_s.to_sym].empty?
+          #return false unless eval("@#{hash_name}")[object.class.to_s.to_sym][object.id]
+          #return false unless eval("@#{hash_name}")[object.class.to_s.to_sym][object.id][section.to_sym]
+          #return false unless eval("@#{hash_name}")[object.class.to_s.to_sym][object.id][section.to_sym][action.to_sym]
+          #policy_hash= eval("@#{hash_name}")[object.class.to_s.to_sym][object.id][section.to_sym][action.to_sym]
+          policy_hash= get_resource_policy_hash(object, section, action, hash_name, opts)
+          return false unless policy_hash
           value= opts[:return_invert] ? !policy_hash[:value] : policy_hash[:value]
           time_check=     policy_actual_by_time?(policy_hash[:start_at], policy_hash[:finish_at])
           counter_check=  policy_actual_by_counter?(policy_hash[:counter], policy_hash[:max_count])
@@ -287,19 +304,6 @@ module Killich #:nodoc:
           true
         end
 
-        def get_resource_policy_hash(object, section, action, hash_name, options = {})
-          opts = {
-            :recalculate => false,
-            :reset => false
-          }.merge!(options)
-          send("#{hash_name}_for_class_of", object, opts)
-          return nil if     eval("@#{hash_name}")[object.class.to_s.to_sym].empty?
-          return nil unless eval("@#{hash_name}")[object.class.to_s.to_sym][object.id]
-          return nil unless eval("@#{hash_name}")[object.class.to_s.to_sym][object.id][section.to_sym]
-          return nil unless eval("@#{hash_name}")[object.class.to_s.to_sym][object.id][section.to_sym][action.to_sym]
-          eval("@#{hash_name}")[object.class.to_s.to_sym][object.id][section.to_sym][action.to_sym]
-        end
-        
         # Персональная политика к ресурсу
         def personal_resources_policies_hash_for_class_of(resource, options = {})
           opts= {
@@ -358,6 +362,32 @@ module Killich #:nodoc:
           opts={ :update_table=>'GroupResourcePolicy', :return_invert=>true }
           check_resource_policy(object, section, action, 'group_resources_policies_hash', options.merge!(opts))
         end
+        
+        # hi level interfaces
+        def has_complex_block?(section, action, options = {})
+          return true if self.has_personal_block?(section, action, options)
+          return true if self.has_group_block?(section, action, options)
+          false
+        end
+        
+        def has_complex_access?(section, action, options = {})
+          return true if self.has_personal_access?(section, action, options)
+          return true if self.has_group_access?(section, action, options)
+          false
+        end
+        
+        def has_complex_resource_block_for?(object, section, action, options = {})
+          return true if self.has_personal_resource_block_for?(object, section, action, options)
+          return true if self.has_group_resource_block_for?(object, section, action, options)
+          false
+        end
+        
+        def has_complex_resource_access_for?(object, section, action, options = {})
+          return true if self.has_personal_resource_access_for?(object, section, action, options)
+          return true if self.has_group_resource_access_for?(object, section, action, options)
+          false
+        end
+        
       end #AbonentMethods
     end# Abonent
   end# Acts

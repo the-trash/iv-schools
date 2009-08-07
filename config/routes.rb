@@ -16,11 +16,11 @@ ActionController::Routing::Routes.draw do |map|
   # Доступ через пользователя
   map.resources :users do |user|
     user.resources :pages                #/users/:user_id/pages [/users/1/pages], [/users/admin/pages]
-    #user.resources :albums do |album|   #/users/:user_id/albums, /users/:user_id/albums/new
-    #  album.resources :images,
-    #    :member=>{ :need_id=>:get },    #/users/:user_id/albums/:album_id/images/:id/need_ids
-    #    :collection=>{ :no_ids=>:get }  #/users/:user_id/albums/:album_id/images/no_ids
-    #end #:albums
+    user.resources :albums do |album|   #/users/:user_id/albums, /users/:user_id/albums/new
+      album.resources :images,
+        :member=>{ :need_id=>:get },    #/users/:user_id/albums/:album_id/images/:id/need_ids
+        :collection=>{ :no_ids=>:get }  #/users/:user_id/albums/:album_id/images/no_ids
+    end #:albums
   end #:users
   
   # Доступ напрямую через поддомен

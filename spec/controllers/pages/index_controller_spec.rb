@@ -28,8 +28,8 @@ describe PagesController do
     # Общедоступная страница
     it "18:24 23.07.2009" do
       get :index
-      response.should be_success
-      response.should render_template("pages/index.haml")
+      response.should be_redirect
+      response.should redirect_to(root_path(:subdomain=>'admin'))
     end
     
     # действие index
