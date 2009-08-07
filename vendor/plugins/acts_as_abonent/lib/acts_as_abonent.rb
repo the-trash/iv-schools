@@ -134,11 +134,6 @@ module Killich #:nodoc:
             :return_invert=>false,
             :policy_table=>false
           }.merge!(options)
-          #send("create_#{hash_name}", opts)
-          #return false if !eval("@#{hash_name}").values_at(section.to_sym) || !eval("@#{hash_name}").values_at(section.to_sym).first
-          #section_of_policies_hash= eval("@#{hash_name}").values_at(section.to_sym).first
-          #return false if !section_of_policies_hash.values_at(action.to_sym) || !section_of_policies_hash.values_at(action.to_sym).first
-          #policy_hash= section_of_policies_hash.values_at(action.to_sym).first
           policy_hash= get_policy_hash(section, action, hash_name, opts)
           return false unless policy_hash
           value= opts[:return_invert] ? !policy_hash[:value] : policy_hash[:value]
@@ -273,12 +268,6 @@ module Killich #:nodoc:
             :reset => false,
             :return_invert=>false
           }.merge!(options)
-          #send("#{hash_name}_for_class_of", object, opts)
-          #return false if     eval("@#{hash_name}")[object.class.to_s.to_sym].empty?
-          #return false unless eval("@#{hash_name}")[object.class.to_s.to_sym][object.id]
-          #return false unless eval("@#{hash_name}")[object.class.to_s.to_sym][object.id][section.to_sym]
-          #return false unless eval("@#{hash_name}")[object.class.to_s.to_sym][object.id][section.to_sym][action.to_sym]
-          #policy_hash= eval("@#{hash_name}")[object.class.to_s.to_sym][object.id][section.to_sym][action.to_sym]
           policy_hash= get_resource_policy_hash(object, section, action, hash_name, opts)
           return false unless policy_hash
           value= opts[:return_invert] ? !policy_hash[:value] : policy_hash[:value]
