@@ -14,7 +14,7 @@ class CreatePersonalResourcePolicies < ActiveRecord::Migration
       t.string    :resource_type
       
       t.string    :section
-      t.string    :action
+      t.string    :policy
       t.boolean   :value
       
       t.datetime  :start_at

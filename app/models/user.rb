@@ -24,7 +24,7 @@ class User < ActiveRecord::Base
   before_save :fields_downcase
 
   # Пользовательский раздел
-  belongs_to  :role                         # У пользователя в системе одна роль
+  #belongs_to  :role                        # У пользователя в системе одна роль
   has_one     :profile                      # У пользователя есть профайл
   has_many    :pages                        # У пользователя много страниц
   

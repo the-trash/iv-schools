@@ -15,7 +15,7 @@ class CreateGroupPolicies < ActiveRecord::Migration
       t.integer   :role_id
       
       t.string    :section
-      t.string    :action
+      t.string    :policy
       t.boolean   :value
       
       t.datetime  :start_at

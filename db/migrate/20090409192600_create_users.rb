@@ -5,11 +5,12 @@ class CreateUsers < ActiveRecord::Migration
       t.string    :email
       t.string    :crypted_password,          :limit => 40
       t.string    :salt,                      :limit => 40
-      t.datetime  :created_at
-      t.datetime  :updated_at
-      t.string    :remember_token
-      t.datetime  :remember_token_expires_at
-
+      
+      t.string :time_zone, :default => 'Europe/Moscow'
+            
+      t.string   :remember_token
+      t.datetime :remember_token_expires_at
+      
       # Специальный маркер, идентифицирующий пользователя
       # Например к любому пользователю можно будет обращаться
       # site.com/users/1347-2346-2231

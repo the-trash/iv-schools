@@ -8,7 +8,7 @@ Factory.define :group_resource_policy do |prp| end
 # Политика для данного пользователя
 Factory.define  :page_manager_group_resource_policy, :class => GroupResourcePolicy do |r|
   r.section     'pages'
-  r.action      'manager'
+  r.policy      'manager'
   r.value       true
   r.start_at    DateTime.now
   r.finish_at(  DateTime.now + 3.days)
@@ -19,7 +19,7 @@ end
 # Политика для данного пользователя
 Factory.define  :page_tree_group_resource_policy, :class => GroupResourcePolicy do |r|
   r.section     'pages'
-  r.action      'tree'
+  r.policy      'tree'
   r.value       true
   r.start_at    DateTime.now
   r.finish_at(  DateTime.now + 1.days)
@@ -30,7 +30,7 @@ end
 # Политика для данного пользователя
 Factory.define  :profile_edit_group_resource_policy, :class => GroupResourcePolicy do |r|
   r.section     'profile'
-  r.action      'edit'
+  r.policy      'edit'
   r.value       true
   r.start_at    DateTime.now-1.day
   r.finish_at   DateTime.now + 1.days
@@ -41,12 +41,12 @@ end
 # Групповая политика для данного пользователя
 Factory.define  :page_tree_group_resource_policy_unlimited, :class => GroupResourcePolicy do |r|
   r.section     'pages'
-  r.action      'tree'
+  r.policy      'tree'
   r.value       true
 end
 
 Factory.define  :page_manager_group_resource_policy_unlimited, :class => GroupResourcePolicy do |r|
   r.section     'pages'
-  r.action      'manager'
+  r.policy      'manager'
   r.value       true
 end

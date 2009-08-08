@@ -8,7 +8,7 @@ Factory.define :group_policy do |gp| end
 # Политика для данной группы
 Factory.define  :page_manager_group_policy, :class => GroupPolicy do |r|
   r.section     'pages'
-  r.action      'manager'
+  r.policy      'manager'
   r.value       true
   r.start_at    DateTime.now
   r.finish_at(  DateTime.now + 3.days)
@@ -19,7 +19,7 @@ end
 # Политика для данной группы
 Factory.define  :page_tree_group_policy, :class => GroupPolicy do |r|
   r.section     'pages'
-  r.action      'tree'
+  r.policy      'tree'
   r.value       true
   r.start_at    DateTime.now
   r.finish_at(  DateTime.now + 1.days)
@@ -29,12 +29,12 @@ end
 
 Factory.define  :page_tree_group_policy_unlimited, :class => GroupPolicy do |r|
   r.section     'pages'
-  r.action      'tree'
+  r.policy      'tree'
   r.value       true
 end
 
 Factory.define  :page_manager_group_policy_unlimited, :class => GroupPolicy do |r|
   r.section     'pages'
-  r.action      'manager'
+  r.policy      'manager'
   r.value       true
 end

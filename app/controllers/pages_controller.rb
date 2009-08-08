@@ -120,6 +120,7 @@ class PagesController < ApplicationController
   # :pages, :new
   # Пользователь - владелец объекта и имеет соответствующие ролевые политики
   # Под объектом предполагается просматриваемый пользователь (текущий и просматриваемый должны совпадать)
+  # !!!!! TODO: НАПИСАТЬ ТЕСТ: ИМЕЕТ ГРУППОВОЙ ДОСТУП К ДЕЙСТВИЮ, НО ПРОСМАТРИВАЕТ НЕ СЕБЯ !!!!!
   def access_to_controller_action_required
     access_denied and return  if current_user.has_complex_block?(:administrator, controller_name)
     return true               if current_user.has_complex_access?(:administrator, controller_name)

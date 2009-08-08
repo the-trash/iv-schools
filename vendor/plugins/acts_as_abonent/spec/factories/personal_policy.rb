@@ -8,7 +8,7 @@ Factory.define :personal_policy do |pp| end
 # Персональная политика для данного пользователя
 Factory.define  :page_manager_personal_policy, :class => PersonalPolicy do |r|
   r.section     'pages'
-  r.action      'manager'
+  r.policy      'manager'
   r.value       true
   r.start_at    DateTime.now
   r.finish_at(  DateTime.now + 3.days)
@@ -19,7 +19,7 @@ end
 # Персональная политика для данного пользователя
 Factory.define  :page_tree_personal_policy, :class => PersonalPolicy do |r|
   r.section     'pages'
-  r.action      'tree'
+  r.policy      'tree'
   r.value       true
   r.start_at    DateTime.now
   r.finish_at(  DateTime.now + 1.days)
@@ -30,12 +30,12 @@ end
 # Персональная политика для данного пользователя
 Factory.define  :page_tree_personal_policy_unlimited, :class => PersonalPolicy do |r|
   r.section     'pages'
-  r.action      'tree'
+  r.policy      'tree'
   r.value       true
 end
 
 Factory.define  :page_manager_personal_policy_unlimited, :class => PersonalPolicy do |r|
   r.section     'pages'
-  r.action      'manager'
+  r.policy      'manager'
   r.value       true
 end
