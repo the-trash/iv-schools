@@ -122,11 +122,11 @@ class PagesController < ApplicationController
   # Под объектом предполагается просматриваемый пользователь (текущий и просматриваемый должны совпадать)
   # !!!!! TODO: НАПИСАТЬ ТЕСТ: ИМЕЕТ ГРУППОВОЙ ДОСТУП К ДЕЙСТВИЮ, НО ПРОСМАТРИВАЕТ НЕ СЕБЯ !!!!!
   def access_to_controller_action_required
-    access_denied and return  if current_user.has_complex_block?(:administrator, controller_name)
-    return true               if current_user.has_complex_access?(:administrator, controller_name)
-    access_denied and return  if current_user.has_complex_block?(controller_name, action_name)
-    return true               if current_user.has_complex_access?(controller_name, action_name) && current_user.is_owner_of?(@user)
-    return true               if current_user.has_role_policy?(controller_name, action_name) && current_user.is_owner_of?(@user)
+    access_denied if current_user.has_complex_block?(:administrator, controller_name)
+    return true   if current_user.has_complex_access?(:administrator, controller_name)
+    access_denied if current_user.has_complex_block?(controller_name, action_name)
+    return true   if current_user.has_complex_access?(controller_name, action_name) && current_user.is_owner_of?(@user)
+    return true   if current_user.has_role_policy?(controller_name, action_name) && current_user.is_owner_of?(@user)
     access_denied
   end
   
@@ -144,16 +144,16 @@ class PagesController < ApplicationController
     # Пользователь - владелец ресурса и имеет соответствующие ролевые политики
     # Под ресурсом предполагается объект принадлежащий пользователю (текущий пользователь редактирует состояния своих объектов)
   def page_resourсe_access_required
-      access_denied and return  if current_user.has_complex_resource_block_for?(@page, :administrator, controller_name)
-      return true               if current_user.has_complex_resource_access_for?(@page, :administrator, controller_name)
-      return true               if current_user.has_role_policy?(:administrator, controller_name)
-      access_denied and return  if current_user.has_complex_block?(:administrator, controller_name)
-      return true               if current_user.has_complex_access?(:administrator, controller_name)
-      access_denied and return  if current_user.has_complex_resource_block_for?(@page, controller_name, action_name)
-      return true               if current_user.has_complex_resource_access_for?(@page, controller_name, action_name)
-      access_denied and return  if current_user.has_complex_block?(controller_name, action_name)
-      return true               if current_user.has_complex_access?(controller_name, action_name)
-      return true               if current_user.has_role_policy?(controller_name, action_name) && current_user.is_owner_of?(@page)
+      access_denied if current_user.has_complex_resource_block_for?(@page, :administrator, controller_name)
+      return true   if current_user.has_complex_resource_access_for?(@page, :administrator, controller_name)
+      return true   if current_user.has_role_policy?(:administrator, controller_name)
+      access_denied if current_user.has_complex_block?(:administrator, controller_name)
+      return true   if current_user.has_complex_access?(:administrator, controller_name)
+      access_denied if current_user.has_complex_resource_block_for?(@page, controller_name, action_name)
+      return true   if current_user.has_complex_resource_access_for?(@page, controller_name, action_name)
+      access_denied if current_user.has_complex_block?(controller_name, action_name)
+      return true   if current_user.has_complex_access?(controller_name, action_name)
+      return true   if current_user.has_role_policy?(controller_name, action_name) && current_user.is_owner_of?(@page)
       access_denied
   end
 end

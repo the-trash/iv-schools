@@ -149,14 +149,7 @@ module Killich #:nodoc:
         end
         
         def policy_exists(section, policy, hash_name, options = {})
-          opts = {
-            :recalculate => false
-          }.merge!(options)
-          send("create_#{hash_name}", opts)
-          return false if !instance_variable_get("@#{opts[:hash_name]}").values_at(section.to_sym) || !instance_variable_get("@#{opts[:hash_name]}").values_at(section.to_sym).first
-          section_of_policies_hash= instance_variable_get("@#{opts[:hash_name]}").values_at(section.to_sym).first
-          return false if !section_of_policies_hash.values_at(policy.to_sym) || !section_of_policies_hash.values_at(policy.to_sym).first
-          true
+          get_policy_hash(section, policy, hash_name, options).is_a?(Hash)
         end
         
         # Персональная политика
@@ -283,16 +276,7 @@ module Killich #:nodoc:
         end
 
         def resource_policy_exists(object, section, policy, hash_name, options = {})
-          opts = {
-            :recalculate => false,
-            :reset => false
-          }.merge!(options)
-          send("#{hash_name}_for_class_of", object, opts)
-          return false if     instance_variable_get("@#{opts[:hash_name]}")[object.class.to_s.to_sym].empty?
-          return false unless instance_variable_get("@#{opts[:hash_name]}")[object.class.to_s.to_sym][object.id]
-          return false unless instance_variable_get("@#{opts[:hash_name]}")[object.class.to_s.to_sym][object.id][section.to_sym]
-          return false unless instance_variable_get("@#{opts[:hash_name]}")[object.class.to_s.to_sym][object.id][section.to_sym][policy.to_sym]
-          true
+          get_resource_policy_hash(object, section, policy, hash_name, options).is_a?(Hash)
         end
 
         # Персональная политика к ресурсу
@@ -379,7 +363,7 @@ module Killich #:nodoc:
           false
         end
         
-      end #AbonentMethods
+      end# AbonentMethods
     end# Abonent
   end# Acts
 end# Killich
