@@ -73,7 +73,7 @@
             %td.navigation
               -# Если меню навигации не определено, то показать корневое меню
               -# Иначе показать сформированное меню
-              = render(:partial => 'shared/add_menu')
+              =# render(:partial => 'shared/add_menu')
               = yield(:navigation_menu).blank? ? render(:partial => 'shared/root_navigation_menu') : yield(:navigation_menu)
                     
       .footer

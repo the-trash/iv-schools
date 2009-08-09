@@ -1,8 +1,10 @@
 .block        
   %ul
     %li
-      - text= content_tag :span, 'Управлять страницами сайта', :class=>:bar
-      = link_to text, manager_pages_path(:subdomain=>@subdomain)
+      -if logged_in?
+        - current_user.has_role_policy?(:pages, :manager)
+          - text= content_tag :span, 'Управлять страницами сайта', :class=>:bar
+          = link_to text, manager_pages_path(:subdomain=>@subdomain)
       
     %li{:class=>"parent"}
       - text= content_tag :span, "Карта сайта", :class=>:bar

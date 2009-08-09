@@ -363,6 +363,13 @@ module Killich #:nodoc:
           false
         end
         
+        def has_policy_complex_check?(section, policy, options = {})
+          return true if personal_policy_exists?(section, policy, options)
+          return true if group_policy_exists?(section, policy, options)
+          return true if has_role_policy?(section, policy)
+          false
+        end
+        
       end# AbonentMethods
     end# Abonent
   end# Acts
