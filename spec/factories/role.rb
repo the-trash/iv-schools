@@ -109,7 +109,7 @@ Factory.define :guaranted_user_role, :class => Role do |r|
   r.description 'Правовой набор заверенного пользователя'
   r.settings(policy.to_yaml)
 end
-#
+
 # РОЛЬ АДМИНИСТРАТОРА ШКОЛЬНОГО САЙТА
 Factory.define :site_administrator_role, :class => Role do |r|
   policy= {
