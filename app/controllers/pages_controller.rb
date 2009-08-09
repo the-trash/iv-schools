@@ -124,6 +124,7 @@ class PagesController < ApplicationController
   def access_to_controller_action_required
     access_denied if current_user.has_complex_block?(:administrator, controller_name)
     return true   if current_user.has_complex_access?(:administrator, controller_name)
+    return true   if current_user.has_role_policy?(:administrator, controller_name)
     access_denied if current_user.has_complex_block?(controller_name, action_name)
     return true   if current_user.has_complex_access?(controller_name, action_name) && current_user.is_owner_of?(@user)
     return true   if current_user.has_role_policy?(controller_name, action_name) && current_user.is_owner_of?(@user)

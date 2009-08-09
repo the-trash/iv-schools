@@ -1,0 +1,33 @@
+%h3=t('cabinet')
+
+.block
+  %ul
+    %li
+      - text= content_tag :span, t('profile'), :class=>:bar
+      = link_to text, profile_users_path
+      
+    %li
+      - text= content_tag :span, t('page.manage'), :class=>:bar
+      = link_to text, manager_pages_path(:subdomain=>current_user.subdomain)
+      
+    %li
+      - text= content_tag :span, t('my_news'), :class=>:bar
+      = link_to text, manager_pages_path(:subdomain=>current_user.subdomain)
+      
+    %li
+      - text= content_tag :span, t('my_questions'), :class=>:bar
+      = link_to text, manager_pages_path(:subdomain=>current_user.subdomain)
+      
+    %li
+      - text= content_tag :span, t('my_albums'), :class=>:bar
+      = link_to text, manager_pages_path(:subdomain=>current_user.subdomain)
+      
+    %li
+      - text= content_tag :span, t('my_documents'), :class=>:bar
+      = link_to text, manager_pages_path(:subdomain=>current_user.subdomain)
+      
+    %li
+      - text= content_tag :span, t('my_files'), :class=>:bar
+      = link_to text, manager_pages_path(:subdomain=>current_user.subdomain)
+      
+      

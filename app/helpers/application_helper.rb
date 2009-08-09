@@ -28,7 +28,7 @@ module ApplicationHelper
       flash_= ''
       flash_= content_tag(:li, flash[:notice])
       flash_= content_tag :ul, flash_
-      flash_= content_tag(:h3, t('flash.warning.title'))+flash_
+      flash_= content_tag(:h3, t('flash.notice.title'))+flash_
       flash_= content_tag :div, flash_, :class=>:notice
       flash_= content_tag :div, flash_, :class=>:system_messages
       # Обнулим флеш - иногда он имеет свойство проявляться

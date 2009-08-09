@@ -1,15 +1,43 @@
+require 'digest/sha1'
 class UsersController < ApplicationController
-  # Ôîğìèğîâàíèå äàííûõ äëÿ îòîáğàæåíèÿ áàçîâîãî ìåíş-íàâèãàöèè
+  # Ğ¤Ğ¾Ñ€Ğ¼Ğ¸Ñ€Ğ¾Ğ²Ğ°Ğ½Ğ¸Ğµ Ğ´Ğ°Ğ½Ğ½Ñ‹Ñ… Ğ´Ğ»Ñ Ğ¾Ñ‚Ğ¾Ğ±Ñ€Ğ°Ğ¶ĞµĞ½Ğ¸Ñ Ğ±Ğ°Ğ·Ğ¾Ğ²Ğ¾Ğ³Ğ¾ Ğ¼ĞµĞ½Ñ-Ğ½Ğ°Ğ²Ğ¸Ğ³Ğ°Ñ†Ğ¸Ğ¸
   before_filter :navigation_menu_init
   
-  # áàçîâàÿ ñòğàíèöà Ïîëüçîâàòåëÿ ñèñòåìû
+  # ĞŸÑ€Ğ¾Ğ²ĞµÑ€ĞºĞ° Ğ½Ğ° Ñ€ĞµĞ³Ğ¸ÑÑ‚Ñ€Ğ°Ñ†Ğ¸Ñ
+  before_filter :login_required, :except=>[:new, :create, :update]
+  
+  # Ğ¡Ğ¿Ğ¸ÑĞ¾Ğº Ğ¿Ğ¾Ğ»ÑŒĞ·Ğ¾Ğ²Ğ°Ñ‚ĞµĞ»ĞµĞ¹ ÑĞ¸ÑÑ‚ĞµĞ¼Ñ‹
   def index
-    @pages_tree= Page.find_all_by_user_id(@user.id, :order=>"lft ASC")
+    @users = User.paginate(:all,
+                           :order=>"created_at ASC", #ASC, DESC
+                           :page => params[:page],
+                           :per_page=>5
+                           )
+  end
+  
+  # ĞºĞ°Ğ±Ğ¸Ğ½ĞµÑ‚ Ğ¿Ğ¾Ğ»ÑŒĞ·Ğ¾Ğ²Ğ°Ñ‚ĞµĞ»Ñ
+  def cabinet
+  end
+  
+  # ĞĞ½ĞºĞµÑ‚Ğ° Ğ¿Ğ¾Ğ»ÑŒĞ·Ğ¾Ğ²Ğ°Ñ‚ĞµĞ»Ñ
+  def profile
+    @profile= current_user.profile
   end
   
   # render new.rhtml
   def new
     @user = User.new
+  end
+
+  # ĞĞ½ĞºĞµÑ‚Ğ° Ğ¿Ğ¾Ğ»ÑŒĞ·Ğ¾Ğ²Ğ°Ñ‚ĞµĞ»Ñ
+  def update
+    @user= User.find_by_id(params[:id])
+    @user.avatar= params[:user][:avatar]
+    extension = File.extname(@user.avatar_file_name)
+    @user.avatar.instance_write(:file_name, "#{Digest::SHA1.hexdigest(@user.login+Time.now.to_s)}#{extension}") 
+    @user.save
+    flash[:notice]= 'ĞĞ²Ğ°Ñ‚Ğ°Ñ€Ğ° ÑƒÑĞ¿ĞµÑˆĞ½Ğ¾ Ğ¾Ğ±Ğ½Ğ¾Ğ²Ğ»ĞµĞ½Ğ°'
+    redirect_to(profile_users_path(:subdomain=>@subdomain)) and return
   end
 
   def create
@@ -19,15 +47,15 @@ class UsersController < ApplicationController
     # uncomment at your own risk
     # reset_session
     
-    # Ñîçäàòü ïîëüçîâàòåëÿ
-    # Íàçíà÷èòü ğîëü çàğåãèñòğèğîâàííîãî ïîëüçîâàòåëÿ
-    # Ñîõğàíèòü
+    # Ğ¡Ğ¾Ğ·Ğ´Ğ°Ñ‚ÑŒ Ğ¿Ğ¾Ğ»ÑŒĞ·Ğ¾Ğ²Ğ°Ñ‚ĞµĞ»Ñ
+    # ĞĞ°Ğ·Ğ½Ğ°Ñ‡Ğ¸Ñ‚ÑŒ Ñ€Ğ¾Ğ»ÑŒ Ğ·Ğ°Ñ€ĞµĞ³Ğ¸ÑÑ‚Ñ€Ğ¸Ñ€Ğ¾Ğ²Ğ°Ğ½Ğ½Ğ¾Ğ³Ğ¾ Ğ¿Ğ¾Ğ»ÑŒĞ·Ğ¾Ğ²Ğ°Ñ‚ĞµĞ»Ñ
+    # Ğ¡Ğ¾Ñ…Ñ€Ğ°Ğ½Ğ¸Ñ‚ÑŒ
     @user = User.new(params[:user])
     @user.set_role(Role.find_by_name('registrated_user'))
     @user.save
         
     if @user.errors.empty?
-      # Åñëè âñå óñïåøíî - ñîçäàäèì ïîëüçîâàòåëş ïóñòîé ïğîôàéë
+      # Ğ•ÑĞ»Ğ¸ Ğ²ÑĞµ ÑƒÑĞ¿ĞµÑˆĞ½Ğ¾ - ÑĞ¾Ğ·Ğ´Ğ°Ğ´Ğ¸Ğ¼ Ğ¿Ğ¾Ğ»ÑŒĞ·Ğ¾Ğ²Ğ°Ñ‚ĞµĞ»Ñ Ğ¿ÑƒÑÑ‚Ğ¾Ğ¹ Ğ¿Ñ€Ğ¾Ñ„Ğ°Ğ¹Ğ»
       Profile.new(:user_id=>@user.id).save
       
       self.current_user = @user

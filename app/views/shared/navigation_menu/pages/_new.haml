@@ -4,7 +4,7 @@
       - text= content_tag :span, t('home'), :class=>:bar
       = link_to text, root_path(:subdomain=>current_user.subdomain)
 
-    - if current_user.has_policy_complex_check?(:pages, :manager)
+    - if current_user.has_policy_complex_check?(:pages, :manager) || current_user.has_policy_complex_check?(:administrator, :pages)
       %li
         - text= content_tag :span, t('page.manage'), :class=>:bar
         = link_to text, manager_pages_path(:subdomain=>current_user.subdomain)

@@ -1,5 +1,6 @@
 ActionController::Routing::Routes.draw do |map|
-  map.resources :users
+  map.resources :profiles, :member=>{ :name=>:put }
+  map.resources :users, :collection=>{:cabinet=>:get, :profile=>:get}
   map.resource :session
 
   map.signup '/signup', :controller => 'users', :action => 'new'
@@ -15,31 +16,30 @@ ActionController::Routing::Routes.draw do |map|
   #------------------------------------------------------------------------------------#
   # Доступ через пользователя
   map.resources :users do |user|
-    user.resources :pages                #/users/:user_id/pages [/users/1/pages], [/users/admin/pages]
+    user.resources :pages
+  end#users
+  
+  # Стандартный роутинг для страниц
+  map.resources :pages,
+    :collection=>{  :map=>:get, :manager=>:get  },
+    :member=>{  :up=>:get, :down=>:get }
+
+=begin
+  map.resources :users do |user|
     user.resources :albums do |album|   #/users/:user_id/albums, /users/:user_id/albums/new
       album.resources :images,
         :member=>{ :need_id=>:get },    #/users/:user_id/albums/:album_id/images/:id/need_ids
         :collection=>{ :no_ids=>:get }  #/users/:user_id/albums/:album_id/images/no_ids
     end #:albums
   end #:users
-  
+
   # Доступ напрямую через поддомен
   map.resources :albums do |album|   #/albums, /albums/new
     album.resources :images,
       :member=>{     :need_id=>:get },    #/albums/:album_id/images/:id/need_ids
       :collection=>{ :no_ids=>:get }  #/albums/:album_id/images/no_ids
   end #:albums
-  
-  # Стандартный роутинг для страниц
-  map.resources :pages,
-    :collection=>{
-      :map=>:get,       # /pages/map
-      :manager=>:get    # /pages/manager
-    },
-    :member=>{
-      :up=>:get,
-      :down=>:get
-    }
+=end
   
   #------------------------------------------------------------------------------------#
   #------------------------------------------------------------------------------------#

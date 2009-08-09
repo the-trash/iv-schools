@@ -6,6 +6,8 @@ class User < ActiveRecord::Base
   # Virtual attribute for the unencrypted password
   attr_accessor :password
 
+  has_attached_file :avatar, :styles => { :medium => "300x300>", :thumb => "100x100>" }
+  
   # Валидация
   validates_uniqueness_of   :login, :case_sensitive => false
   validates_uniqueness_of   :email, :case_sensitive => false
@@ -37,7 +39,8 @@ class User < ActiveRecord::Base
   # prevents a user from submitting a crafted form that bypasses activation
   # anything else you want your user to change should be added here.
   attr_accessible :login, :email, :password, :password_confirmation
-
+  attr_accessible :avatar, :avatar_file_name, :avatar_content_type, :avatar_file_size, :avatar_updated_at
+  
   # Перевести в нижний регистр логин и email
   def subdomain
     login

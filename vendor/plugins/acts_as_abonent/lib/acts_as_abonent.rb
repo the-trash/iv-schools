@@ -79,6 +79,7 @@ module Killich #:nodoc:
           return if !opts[:update_table] || !opts[:updated_policy]
           return unless opts[:updated_policy].is_a?(Hash)
           return unless opts[:updated_policy][:id]
+          # opts[:update_table].constantize.send(:update_counters, opts[:updated_policy][:id], :counter => opts[:counter_increment])
           eval("#{opts[:update_table]}.update_counters(#{opts[:updated_policy][:id]}, :counter=>#{opts[:counter_increment]})")
           opts[:updated_policy][:counter]= opts[:updated_policy][:counter]+opts[:counter_increment]
         end

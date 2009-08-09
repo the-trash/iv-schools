@@ -4,6 +4,7 @@ class CreateProfiles < ActiveRecord::Migration
 
       # Анкета пользователя
       t.integer   :user_id          # Кому принадлежит
+      t.string    :zip              # zip id анкеты
       t.date      :birthday         # День рождения
       t.string    :native_town      # Родной город
       

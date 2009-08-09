@@ -8,6 +8,7 @@
     =yield :meta
     
     =stylesheet_link_tag 'basic/style.css', :media=>'screen'
+    =stylesheet_link_tag 'basic/user_bar.css', :media=>'screen'
     =stylesheet_link_tag 'basic/paginator', :media=>'screen'
     
     =yield  :js
@@ -31,19 +32,17 @@
       Иваново, Школьный портал
   %body
     .body
-      -# Если выполнен вход, то отобразим верхнее меню для данного пользователя
-      -if current_user
-        =render :partial => "users/toolbar"
-
       =image_tag "basic/basic_header.jpg", :alt=>"iv36.iv-schools.ru"
 
       .header{:id=>:header}
-        - if @subdomain.blank?
-          = link_to "Ивановский школьный портал iv-schools.ru", "#" 
+        - if @subdomain == 'portal'
+          = link_to "Ивановский школьный портал iv-schools.ru", root_path
         - else
-          = link_to @subdomain.to_s + ".iv-schools.ru", "#"
+          = link_to @subdomain.to_s + ".iv-schools.ru", root_path(:subdomain=>@subdomain)
 
       %ul.system_navigation
+        %li
+          =link_to t('users'), users_path
         %li
           =link_to t('news'), url_for(:controller=>:reports)
         %li
@@ -59,10 +58,19 @@
             =link_to t('exit'), logout_path
           -else
             =link_to t('signup'), login_path(:subdomain => @subdomain)
-
+            
+      -# Если выполнен вход, то отобразим верхнее меню для данного пользователя
+                
       %table.main#main
         %tbody
           %tr
+            %td.navigation
+              -#if logged_in?
+              =render :partial => "users/toolbar"
+      
+              -# Если меню навигации не определено, то показать корневое меню
+              = yield(:navigation_menu).blank? ? render(:partial => 'shared/basic_navigation_menu') : yield(:navigation_menu)
+              
             %td.content#content_column
               .block#content_block
                 -# Ввод Флеш сообщений
@@ -70,16 +78,14 @@
                 -# Ввод основного содержимого страницы
                 =yield
                   
-            %td.navigation
-              -# Если меню навигации не определено, то показать корневое меню
-              = yield(:navigation_menu).blank? ? render(:partial => 'shared/basic_navigation_menu') : yield(:navigation_menu)
+
                     
       .footer
         .block
           .moderator
             
           .portal
-            = link_to 'Ивановский Региональный Школьный Интернет Портал', 'http://iv-schools.ru'
+            = link_to t('site_description'), root_path(:subdomain=>false)
             &nbsp;&nbsp;&nbsp;2006 &mdash; 2009 &copy;
             &nbsp;&nbsp;&nbsp;
             Язык интерфейса:
