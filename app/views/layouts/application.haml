@@ -84,6 +84,10 @@
           .portal
             = link_to 'Ивановский Региональный Школьный Интернет Портал', 'http://iv-schools.ru'
             &nbsp;&nbsp;&nbsp;2006 &mdash; 2009 &copy;
+            &nbsp;&nbsp;&nbsp;
+            Язык интерфейса:
+            =# cookies[:lang]
+            =select("local", "lang", {'английский'=>'/?lang=en', 'русский'=>'/?lang=ru'}, {:selected=>"/?lang=#{cookies[:lang]}"}, :onchange=>"top.location.href = this.options[this.selectedIndex].value")
             
           =# render :partial=>'shared/debugger'
             

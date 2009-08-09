@@ -24,3 +24,5 @@ en:
       :title: 'Warning'
       :system: 'System Warning'
       :many_title: 'Warning'
+
+  :enter: 'Send'

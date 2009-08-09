@@ -17,7 +17,7 @@ class ApplicationController < ActionController::Base
   before_filter :system_init    # Инициализация системных переменных
   before_filter :find_subdomain # Определить поддомен в котором мы находимся
   before_filter :find_user      # Определить пользователя системы, к которому мы пытаемся получить доступ (первый уровень поиска)
-  #before_filter :set_user_language # i18n интернационализация
+  before_filter :set_user_language # i18n интернационализация
   
   protected
 
@@ -26,9 +26,17 @@ class ApplicationController < ActionController::Base
     flash[:system_warnings]= []
   end
 
-  #def set_user_language
-  #  I18n.locale = current_user.language if logged_in?
-  #end
+  def set_user_language
+    #current_user.language if logged_in?
+    #cookies[:lang] = 'ru' unless cookies[:lang]
+    I18n.locale = cookies[:lang] if cookies[:lang] && ['en', 'ru'].include?(cookies[:lang]) 
+    if params[:lang]
+      if ['en', 'ru'].include?(params[:lang])
+        cookies[:lang] = params[:lang] 
+        I18n.locale = params[:lang]
+      end
+    end
+  end
   
   #-------------------------------------------------------------------------------------
   #> Я - НЕ зарегистрированный пользователь

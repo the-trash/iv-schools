@@ -1,33 +1,29 @@
 .std_form
   %h3
-    Вход в систему iv-schools.ru
+    =t('text.sessions.new.wellcome')
   %p
-    t('text.sessions.new.description')
+    =t('text.sessions.new.description')
 
   -form_tag session_path do
     %label{:for=>:login}
-      Логин
-      %strong
-        (имя в системе)
+      =t('text.sessions.new.login_label')
     %span
       = text_field_tag :login, '', :class=>:input
     %p
-      Логин &mdash; это ваш псеводоним в системе iv-schools.ru, который Вы указали при регистрации
+      =t('text.sessions.new.login')
       
     %label{:for=>:password}
-      Пароль
+      =t('text.sessions.new.password_label')
     %span
       = password_field_tag :password, '', :class=>:input
     %p
-      Пароль для доступа в систему
+      =t('text.sessions.new.password')
       
     %label{:for=>:remember_me}
       = check_box_tag 'remember_me', '1', false, :class=>:check_box
-      Запомнить меня
-      %strong
-        (3 дня)
+      =t('text.sessions.new.remember_me')        
     %p
-      не устанавливайте, если работаете на чужом компьютере
+      =t('text.sessions.new.check_requirement')
 
     %p
-      = submit_tag 'Вход', :class=>:submit
+      = submit_tag t('enter'), :class=>:submit
