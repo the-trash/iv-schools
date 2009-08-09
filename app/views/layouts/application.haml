@@ -72,23 +72,18 @@
                   
             %td.navigation
               -# Если меню навигации не определено, то показать корневое меню
-              -# Иначе показать сформированное меню
-              =# render(:partial => 'shared/add_menu')
-              = yield(:navigation_menu).blank? ? render(:partial => 'shared/root_navigation_menu') : yield(:navigation_menu)
+              = yield(:navigation_menu).blank? ? render(:partial => 'shared/basic_navigation_menu') : yield(:navigation_menu)
                     
       .footer
         .block
           .moderator
-            =# render :partial=>'shared/page_stat'
             
           .portal
             = link_to 'Ивановский Региональный Школьный Интернет Портал', 'http://iv-schools.ru'
             &nbsp;&nbsp;&nbsp;2006 &mdash; 2009 &copy;
             &nbsp;&nbsp;&nbsp;
             Язык интерфейса:
-            =# cookies[:lang]
             =select("local", "lang", {'английский'=>'/?lang=en', 'русский'=>'/?lang=ru'}, {:selected=>"/?lang=#{cookies[:lang]}"}, :onchange=>"top.location.href = this.options[this.selectedIndex].value")
             
-          =# render :partial=>'shared/debugger'
             
             

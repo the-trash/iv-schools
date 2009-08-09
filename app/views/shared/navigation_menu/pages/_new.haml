@@ -1,25 +1,10 @@
 .block
   %ul
     %li
-      - text= content_tag :span, 'Управлять страницами сайта', :class=>:bar
-      = link_to text, manager_pages_path(:subdomain=>@subdomain)
-    %li
-      - text= content_tag :span, 'Документация для редактора', :class=>:bar
-      = link_to text, '#'
-    %li
-      - text= content_tag :span, 'Хотят редактировать страницу +3', :class=>:bar
-      = link_to text, '#'
-    %li
-      - text= content_tag :span, 'Редакторы страницы +5', :class=>:bar
-      = link_to text, '#'
-    %li
-      - text= content_tag :span, 'Настройки отображения страницы', :class=>:bar
-      = link_to text, '#'
-    %li
-      - text= content_tag :span, 'История редактирования', :class=>:bar
-      = link_to text, '#'
+      - text= content_tag :span, t('home'), :class=>:bar
+      = link_to text, root_path(:subdomain=>current_user.subdomain)
 
-    %li.system
-      - iv= content_tag :span, "iv-schools.ru", :class=>:nobr
-      - text= content_tag :span, "Регистрация в системе #{iv}", :class=>:bar
-      = link_to text, signup_path
+    - if current_user.has_policy_complex_check?(:pages, :manager)
+      %li
+        - text= content_tag :span, t('page.manage'), :class=>:bar
+        = link_to text, manager_pages_path(:subdomain=>current_user.subdomain)

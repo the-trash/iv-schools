@@ -24,7 +24,6 @@ class User < ActiveRecord::Base
   before_save :fields_downcase
 
   # Пользовательский раздел
-  #belongs_to  :role                        # У пользователя в системе одна роль
   has_one     :profile                      # У пользователя есть профайл
   has_many    :pages                        # У пользователя много страниц
   
@@ -38,7 +37,12 @@ class User < ActiveRecord::Base
   # prevents a user from submitting a crafted form that bypasses activation
   # anything else you want your user to change should be added here.
   attr_accessible :login, :email, :password, :password_confirmation
-  
+
+  # Перевести в нижний регистр логин и email
+  def subdomain
+    login
+  end
+    
   # Перевести в нижний регистр логин и email
   def fields_downcase
     login.downcase!
