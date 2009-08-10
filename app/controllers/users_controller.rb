@@ -29,17 +29,6 @@ class UsersController < ApplicationController
     @user = User.new
   end
 
-  # Анкета пользователя
-  def update
-    @user= User.find_by_id(params[:id])
-    @user.avatar= params[:user][:avatar]
-    extension = File.extname(@user.avatar_file_name)
-    @user.avatar.instance_write(:file_name, "#{Digest::SHA1.hexdigest(@user.login+Time.now.to_s)}#{extension}") 
-    @user.save
-    flash[:notice]= 'Аватара успешно обновлена'
-    redirect_to(profile_users_path(:subdomain=>@subdomain)) and return
-  end
-
   def create
     cookies.delete :auth_token
     # protects against session fixation attacks, wreaks havoc with 

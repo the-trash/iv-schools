@@ -5,6 +5,7 @@ ru:
       :password_confirmation: 'Подтверждение пароля'
       :login: 'Логин (имя учетной записи)'
       :email: 'Email (ваш адрес электронной почты)'
+      :avatar: 'Аватар'
 
     :auth:
       :updated: "Спасибо за регистрацию в системе iv-schools.ru"

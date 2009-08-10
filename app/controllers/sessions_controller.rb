@@ -20,7 +20,7 @@ class SessionsController < ApplicationController
           :domain=>Site::COOKIES_SCOPE
         }
       end
-      redirect_back_or_default(root_path(:subdomain=>current_user.login))
+      redirect_back_or_default(cabinet_users_path(:subdomain=>current_user.subdomain))
       flash[:notice] = t('user.auth.entered')
     else
       flash[:warning] = t('user.auth.enter_error')

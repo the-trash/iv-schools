@@ -1,5 +1,5 @@
 ActionController::Routing::Routes.draw do |map|
-  map.resources :profiles, :member=>{ :name=>:put }
+  map.resources :profiles, :member=>{ :name=>:put, :avatar=>:put }
   map.resources :users, :collection=>{:cabinet=>:get, :profile=>:get}
   map.resource :session
 

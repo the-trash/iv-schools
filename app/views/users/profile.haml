@@ -1,5 +1,7 @@
 %h3=t('profile')
 
+=object_errors(@user)
+
 .edit_form
   %h5
     Мое имя:
@@ -12,7 +14,7 @@
 .edit_form
   %h5
     Аватара:
-  -form_for :user, :url => user_path(@user), :html => { :multipart => true, :method=>:put } do |form|
+  -form_for :user, :url => avatar_profile_path(@user), :html => { :multipart => true, :method=>:put } do |form|
     =form.file_field :avatar
     =submit_tag 'Установить', :class=>:submit
 

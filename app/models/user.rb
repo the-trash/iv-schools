@@ -7,6 +7,14 @@ class User < ActiveRecord::Base
   attr_accessor :password
 
   has_attached_file :avatar, :styles => { :medium => "300x300>", :thumb => "100x100>" }
+  validates_attachment_presence :avatar
+  validates_attachment_content_type :avatar, :content_type => 'image/jpeg', :message=>'123'#t('cabinet')
+  #validate_attachment_size :avatar, :greater_than=>50.kilobytes, :less_than =>300.kilobytes
+  #:in=>(50.kilobytes..300.kilobytes)
+  #:message=>'blabla'
+  #description
+  #negative_failure_message
+  #failure_message
   
   # Валидация
   validates_uniqueness_of   :login, :case_sensitive => false
@@ -122,5 +130,4 @@ class User < ActiveRecord::Base
       
     def password_required?
       crypted_password.blank? || !password.blank?
-    end
-end
+    end
