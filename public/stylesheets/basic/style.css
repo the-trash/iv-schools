@@ -35,7 +35,6 @@ sub{vertical-align:-40%;}
 
 ol, ul        { list-style:none; }
 table, tr, td { vertical-align:top; border-collapse: collapse; border-spacing: 0; }
-table{margin:1px;}
 a             { text-decoration: underline; color:#2476FF; }
 a:hover       { text-decoration: none;}
 p             { margin:0 0 15px 0; line-height:160%; font-size:8pt; text-indent:15px;}

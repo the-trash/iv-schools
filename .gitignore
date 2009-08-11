@@ -6,3 +6,4 @@ config/database.yml
 *.txt
 *.bat
 public/system
+public/uploads

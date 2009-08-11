@@ -1,0 +1,21 @@
+.main_bar_div
+  %table.main_bar
+    %tr
+      %td.logo
+        =link_to image_tag('star.png'), '#'
+        =link_to 'Школьный портал', '#'
+      %td.avatar
+        =link_to image_tag(current_user.avatar:micro), '#'
+      %td.cabinet
+        =link_to t('cabinet'), '#'
+        &nbsp;
+        &nbsp;
+        =link_to image_tag('mail.png'), '#'
+        =link_to '10', '#'
+      %td.exit
+        =link_to t('exit'), '#'
+      %td.search
+        -form_tag do
+          %span
+            = text_field_tag :title
+            =submit_tag 'Поиск'

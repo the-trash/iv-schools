@@ -5,16 +5,40 @@ class User < ActiveRecord::Base
   
   # Virtual attribute for the unencrypted password
   attr_accessor :password
+  #----------------------------------------------------------------------------------------------
+  has_attached_file :avatar,
+    :styles => {
+        :normal => ["200x300#", :jpg],
+        :small => ["100x150#", :jpg],
+        :mini  => ["50x75#", :jpg],
+        :micro  => ["25x38#", :jpg]
+        #:original => ["200x300#", :jpg],
+    },
+    :convert_options => {
+      :all => "-strip"
+      #:original => ' -crop "165x165+0+0" ',
+      #:small => ' -crop "100x100+0+0" ',
+      #:mini => ' -crop "50x50+0+0" '
+    },
+    :url => Project::AVATARA_URL,
+    :default_url=>Project::AVATARA_DEFAULT
+    # :negative => "-negate" 
+    #'-fuzz "1%" -trim', '-background white -extend 128x128 -strip'
+    #:path => PROJECT['avatara_path'],
+    #:url => PROJECT['avatara_url']
+    #avatara_path: ':rails_root/public/uploads/:attachment/:id/:id-:style.jpg'
+    #avatara_url: '/uploads/:attachment/:id/:id-:style.jpg'
 
-  has_attached_file :avatar, :styles => { :medium => "300x300>", :thumb => "100x100>" }
-  validates_attachment_presence :avatar
-  validates_attachment_content_type :avatar, :content_type => 'image/jpeg', :message=>'123'#t('cabinet')
-  #validate_attachment_size :avatar, :greater_than=>50.kilobytes, :less_than =>300.kilobytes
-  #:in=>(50.kilobytes..300.kilobytes)
-  #:message=>'blabla'
-  #description
-  #negative_failure_message
-  #failure_message
+  
+  # ['image/gif', 'image/png', 'image/pjpeg', 'image/x-png', 'image/jpg'],
+  validates_attachment_content_type :avatar,
+                                    :content_type => ['image/jpeg'],
+                                    :message=>I18n.translate('paperclip.avatar.errors.content_type')
+                                    
+  validates_attachment_size :avatar,
+                            :in => 5.kilobytes..200.kilobytes,
+                            :message=>I18n.translate('paperclip.avatar.errors.size')
+  #----------------------------------------------------------------------------------------------
   
   # Валидация
   validates_uniqueness_of   :login, :case_sensitive => false
@@ -130,4 +154,5 @@ class User < ActiveRecord::Base
       
     def password_required?
       crypted_password.blank? || !password.blank?
-    end
+    end
+end

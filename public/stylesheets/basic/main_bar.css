@@ -1,0 +1,35 @@
+.main_bar_div{
+  width:895px;
+  border:4px solid #EEE;
+}
+.main_bar img{
+  vertical-align:middle;
+}
+.main_bar{
+  padding:0;
+  border-collapse:separate;
+}
+.main_bar td{
+  vertical-align:middle;
+  padding:3px;
+}
+.main_bar td.logo{
+  padding-left: 20px;
+  width:180px;
+}
+.main_bar td.avatar{
+  border-left:1px solid #DDDDDD;
+  padding-left:10px;
+  width:30px;
+}
+.main_bar td.cabinet{
+  width:200px;
+}
+.main_bar td.exit{
+  width:50px;
+}
+.main_bar td.search{
+  border-left:1px solid #DDDDDD;
+  padding-left:10px;
+  width:250px;
+}

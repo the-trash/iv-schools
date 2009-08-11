@@ -2,6 +2,7 @@ class CreateUsers < ActiveRecord::Migration
   def self.up
     create_table "users", :force => true do |t|
       t.string    :login
+      t.string    :zip              # zip код пользователя
       t.string    :email
       t.string    :crypted_password,          :limit => 40
       t.string    :salt,                      :limit => 40

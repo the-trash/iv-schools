@@ -1,6 +1,8 @@
 module Site
   # Site::ADDRESS
   # Глобальные константы сайта
+  # Адрес проекта
   ADDRESS = "http://localhost:3000"
-  COOKIES_SCOPE = ".iv-schools.info" # авторизация действительна для всех поддоменов
+  # авторизация действительна для всех поддоменов
+  COOKIES_SCOPE = ".iv-schools.info"
 end

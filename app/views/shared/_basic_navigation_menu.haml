@@ -1,7 +1,0 @@
--unless logged_in?
-  .block
-    %ul
-      %li.system
-        - iv= content_tag :span, "iv-schools.ru", :class=>:nobr
-        - text= content_tag :span, "Регистрация в системе #{iv}", :class=>:bar
-        = link_to text, signup_path

@@ -1,0 +1,16 @@
+.current_user_bar{
+  padding:3px;
+  margin-bottom:10px;
+  background:#CBA135 url(/images/editor_arrow.gif) no-repeat scroll 100% 0;
+}
+.current_user_bar td{
+  padding-right:10px;
+}
+.current_user_bar a{
+  color:#FFF;
+  font-size:8pt;
+  line-height:170%;
+}
+.current_user_bar a:hover{
+  color:#FFF;
+}

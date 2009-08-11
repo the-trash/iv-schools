@@ -8,7 +8,8 @@
     =yield :meta
     
     =stylesheet_link_tag 'basic/style.css', :media=>'screen'
-    =stylesheet_link_tag 'basic/user_bar.css', :media=>'screen'
+    =stylesheet_link_tag 'basic/main_bar.css', :media=>'screen'
+    =stylesheet_link_tag 'basic/current_user_bar.css', :media=>'screen'
     =stylesheet_link_tag 'basic/paginator', :media=>'screen'
     
     =yield  :js
@@ -32,6 +33,11 @@
       Иваново, Школьный портал
   %body
     .body
+      -if logged_in?
+        =render :partial => 'shared/main_bar_logined'
+      -else
+        =render :partial => 'shared/main_bar'
+        
       =image_tag "basic/basic_header.jpg", :alt=>"iv36.iv-schools.ru"
 
       .header{:id=>:header}
@@ -66,10 +72,11 @@
           %tr
             %td.navigation
               -#if logged_in?
-              =render :partial => "users/toolbar"
+              =render :partial => "shared/current_user_bar"
       
               -# Если меню навигации не определено, то показать корневое меню
-              = yield(:navigation_menu).blank? ? render(:partial => 'shared/basic_navigation_menu') : yield(:navigation_menu)
+              =# yield(:navigation_menu).blank? ? render(:partial => 'shared/basic_navigation_menu') : yield(:navigation_menu)
+              = yield(:navigation_menu) unless yield(:navigation_menu).blank?
               
             %td.content#content_column
               .block#content_block
