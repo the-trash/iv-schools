@@ -2,6 +2,9 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :profiles,
     :member=>{ :name=>:put, :avatar=>:put }
   
+  map.resources :storage_sections
+  map.resources :storage_files
+  
   map.resources :pages,
     :collection=>{ :map=>:get, :manager=>:get },
     :member=>{ :up=>:get, :down=>:get }
@@ -13,8 +16,8 @@ ActionController::Routing::Routes.draw do |map|
   map.login '/login', :controller => 'sessions', :action => 'new'
   map.logout '/logout', :controller => 'sessions', :action => 'destroy'
   
-  map.root :controller => 'pages', :action => 'index'
-
+  map.root :controller=>'pages'
+  
   # Администраторский роутер - работает с app/controllers/admins, app/view/admins
   # /admins/users/new, /admins/users/:id/edit
   # /admins/users/:id/change_role    

@@ -30,9 +30,8 @@ class User < ActiveRecord::Base
     #avatara_url: '/uploads/:attachment/:id/:id-:style.jpg'
 
   
-  # ['image/gif', 'image/png', 'image/pjpeg', 'image/x-png', 'image/jpg'],
   validates_attachment_content_type :avatar,
-                                    :content_type => ['image/jpeg'],
+                                    :content_type => ['image/jpg', 'image/jpeg', 'image/pjpeg', 'image/gif', 'image/png', 'image/x-png'],
                                     :message=>I18n.translate('paperclip.avatar.errors.content_type')
                                     
   validates_attachment_size :avatar,

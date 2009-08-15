@@ -1,4 +1,12 @@
-.map
-  %h5=t('site_map')
-  %ul
-    = pages_tree!(@pages_tree)
+- content_for :current_editor do
+  = render :partial => "shared/current_editor_bar"
+
+-if @pages_tree.empty?
+  .map
+    %h5
+      Нет страниц с содержимым для отображения
+-else
+  .map
+    %h5=t('site_map')
+    %ul
+      = pages_tree!(@pages_tree)

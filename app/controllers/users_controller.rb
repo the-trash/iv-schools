@@ -4,12 +4,13 @@ class UsersController < ApplicationController
   before_filter :navigation_menu_init
   
   # Проверка на регистрацию
-  before_filter :login_required, :except=>[:new, :create, :update]
+  before_filter :login_required, :except=>[:index, :new, :create, :update]
   
   # Список пользователей системы
   def index
     @users = User.paginate(:all,
-                           :order=>"created_at ASC", #ASC, DESC
+                           :order=>"id DESC", #ASC, DESC
+                           :include=>:role,
                            :page => params[:page],
                            :per_page=>5
                            )

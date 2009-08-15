@@ -7,6 +7,10 @@ module Paperclip
     def login attachment, style
       attachment.instance.login
     end
+    
+    def holder_login attachment, style
+      attachment.instance.user.login
+    end
 
     # :url => '/uploads/:attachment/:zip/:style.jpg'
     def zip attachment, style

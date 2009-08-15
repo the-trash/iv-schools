@@ -1,11 +1,10 @@
 .main_bar_div
   %table.main_bar
     %tr
-      %td.logo
-        =link_to image_tag('star.png'), '#'
-        =link_to 'Школьный портал', '#'
-      %td.search
-        -form_tag do
-          %span
-            = text_field_tag :title
-            =submit_tag 'Поиск'
+      %td
+        =link_to image_tag('star.png'), root_url(:subdomain=>false)
+        =link_to 'Школьный портал', root_url(:subdomain=>false)
+      %td
+        =link_to t('login'), login_path(:subdomain=> false)
+      %td
+        =link_to t('signup'), signup_path(:subdomain=> false)

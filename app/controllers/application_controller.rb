@@ -6,6 +6,9 @@ class ApplicationController < ActionController::Base
   # Система авторизации
   include AuthenticatedSystem
   
+  #rescue_from ActionController::RoutingError, :with => :page_not_found
+  #rescue_from ActionController::UnknownAction, :with=> :page_not_found
+  
   helper :all # include all helpers, all the time
   protect_from_forgery # See ActionController::RequestForgeryProtection for details
 
@@ -20,6 +23,11 @@ class ApplicationController < ActionController::Base
   before_filter :set_user_language # i18n интернационализация
   
   protected
+  
+  def page_not_found
+    flash[:notice]= 'Раздел к которому Вы пытались обратиться временно не доступен'
+    redirect_to root_url
+  end
 
   def system_init 
     # Инициализировать флеш массив с системными уведомлениями
@@ -140,5 +148,13 @@ class ApplicationController < ActionController::Base
     redirect_to :back
     rescue ActionController::RedirectBackError
     redirect_to path
+  end
+  
+  def zip_for_model(class_name)
+    zip= "#{(1000..9999).to_a.rand}-#{(1000..9999).to_a.rand}-#{(1000..9999).to_a.rand}"
+    while class_name.to_s.camelize.constantize.find_by_zip(zip)
+      zip= "#{(1000..9999).to_a.rand}-#{(1000..9999).to_a.rand}-#{(1000..9999).to_a.rand}"
+    end
+    zip
   end
 end

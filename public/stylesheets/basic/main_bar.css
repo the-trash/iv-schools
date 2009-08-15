@@ -11,25 +11,6 @@
 }
 .main_bar td{
   vertical-align:middle;
-  padding:3px;
-}
-.main_bar td.logo{
-  padding-left: 20px;
-  width:180px;
-}
-.main_bar td.avatar{
-  border-left:1px solid #DDDDDD;
-  padding-left:10px;
-  width:30px;
-}
-.main_bar td.cabinet{
-  width:200px;
-}
-.main_bar td.exit{
-  width:50px;
-}
-.main_bar td.search{
-  border-left:1px solid #DDDDDD;
-  padding-left:10px;
-  width:250px;
+  padding:10px 20px;
+  border-right:2px solid #EEE
 }

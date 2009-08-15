@@ -7,15 +7,10 @@
       %td.avatar
         =link_to image_tag(current_user.avatar:micro), '#'
       %td.cabinet
-        =link_to t('cabinet'), '#'
+        =link_to t('cabinet'), cabinet_users_url(:subdomain=>@user.subdomain)
         &nbsp;
         &nbsp;
         =link_to image_tag('mail.png'), '#'
         =link_to '10', '#'
       %td.exit
-        =link_to t('exit'), '#'
-      %td.search
-        -form_tag do
-          %span
-            = text_field_tag :title
-            =submit_tag 'Поиск'
+        =link_to t('exit'), logout_url(:subdomain=>@user.subdomain)

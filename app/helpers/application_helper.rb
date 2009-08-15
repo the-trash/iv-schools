@@ -64,5 +64,4 @@ module ApplicationHelper
     end
     res
   end #app_flash
-  
 end

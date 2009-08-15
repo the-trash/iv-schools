@@ -16,7 +16,7 @@ class PagesController < ApplicationController
   def index
     # Для определенности отправим пользователя, заходящего на центральную страницу
     # В центральный поддомен
-    redirect_to(root_path(:subdomain=>@user.login)) and return if (!current_subdomain && @user==User.find(:first))
+    # redirect_to(root_path(:subdomain=>@user.login)) and return if (!current_subdomain && @user==User.find(:first))
     
     # Выбрать дерево страниц, только те поля, которые учавствуют отображении
     @pages_tree= Page.find_all_by_user_id(@user.id, :select=>'id, title, zip, parent_id', :order=>"lft ASC")
@@ -45,10 +45,7 @@ class PagesController < ApplicationController
     @page= Page.new(params[:page])
     @parent= nil
     @parent= Page.find_by_zip(params[:parent_id]) if params[:parent_id]
-    zip= "#{(1000..9999).to_a.rand}-#{(1000..9999).to_a.rand}-#{(1000..9999).to_a.rand}"
-    while Page.find_by_zip(zip)
-      zip= "#{(1000..9999).to_a.rand}-#{(1000..9999).to_a.rand}-#{(1000..9999).to_a.rand}"
-    end
+    zip= zip_for_model('Page')
     @page.zip= zip
     @page.user_id= @user.id 
     respond_to do |format|
@@ -120,11 +117,8 @@ class PagesController < ApplicationController
   end
   
   def fix_url_by_redirect
-    flash[:notice]= page_url(@page.zip, :subdomain=>@subdomain)
     return true if @user.is_owner_of?(@page)
-    owner_user= @page.user
-    flash[:notice]= page_url(@page.zip, :subdomain=>owner_user.subdomain)
-    redirect_to page_url(@page.zip, :subdomain=>owner_user.subdomain)
+    redirect_to page_url(@page.zip, :subdomain=>@page.user.subdomain)
   end
   
   # for :new, :create, :manager

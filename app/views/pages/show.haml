@@ -1,5 +1,9 @@
 - content_for :navigation_menu do
   =render :partial => 'site_map_navigation'
+  
+- content_for :current_editor do
+  = render :partial => "shared/current_editor_bar"
+
 
 .page
   -if @page

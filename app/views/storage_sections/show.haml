@@ -1,0 +1,37 @@
+%h3
+  =link_to 'Хранилище файлов', storage_sections_url(:subdomain=>@subdomain) 
+%h5
+  Раздел
+  =@storage_section.name
+  
+    
+.edit_form
+  %h5
+    Добавить файл
+  -form_for :storage_file, :url => storage_files_path, :html => { :multipart => true, :method=>:post } do |form|
+    %label
+      Название файла
+    =form.text_field :name
+    %br 
+    
+    =hidden_field_tag 'storage_section_zip', @storage_section.zip
+    
+    %label
+      Путь к файлу
+    =form.file_field :file
+    %br 
+    
+    =submit_tag 'Загрузить', :class=>:submit
+    
+%ul
+  - @storage_section_files.each do |file|
+    %li{:style=>"padding:10px;margin:0 0 10px 0; border:3px solid #CCC;"}
+      -file_name= file.name.blank? ? 'без имени' : file.name
+      =link_to file_name, file.file.url
+      |
+      размер файла:
+      =sprintf("%.3f", (file.file.size.to_f/1.kilobyte.to_f))
+      Kb
+      
+= will_paginate @storage_section_files
+%br
