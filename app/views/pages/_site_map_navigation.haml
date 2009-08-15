@@ -2,7 +2,7 @@
   %ul 
     %li{:class=>"parent"}
       - text= content_tag :span, "Карта сайта", :class=>:bar
-      = link_to text, pages_path
+      = link_to text, pages_path(:subdomain=>@page_subdomain)
     -if @parents
       - @parents.each do |parent|
         -# Проверяет по id текущая ли это страница - к ней применяется css стиль current
@@ -10,16 +10,13 @@
         - current= (parent.id == @page.id) ? "current #{'last' if @siblings.empty?}" : ''
         %li{:class=>"parent #{current}"}
           - text= content_tag :span, parent.title, :class=>:bar
-          = link_to text, page_path(parent.zip)
+          = link_to text, page_path(parent.zip, :subdomain=>@page_subdomain)
           
         -if parent.id == @page.id
           -# Фактически вложенные элементы
           - @siblings.each do |elem|
             %li
               - text= content_tag :span, elem.title, :class=>:bar
-              = link_to text, page_path(elem.zip)
+              = link_to text, page_path(elem.zip, :subdomain=>@page_subdomain)
 
-    %li.system
-      - iv= content_tag :span, "iv-schools.ru", :class=>:nobr
-      - text= content_tag :span, "Регистрация в системе #{iv}", :class=>:bar
-      = link_to text, signup_path
+    -# %li.system

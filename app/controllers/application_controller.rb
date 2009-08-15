@@ -72,7 +72,7 @@ class ApplicationController < ActionController::Base
     # По умолчанию - поддомен отсутствует
     # По умолчанию - просматриваемый пользователь - первый, который есть в системе
     # (должен быть администаратор)
-    @subdomain= false
+    @subdomain= nil
     
     # если мы зарегистрированы в системе, то по умолчанию, просматриваемый пользователь - это мы
     # например /pages/index ведет на просмотр нашего дерева страниц,
@@ -94,7 +94,7 @@ class ApplicationController < ActionController::Base
       user= User.find_by_login(@subdomain)
       unless user
         flash[:system_warnings].push(t('system.domain_does_not_exist'))
-        @subdomain= false
+        @subdomain= nil
       end
       @user= user ? user : @user
     end
@@ -107,12 +107,16 @@ class ApplicationController < ActionController::Base
     # Проверяем параметр params[:user_id] - если он есть и соответствует abcd345efg, то ищем по login
     # Если соответствует 12345456, то ищем по id
     
-    # params[:user_id] - для сложносоставных маршрутов, для простых марщрутов - id (проверяем на низких уровнях контроллера)
+    # params[:user_id] - для сложносоставных маршрутов, => /users/:user_id/pages/1234-3425-4567-3452 =>:user_id
+    
+    # Для простых марщрутов - id (проверяем на низких уровнях контроллера) => /users/:id =>:id
+    # Нужно определять в Моедли User (по логике, больше нигде не нужно)
+    
     # Там сделаю mixin для контроллеров с переопределением def find_user
     if params[:user_id]
       if params[:user_id].match(Format::NUMBERS) # id cовпал с целым числом
         user= User.find_by_id(params[:user_id])
-      elsif params[:user_id].match(Format::LOGIN) # id cовпал с login        
+      elsif params[:user_id].match(Format::LOGIN) # id cовпал с login       
         user= User.find_by_login(params[:user_id])
       end #params[:user_id].match
       user ? nil : flash[:system_warnings].push(t('system.section_not_found')+params[:user_id].to_s)
@@ -127,7 +131,6 @@ class ApplicationController < ActionController::Base
   def navigation_menu_init
     # Должен существовать хотя бы один пользователь
     (render :text=>t('system.have_no_users') and return) unless @user
-    # Должен существовать хотя бы один пользователь
     @root_pages= Page.find_all_by_user_id_and_parent_id(@user.id, nil, :order=>"lft ASC")
   end
     

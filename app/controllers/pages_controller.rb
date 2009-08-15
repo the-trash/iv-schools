@@ -1,11 +1,12 @@
 class PagesController < ApplicationController  
   # Формирование данных для отображения базового меню-навигации
-  before_filter :navigation_menu_init, :except=>[:show]
-  
+  before_filter :navigation_menu_init, :except=>[:show]  
   # Проверка на регистрацию
   before_filter :login_required, :except=>[:index, :show]
   # Поиск ресурса для обработчиков, которым он требуется
   before_filter :find_page, :only=>[:show, :edit, :update, :destroy, :up, :down]
+  # Исправить адрес по которому обращается пользователь к ресурсу
+  before_filter :fix_url_by_redirect, :only=>[:show]
   # Проверка на политику доступа к обработчику, который не требует конкретного ресурса
   before_filter :access_to_controller_action_required, :only=>[:new, :create, :manager]
   # Проверка на политику доступа к обработчику, который требует ресурс
@@ -23,6 +24,8 @@ class PagesController < ApplicationController
 
   def show
     @page= Page.find_by_zip(params[:id])
+    # Действительный владелец страницы
+    @page_subdomain= @user.is_owner_of?(@page) ? @user.subdomain : @page.user.subdomain
     @parents= @page.self_and_ancestors if @page
     @siblings= @page.children if @page
   end
@@ -105,14 +108,23 @@ class PagesController < ApplicationController
     end
     redirect_to(manager_pages_path(:subdomain=>@subdomain)) and return
   end
-  
+ 
   protected
 
   # for :show, :edit, :update, :destroy, :up, :down
   # Поиск ресурса
   def find_page
+    # Для /pages/1234-3425-4567-3452 => :id
     @page= Page.find_by_zip(params[:id])
     access_denied and return unless @page
+  end
+  
+  def fix_url_by_redirect
+    flash[:notice]= page_url(@page.zip, :subdomain=>@subdomain)
+    return true if @user.is_owner_of?(@page)
+    owner_user= @page.user
+    flash[:notice]= page_url(@page.zip, :subdomain=>owner_user.subdomain)
+    redirect_to page_url(@page.zip, :subdomain=>owner_user.subdomain)
   end
   
   # for :new, :create, :manager

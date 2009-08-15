@@ -41,7 +41,7 @@
       =image_tag "basic/basic_header.jpg", :alt=>"iv36.iv-schools.ru"
 
       .header{:id=>:header}
-        - if @subdomain == 'portal'
+        - if @subdomain == 'portal' || @subdomain.nil?
           = link_to "Ивановский школьный портал iv-schools.ru", root_path
         - else
           = link_to @subdomain.to_s + ".iv-schools.ru", root_path(:subdomain=>@subdomain)

@@ -1,5 +1,11 @@
 ActionController::Routing::Routes.draw do |map|
-  map.resources :profiles, :member=>{ :name=>:put, :avatar=>:put }
+  map.resources :profiles,
+    :member=>{ :name=>:put, :avatar=>:put }
+  
+  map.resources :pages,
+    :collection=>{ :map=>:get, :manager=>:get },
+    :member=>{ :up=>:get, :down=>:get }
+  
   map.resources :users, :collection=>{:cabinet=>:get, :profile=>:get}
   map.resource :session
 
@@ -9,6 +15,50 @@ ActionController::Routing::Routes.draw do |map|
   
   map.root :controller => 'pages', :action => 'index'
 
+  # Администраторский роутер - работает с app/controllers/admins, app/view/admins
+  # /admins/users/new, /admins/users/:id/edit
+  # /admins/users/:id/change_role    
+  # /admins/pages/new
+  # /admins/pages/:id/edit     
+  # /admins/roles/new
+  # /admins/roles/:id/edit
+  # /admins/roles/:id/new_role_section
+  # /admins/roles/:id/new_role_rule
+  # /admins/roles/:role_id/sections/new
+  # /admins/roles/:role_id/sections/:id/edit
+  # /admins/roles/:role_id/sections/:id/new_rule
+  # /admins/roles/:role_id/sections/:id/delete_rule/?name=some_name
+  map.namespace(:admins) do |admin|
+    admin.resources :users,
+      :member=>{:change_role => :post}
+
+    admin.resources :pages
+    
+    admin.resources :roles,
+      :member=>{ :new_role_section=>:post, :new_role_rule=>:post } do |role|
+        role.resources :sections,
+          :controller=>'role_section',
+          :member=>{ :new_rule=>:get, :delete_rule=>:delete }
+      end
+  end# map.namespace(:admins)
+
+  # Стандартная маршрутизация
+  map.connect ':controller/:action/:id'
+  map.connect ':controller/:action/:id.:format'
+end
+
+=begin
+  Отказываюсь от адресации через users
+  Систему разрабатываю только через поддомены
+  Поскольку дополнительная адресация это конечно хорошо,
+  Но организовывать пернаправления в случае не корректного адреса не просто
+  http:// login1.site.com/users/login2/albums/login1-album_id/images/2 ==>redirect_to==>http:// login1.site.com/users/login1/albums/login1-album_id/images/2
+  
+  Вариант адресации не через домены возможен, но на данный момент не рассматривается,
+  т.к. усложняет систему
+  
+  http:// login1.site.com/albums/login1-album_id/images/2
+  
   #------------------------------------------------------------------------------------#
   #- Парная связка, которая должна вести к одним и тем же обработчикам
   #- Первый фрагмент - через идентификатор пользователя
@@ -20,11 +70,9 @@ ActionController::Routing::Routes.draw do |map|
   end#users
   
   # Стандартный роутинг для страниц
-  map.resources :pages,
-    :collection=>{  :map=>:get, :manager=>:get  },
-    :member=>{  :up=>:get, :down=>:get }
 
-=begin
+
+
   map.resources :users do |user|
     user.resources :albums do |album|   #/users/:user_id/albums, /users/:user_id/albums/new
       album.resources :images,
@@ -41,42 +89,6 @@ ActionController::Routing::Routes.draw do |map|
   end #:albums
 =end
   
-  #------------------------------------------------------------------------------------#
-  #------------------------------------------------------------------------------------#
-  #------------------------------------------------------------------------------------#
-
-  #------------------------------------------------------------------------------------#
-  # Администраторский роутер - работает с app/controllers/admins, app/view/admins
-  #------------------------------------------------------------------------------------#
-  map.namespace(:admins) do |admin|
-    # /admins/users/new, /admins/users/:id/edit
-    admin.resources :users,
-    :member=>{:change_role => :post} # /admins/users/:id/change_role
-    
-    # /admins/pages/new
-    # /admins/pages/:id/edit
-    admin.resources :pages
-     
-    # /admins/roles/new
-    # /admins/roles/:id/edit
-    admin.resources :roles,
-    :member=>{
-      :new_role_section=>:post,                   # /admins/roles/:id/new_role_section
-      :new_role_rule=>:post                       # /admins/roles/:id/new_role_rule
-    } do |role|
-      # /admins/roles/:role_id/sections/new
-      #/admins/roles/:role_id/sections/:id/edit
-      role.resources :sections,
-        :controller=>'role_section',               
-        :member=>{
-          :new_rule=>:get,                           # /admins/roles/:role_id/sections/:id/new_rule
-          :delete_rule=>:delete                      # /admins/roles/:role_id/sections/:id/delete_rule/?name=some_name
-        }
-    end
-  end #:admin
-  #------------------------------------------------------------------------------------#
-  # Стандартная маршрутизация
-  #------------------------------------------------------------------------------------#
-  map.connect ':controller/:action/:id'
-  map.connect ':controller/:action/:id.:format'
-end
+#------------------------------------------------------------------------------------#
+#------------------------------------------------------------------------------------#
+#------------------------------------------------------------------------------------#
