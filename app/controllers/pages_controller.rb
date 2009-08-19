@@ -1,24 +1,20 @@
 class PagesController < ApplicationController  
   # Формирование данных для отображения базового меню-навигации
-  before_filter :navigation_menu_init, :except=>[:show]  
   # Проверка на регистрацию
-  before_filter :login_required, :except=>[:index, :show]
   # Поиск ресурса для обработчиков, которым он требуется
-  before_filter :find_page, :only=>[:show, :edit, :update, :destroy, :up, :down]
   # Исправить адрес по которому обращается пользователь к ресурсу
-  before_filter :fix_url_by_redirect, :only=>[:show]
   # Проверка на политику доступа к обработчику, который не требует конкретного ресурса
-  before_filter :access_to_controller_action_required, :only=>[:new, :create, :manager]
   # Проверка на политику доступа к обработчику, который требует ресурс
-  before_filter :page_resourсe_access_required, :only=>[:edit, :update, :destroy, :up, :down]
+  before_filter :navigation_menu_init,                  :except=> [:show]  
+  before_filter :login_required,                        :except=> [:index, :show]
+  before_filter :find_page,                             :only=>   [:show, :edit, :update, :destroy, :up, :down]
+  before_filter :fix_url_by_redirect,                   :only=>   [:show]
+  before_filter :access_to_controller_action_required,  :only=>   [:new, :create, :manager]
+  before_filter :page_resourсe_access_required,         :only=>   [:edit, :update, :destroy, :up, :down]
 
   # Карта сайта
+  # Выбрать дерево страниц, только те поля, которые учавствуют отображении
   def index
-    # Для определенности отправим пользователя, заходящего на центральную страницу
-    # В центральный поддомен
-    # redirect_to(root_path(:subdomain=>@user.login)) and return if (!current_subdomain && @user==User.find(:first))
-    
-    # Выбрать дерево страниц, только те поля, которые учавствуют отображении
     @pages_tree= Page.find_all_by_user_id(@user.id, :select=>'id, title, zip, parent_id', :order=>"lft ASC")
   end
 
@@ -108,10 +104,7 @@ class PagesController < ApplicationController
  
   protected
 
-  # for :show, :edit, :update, :destroy, :up, :down
-  # Поиск ресурса
   def find_page
-    # Для /pages/1234-3425-4567-3452 => :id
     @page= Page.find_by_zip(params[:id])
     access_denied and return unless @page
   end
@@ -121,12 +114,6 @@ class PagesController < ApplicationController
     redirect_to page_url(@page.zip, :subdomain=>@page.user.subdomain)
   end
   
-  # for :new, :create, :manager
-  # :administrator, :pages
-  # :pages, :new
-  # Пользователь - владелец объекта и имеет соответствующие ролевые политики
-  # Под объектом предполагается просматриваемый пользователь (текущий и просматриваемый должны совпадать)
-  # !!!!! TODO: НАПИСАТЬ ТЕСТ: ИМЕЕТ ГРУППОВОЙ ДОСТУП К ДЕЙСТВИЮ, НО ПРОСМАТРИВАЕТ НЕ СЕБЯ !!!!!
   def access_to_controller_action_required
     access_denied if current_user.has_complex_block?(:administrator, controller_name)
     return true   if current_user.has_complex_access?(:administrator, controller_name)
@@ -136,6 +123,27 @@ class PagesController < ApplicationController
     return true   if current_user.has_role_policy?(controller_name, action_name) && current_user.is_owner_of?(@user)
     access_denied
   end
+  
+  def page_resourсe_access_required
+      access_denied if current_user.has_complex_resource_block_for?(@page, :administrator, controller_name)
+      return true   if current_user.has_complex_resource_access_for?(@page, :administrator, controller_name)
+      return true   if current_user.has_role_policy?(:administrator, controller_name)
+      access_denied if current_user.has_complex_block?(:administrator, controller_name)
+      return true   if current_user.has_complex_access?(:administrator, controller_name)
+      access_denied if current_user.has_complex_resource_block_for?(@page, controller_name, action_name)
+      return true   if current_user.has_complex_resource_access_for?(@page, controller_name, action_name)
+      access_denied if current_user.has_complex_block?(controller_name, action_name)
+      return true   if current_user.has_complex_access?(controller_name, action_name)
+      return true   if current_user.has_role_policy?(controller_name, action_name) && current_user.is_owner_of?(@page)
+      access_denied
+  end
+  
+  # for :new, :create, :manager
+  # :administrator, :pages
+  # :pages, :new
+  # Пользователь - владелец объекта и имеет соответствующие ролевые политики
+  # Под объектом предполагается просматриваемый пользователь (текущий и просматриваемый должны совпадать)
+  # !!!!! TODO: НАПИСАТЬ ТЕСТ: ИМЕЕТ ГРУППОВОЙ ДОСТУП К ДЕЙСТВИЮ, НО ПРОСМАТРИВАЕТ НЕ СЕБЯ !!!!!
   
   # for :edit, :update, :destroy, :up, :down
   # :administrator, :pages
@@ -150,17 +158,4 @@ class PagesController < ApplicationController
     # Есть персональные или групповые разрешения
     # Пользователь - владелец ресурса и имеет соответствующие ролевые политики
     # Под ресурсом предполагается объект принадлежащий пользователю (текущий пользователь редактирует состояния своих объектов)
-  def page_resourсe_access_required
-      access_denied if current_user.has_complex_resource_block_for?(@page, :administrator, controller_name)
-      return true   if current_user.has_complex_resource_access_for?(@page, :administrator, controller_name)
-      return true   if current_user.has_role_policy?(:administrator, controller_name)
-      access_denied if current_user.has_complex_block?(:administrator, controller_name)
-      return true   if current_user.has_complex_access?(:administrator, controller_name)
-      access_denied if current_user.has_complex_resource_block_for?(@page, controller_name, action_name)
-      return true   if current_user.has_complex_resource_access_for?(@page, controller_name, action_name)
-      access_denied if current_user.has_complex_block?(controller_name, action_name)
-      return true   if current_user.has_complex_access?(controller_name, action_name)
-      return true   if current_user.has_role_policy?(controller_name, action_name) && current_user.is_owner_of?(@page)
-      access_denied
-  end
 end

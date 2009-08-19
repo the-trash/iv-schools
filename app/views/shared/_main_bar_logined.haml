@@ -2,15 +2,17 @@
   %table.main_bar
     %tr
       %td.logo
-        =link_to image_tag('star.png'), '#'
-        =link_to 'Школьный портал', '#'
+        =link_to image_tag('star.png'), root_url(:subdomain=>false)
+        =link_to 'Школьный портал', root_url(:subdomain=>false)
       %td.avatar
         =link_to image_tag(current_user.avatar:micro), '#'
       %td.cabinet
-        =link_to t('cabinet'), cabinet_users_url(:subdomain=>@user.subdomain)
+        =link_to t('cabinet'), cabinet_users_url(:subdomain=>current_user.subdomain)
         &nbsp;
-        &nbsp;
-        =link_to image_tag('mail.png'), '#'
-        =link_to '10', '#'
+        -#
+          &nbsp;
+          =link_to image_tag('mail.png'), '#'
+          =link_to '10', '#'
+        
       %td.exit
         =link_to t('exit'), logout_url(:subdomain=>@user.subdomain)

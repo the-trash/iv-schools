@@ -2,8 +2,8 @@
 .map
   %ul
     - @storage_sections.each do |section|
-      %li{:style=>"padding:10px;margin:0 0 10px 0; border:3px solid #CCC;"}
-        =link_to section.name, storage_section_url(section.zip)
+      %li{:style=>"padding:10px;margin:0 0 10px 0;"}
+        =link_to image_tag('iconza/blue/downloads_folder.png', :style=>'vertical-align:middle;') + " " + section.name, storage_section_url(section.zip), :style=>'font-weight:bold;'
   
 = object_errors(@page)
 

@@ -4,5 +4,5 @@
 %h5 Управление страницами сайта
 .admin_map
   = manager_pages_tree!(@pages_tree)
-  %div{:style=>'margin:10px 5px; padding:3px;border:3px solid #CCC;'}
-    = link_to 'Создать корневую страницу', new_page_path
+  .div{:style=>'margin:25px 0 0 0;'}
+    = link_to image_tag('iconza/blue/add.png', :style=>'vertical-align:middle;')+' Создать корневую страницу', new_page_path, :style=>'font-weight:bold;'

@@ -32,6 +32,18 @@ end
 # РОЛЬ ЗАВЕРЕННОГО ПОЛЬЗОВАТЕЛЯ
 Factory.define :guaranted_user_role, :class => Role do |r|
   policy= {
+    :users=>{
+      :index=>true,
+      :cabinet=>true,
+      :profile=>true,
+      :new=>true,
+      :create=>true
+    },
+    :profiles=>{
+      :name=>true,
+      :avatar=>true,
+      :update=>true
+    },
     :pages=>{
       :index=>true,
       :show=>true
@@ -62,6 +74,18 @@ end
 # РОЛЬ АДМИНИСТРАТОРА ШКОЛЬНОГО САЙТА
 Factory.define :site_administrator_role, :class => Role do |r|
   policy= {
+    :users=>{
+      :index=>true,
+      :cabinet=>true,
+      :profile=>true,
+      :new=>true,
+      :create=>true
+    },
+    :profiles=>{
+      :name=>true,
+      :avatar=>true,
+      :update=>true
+    },
     :pages=>{
       :index=>true,
       :show=>true,
@@ -73,6 +97,14 @@ Factory.define :site_administrator_role, :class => Role do |r|
       :destroy=>true,
       :up=>true,
       :down=>true,
+    },
+    :storage_sections=>{
+      :index=>true,
+      :show=>true,
+      :create=>true
+    },
+    :storage_files=>{
+      :create=>true
     },
     :documents=>{
       :index=>true,
@@ -120,6 +152,18 @@ end
 # РОЛЬ АДМИНИСТРАТОРА СТРАНИЦ
 Factory.define :page_administrator_role, :class => Role do |r|
   policy= {
+    :users=>{
+      :index=>true,
+      :cabinet=>true,
+      :profile=>true,
+      :new=>true,
+      :create=>true
+    },
+    :profiles=>{
+      :name=>true,
+      :avatar=>true,
+      :update=>true
+    },
     :administrator=>{
       :pages=>true
     },
@@ -134,6 +178,14 @@ Factory.define :page_administrator_role, :class => Role do |r|
       :destroy=>true,
       :up=>true,
       :down=>true,
+    },
+    :storage_sections=>{
+      :index=>true,
+      :show=>true,
+      :create=>true
+    },
+    :storage_files=>{
+      :create=>true
     },
     :documents=>{
       :index=>true,
@@ -182,7 +234,11 @@ end
 Factory.define :administrator_role, :class => Role do |r|
   policy= {
     :administrator=>{
+      :users=>true,
+      :profiles=>true,
       :pages=>true,
+      :storage_sections=>true,
+      :storage_files=>true,
       :documents=>true,
       :blogs=>true,
       :albums=>true,
@@ -210,7 +266,7 @@ Factory.define :page_manager_role, :class => Role do |r|
       :no=>true
     }
   }
-  r.name   'self_page_manager'
+  r.name  'self_page_manager'
   r.title 'Редактор своих страниц'
   r.description 'Правовой набор пользователя, который может редактировать свои страницы'
   r.settings(policy.to_yaml)

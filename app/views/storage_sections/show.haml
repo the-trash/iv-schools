@@ -5,23 +5,27 @@
   =@storage_section.name
   
     
-.edit_form
-  %h5
-    Добавить файл
-  -form_for :storage_file, :url => storage_files_path, :html => { :multipart => true, :method=>:post } do |form|
-    %label
-      Название файла
-    =form.text_field :name
-    %br 
-    
-    =hidden_field_tag 'storage_section_zip', @storage_section.zip
-    
-    %label
-      Путь к файлу
-    =form.file_field :file
-    %br 
-    
-    =submit_tag 'Загрузить', :class=>:submit
+.edit_form{:style=>'border-color:#FDD;'}
+  .div#add_file_link
+    =link_to_function 'Добавить файл', 'show_add_file_form()'
+  .div#add_file_form{:style=>'display:none;'}
+    %h5
+      Добавить файл
+
+    -form_for :storage_file, :url => storage_files_path, :html => { :multipart => true, :method=>:post } do |form|
+      %label
+        Название файла
+      =form.text_field :name
+      %br 
+      
+      =hidden_field_tag 'storage_section_zip', @storage_section.zip
+      
+      %label
+        Путь к файлу
+      =form.file_field :file
+      %br 
+      
+      =submit_tag 'Загрузить', :class=>:submit
     
 %ul
   - @storage_section_files.each do |file|

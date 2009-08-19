@@ -1,18 +1,18 @@
 require 'digest/sha1'
 class UsersController < ApplicationController
   # Формирование данных для отображения базового меню-навигации
-  before_filter :navigation_menu_init
-  
   # Проверка на регистрацию
-  before_filter :login_required, :except=>[:index, :new, :create, :update]
+  before_filter :navigation_menu_init
+  before_filter :login_required, :except=>[:index, :new, :create]
+  before_filter :access_to_controller_action_required, :only=>[:cabinet]
   
   # Список пользователей системы
   def index
     @users = User.paginate(:all,
-                           :order=>"id DESC", #ASC, DESC
+                           :order=>"id ASC", #ASC, DESC
                            :include=>:role,
                            :page => params[:page],
-                           :per_page=>5
+                           :per_page=>20
                            )
   end
   
@@ -57,5 +57,17 @@ class UsersController < ApplicationController
       render :action => 'new'
     end
   end
+  
+  protected
 
+  def access_to_controller_action_required
+    access_denied if current_user.has_complex_block?(:administrator, controller_name)
+    return true   if current_user.has_complex_access?(:administrator, controller_name)
+    return true   if current_user.has_role_policy?(:administrator, controller_name)
+    access_denied if current_user.has_complex_block?(controller_name, action_name)
+    return true   if current_user.has_complex_access?(controller_name, action_name) && current_user.is_owner_of?(@user)
+    return true   if current_user.has_role_policy?(controller_name, action_name)    && current_user.is_owner_of?(@user)
+    access_denied
+  end
+  
 end

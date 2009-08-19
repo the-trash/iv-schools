@@ -12,7 +12,13 @@
     =stylesheet_link_tag 'basic/current_editor_bar.css', :media=>'screen'
     =stylesheet_link_tag 'basic/users_listing.css', :media=>'screen'
     =stylesheet_link_tag 'basic/paginator', :media=>'screen'
-    
+
+    - content_for :js do
+      =#javascript_include_tag :defaults  
+      =javascript_include_tag "prototype"
+      =javascript_include_tag "effects"
+      =javascript_include_tag "application"
+      
     =yield  :js
     =yield  :css
 
@@ -21,9 +27,8 @@
       %meta{:name=>"keywords", :content=>"Ивановский региональный школьный портал"}
       %meta{:name=>"author", :content=>"killich@yandex.ru, Илья Зыкин"}
       
-    - content_for :js do
-      =#javascript_include_tag :defaults  
-      =#javascript_include_tag "messanger"
+
+      
       
     - content_for :css do
       =#stylesheet_link_tag 'haml_scaffolds/reset', :media=>'screen'
@@ -51,15 +56,17 @@
         %li
           =link_to t('users'), users_path
         %li
-          =link_to t('news'), url_for(:controller=>:reports)
-        %li
-          =link_to t('questions'), url_for(:controller=>:questions)
-        %li
-          =link_to t('albums'), url_for(:controller=>:albums)
-        %li
-          =link_to t('documents'), url_for(:controller=>:documents)
-        %li
           =link_to t('site_map'), pages_path(:subdomain=>@user.subdomain)
+        -#
+          %li
+            =link_to t('news'), url_for(:controller=>:reports)
+          %li
+            =link_to t('questions'), url_for(:controller=>:questions)
+          %li
+            =link_to t('albums'), url_for(:controller=>:albums)
+          %li
+            =link_to t('documents'), url_for(:controller=>:documents)
+
             
       %table.main
         %tbody
