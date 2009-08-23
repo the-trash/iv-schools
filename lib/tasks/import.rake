@@ -32,7 +32,7 @@ namespace :db do
           :adapter  => "mysql",
           :host     => "localhost",
           :username => "root",
-          :password => "",
+          :password => "bdcrekcvfcnthbvfhuj",
           :database => "ivschools",
           :encoding => "utf8"
         )
@@ -85,16 +85,16 @@ namespace :db do
 
         eval("
           class IvSchoolsSection < IvSchoolsPageConnect
-              set_table_name '#{login}_sections'
+              set_table_name '#{login}_Sections'
           end    
           class IvSchoolsPage < IvSchoolsPageConnect
-              set_table_name '#{login}_pages'
+              set_table_name '#{login}_Pages'
           end
           class IvSchoolsLinkedFiles < IvSchoolsPageConnect
-              set_table_name '#{login}_linked_files'
+              set_table_name '#{login}_Linked_Files'
           end
           class IvSchoolsCommonFiles < IvSchoolsPageConnect
-              set_table_name '#{login}_common_files'
+              set_table_name '#{login}_Common_Files'
           end
         ")
         

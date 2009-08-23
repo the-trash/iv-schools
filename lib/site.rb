@@ -2,7 +2,7 @@ module Site
   # Site::ADDRESS
   # Глобальные константы сайта
   # Адрес проекта
-  ADDRESS = "http://localhost:3000"
+  ADDRESS = "http://poweruser.ru"
   # авторизация действительна для всех поддоменов
-  COOKIES_SCOPE = ".iv-schools.info"
+  COOKIES_SCOPE = ".poweruser.ru"
 end

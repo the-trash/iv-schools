@@ -6,6 +6,8 @@ namespace :db do
     desc 'create basic roles for project'
     task :create => :environment do
     
+      require "#{RAILS_ROOT}/spec/factories/role"
+    
       Factory.create(:registrated_user_role)
       Factory.create(:guaranted_user_role)
       Factory.create(:site_administrator_role)

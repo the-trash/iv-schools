@@ -2,13 +2,17 @@
 namespace :db do
   # rake db:basic_data
   desc 'create basic data'
-  task :basic_data => ['db:drop', 'db:create:all', 'db:migrate', 'db:roles:create', 'db:users:create', 'db:import:start']
+  
+  task :basic_data => ['db:drop', 'db:create', 'db:migrate', 'db:roles:create', 'db:users:create', 'db:import:start']
       
   # Раздел создания базовых пользователей системы
   namespace :users do
     # rake db:users:create
     desc 'create basic users'
     task :create => :environment do
+    
+      require "#{RAILS_ROOT}/spec/factories/users"
+      require "#{RAILS_ROOT}/spec/factories/profile"
 
       # Создать администратора
       user= Factory.create(:user,
