@@ -29,3 +29,7 @@ ru:
     :cant_be_move: 'Невозможно переместить страницу'
 
     :manage: 'Мои страницы'
+
+  :storagefile:
+    :field:
+      :name: 'Имя файла'

@@ -25,7 +25,7 @@ caption, tbody, tfoot, thead, tr, th, td
 .overblock{overflow:hidden; zoom:1;}
 
 html, body, div, applet, object, iframe,
-p, blockquote, pre, a, abbr, acronym, address, cite, code, del, dfn,
+p, blockquote, pre, abbr, acronym, address, cite, code, del, dfn,
 font, img, ins, kbd, q, s, samp, small, strike, tt, var, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table,
 caption, tbody, tfoot, thead, tr, th, td{
   font-weight:normal;
@@ -60,6 +60,8 @@ h4{ font-size:16pt; }
 h5{ font-size:14pt; }
 h6{ font-size:12pt; }
 /* headers */
+h3 a{color:#000; text-decoration:none;}
+h3 a:hover{color:#2476FF;}
 
 /* structure */
 .main       { margin:25px 0; }

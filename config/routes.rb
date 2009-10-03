@@ -1,4 +1,6 @@
 ActionController::Routing::Routes.draw do |map|
+  map.resources :answeres
+
   map.resources :profiles,
     :member=>{ :name=>:put, :avatar=>:put }
   
