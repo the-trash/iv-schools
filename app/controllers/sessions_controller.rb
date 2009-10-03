@@ -17,7 +17,7 @@ class SessionsController < ApplicationController
           :expires => self.current_user.remember_token_expires_at,
           # look at! lib/authenticated_system.rb
           # look at! config/environment.rb
-          :domain=>Site::COOKIES_SCOPE
+          :domain=>Project::COOKIES_SCOPE
         }
       end
       redirect_back_or_default(cabinet_users_path(:subdomain=>current_user.subdomain))
@@ -32,7 +32,7 @@ class SessionsController < ApplicationController
     self.current_user.forget_me if logged_in?
     cookies.delete(
       :auth_token,
-      :domain=>Site::COOKIES_SCOPE
+      :domain=>Project::COOKIES_SCOPE
     )
     reset_session
     flash[:notice] = t('user.auth.logouted')

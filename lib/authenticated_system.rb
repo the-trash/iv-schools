@@ -115,7 +115,7 @@ module AuthenticatedSystem
         cookies[:auth_token] = {
           :value => user.remember_token,
           :expires => user.remember_token_expires_at,
-          :domain=>Site::COOKIES_SCOPE
+          :domain=>Project::COOKIES_SCOPE
         }
         self.current_user = user
       end
