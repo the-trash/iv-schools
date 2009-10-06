@@ -1,8 +1,10 @@
-class CreateAnsweres < ActiveRecord::Migration
+class CreateUuestions < ActiveRecord::Migration
   def self.up
-    create_table :answeres do |t|
+    create_table :questions do |t|
       t.string :from
       t.string :email
+      t.string :website
+      
       t.string :to
       t.string :topic
       t.text :question
@@ -14,6 +16,6 @@ class CreateAnsweres < ActiveRecord::Migration
   end
 
   def self.down
-    drop_table :answeres
+    drop_table :questions
   end
 end

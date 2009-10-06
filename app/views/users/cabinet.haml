@@ -12,6 +12,9 @@
     %li
       - text= content_tag :span, t('my_files'), :class=>:bar
       = link_to text, storage_sections_url(:subdomain=>@user.subdomain)
+    %li
+      - text= content_tag :span, 'Вопрос/Ответ', :class=>:bar
+      = link_to text, '#'
     -#
       %li
         - text= content_tag :span, t('my_news'), :class=>:bar

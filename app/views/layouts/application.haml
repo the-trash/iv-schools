@@ -54,14 +54,14 @@
 
       %ul.system_navigation
         %li
+          =link_to t('questions'), url_for(:controller=>:questions)
+        %li
           =link_to t('users'), users_path
         %li
           =link_to t('site_map'), pages_path(:subdomain=>@user.subdomain)
         -#
           %li
             =link_to t('news'), url_for(:controller=>:reports)
-          %li
-            =link_to t('questions'), url_for(:controller=>:questions)
           %li
             =link_to t('albums'), url_for(:controller=>:albums)
           %li

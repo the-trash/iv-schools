@@ -1,5 +1,9 @@
-%h3
-  =link_to '&laquo; Назад в личный кабинет', cabinet_users_url(:subdomain=>current_user.subdomain)
+.block
+  %ul
+    %li
+      - text= content_tag :span, '&laquo; Назад в личный кабинет', :class=>:bar
+      = link_to text, cabinet_users_url(:subdomain=>current_user.subdomain)
+
 %h3 Хранилище файлов
 .map
   %ul
