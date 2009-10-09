@@ -1,4 +1,4 @@
-class CreateUuestions < ActiveRecord::Migration
+class CreateQuestions < ActiveRecord::Migration
   def self.up
     create_table :questions do |t|
       t.string :from
@@ -9,7 +9,7 @@ class CreateUuestions < ActiveRecord::Migration
       t.string :topic
       t.text :question
       t.text :answere
-      t.integer :user_id, :default=>NIL
+      t.integer :user_id
 
       t.timestamps
     end

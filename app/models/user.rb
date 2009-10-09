@@ -1,10 +1,20 @@
 require 'digest/sha1'
 class User < ActiveRecord::Base
-  # Действуй как абонент
-  acts_as_abonent
-  
   # Virtual attribute for the unencrypted password
   attr_accessor :password
+  
+  # Действуй как абонент
+  acts_as_abonent
+
+  # Пользовательский раздел
+  has_one     :profile                      # У пользователя есть профайл
+  has_many    :pages                        # У пользователя много страниц
+  has_many    :questions                    # У пользователя много вопросов
+  
+  has_many    :personal_policies            # Пользователь имеет много персональных политик
+  has_many    :personal_resource_policies   # Пользователь имеет много персональных политик по отношению к объектам
+
+  # papperclip
   #----------------------------------------------------------------------------------------------
   has_attached_file :avatar,
     :styles => {
@@ -29,7 +39,8 @@ class User < ActiveRecord::Base
     #avatara_path: ':rails_root/public/uploads/:attachment/:id/:id-:style.jpg'
     #avatara_url: '/uploads/:attachment/:id/:id-:style.jpg'
 
-  
+  # Валидация  
+  #----------------------------------------------------------------------------------------------
   validates_attachment_content_type :avatar,
                                     :content_type => ['image/jpg', 'image/jpeg', 'image/pjpeg', 'image/gif', 'image/png', 'image/x-png'],
                                     :message=>I18n.translate('paperclip.avatar.errors.content_type')
@@ -37,9 +48,8 @@ class User < ActiveRecord::Base
   validates_attachment_size :avatar,
                             :in => 5.kilobytes..200.kilobytes,
                             :message=>I18n.translate('paperclip.avatar.errors.size')
+
   #----------------------------------------------------------------------------------------------
-  
-  # Валидация
   validates_uniqueness_of   :login, :case_sensitive => false
   validates_uniqueness_of   :email, :case_sensitive => false
   validates_presence_of     :login, :email
@@ -53,15 +63,9 @@ class User < ActiveRecord::Base
   validates_length_of :email, :within => 6..50
 
   # Пользовательские фильтры
+  #----------------------------------------------------------------------------------------------
   before_save :encrypt_password
   before_save :fields_downcase
-
-  # Пользовательский раздел
-  has_one     :profile                      # У пользователя есть профайл
-  has_many    :pages                        # У пользователя много страниц
-  
-  has_many    :personal_policies            # Пользователь имеет много персональных политик
-  has_many    :personal_resource_policies   # Пользователь имеет много персональных политик по отношению к объектам
 
 #----------------------------------------------------------------------------
 # Стандартные определения

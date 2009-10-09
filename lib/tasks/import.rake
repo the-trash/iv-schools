@@ -191,6 +191,6 @@ namespace :db do
           ids_set[old_id] = new_id
         end# sections.each do |s|
       end# logins.each do |login|
-    end# rake db:roles:create
-  end#:roles
+    end# rake db:import:start
+  end#:import
 end#:db
