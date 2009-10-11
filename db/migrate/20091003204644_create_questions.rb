@@ -1,6 +1,8 @@
 class CreateQuestions < ActiveRecord::Migration
   def self.up
     create_table :questions do |t|
+      t.string  :zip
+      
       t.string :from
       t.string :email
       t.string :website

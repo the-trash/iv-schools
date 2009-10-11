@@ -1,4 +1,5 @@
 # Базовые роли пользователей
+
 namespace :db do
   namespace :import do
   
@@ -32,7 +33,8 @@ namespace :db do
           :adapter  => "mysql",
           :host     => "localhost",
           :username => "root",
-          :password => "bdcrekcvfcnthbvfhuj",
+          #:password => "bdcrekcvfcnthbvfhuj",#server
+          :password => "", #Home
           :database => "ivschools",
           :encoding => "utf8"
         )
@@ -49,9 +51,13 @@ namespace :db do
       help= Helpers.new
       res= ""
       files.each do |f|
-        res<< help.content_tag(:li, help.link_to(f.Description, f.Path) )
+        res+= ("\n\t"+help.content_tag(:li, help.link_to(f.Description, f.Path)))
       end
-      res= help.content_tag(:ul, res, :class=>:linked_files)
+      res += "\n"
+      res1 =  "\n\n"
+      res1 =  help.content_tag(:ul, res, :class=>:linked_files)
+      res1 +=  "\n\n"
+      res1
     end
     
     def root_section_msg

@@ -1,1 +1,37 @@
-Вопросы/Ответы
+- content_for :current_editor do
+  = render :partial => "shared/current_editor_bar"
+                  
+- @user.questions.each do |q|
+  .comment
+    %b
+      Кому:
+    =q.to
+    
+    %br
+    
+    %b
+      Тема:
+    =q.topic
+    .number
+      ="#"
+      =q.zip
+    .info
+      .date
+        =q.created_at.to_s(:db)
+      %a{:href=>"#"}
+        =q.from
+    =q.question
+    %br  
+    %hr
+    =q.answere
+    .controls
+      %a{:href=>"#"} Комментировать
+      %a{:href=>"#"} Правка
+      %a{:href=>"#"} Удалить
+  
+
+  
+  
+  
+  
+  
