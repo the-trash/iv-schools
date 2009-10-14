@@ -6,6 +6,9 @@ class ApplicationController < ActionController::Base
   # Система авторизации
   include AuthenticatedSystem
   
+  # Простая капча
+  include SimpleCaptcha::ControllerHelpers
+  
   #rescue_from ActionController::RoutingError, :with => :page_not_found
   #rescue_from ActionController::UnknownAction, :with=> :page_not_found
   

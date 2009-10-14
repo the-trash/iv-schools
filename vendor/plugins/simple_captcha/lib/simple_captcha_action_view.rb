@@ -72,7 +72,7 @@ module SimpleCaptcha #:nodoc
       options[:field_value] = set_simple_captcha_data(options[:code_type])
       @simple_captcha_options = 
         {:image => simple_captcha_image(options),
-         :label => options[:label] || "(type the code from the image)",
+         :label => options[:label] || "(Укажите код с картинки)",
          :field => simple_captcha_field(options)}
       render :partial => 'simple_captcha/simple_captcha'
     end
@@ -87,7 +87,7 @@ module SimpleCaptcha #:nodoc
           :image_style => options[:image_style] || '', 
           :distortion => options[:distortion] || '',
           :time => Time.now.to_i)
-      "<img src='#{url}' alt='ivgorod_captcha' />"
+      "<img src='#{url}' alt='iv-schools_captcha' />"
     end
     
     def simple_captcha_field(options={})

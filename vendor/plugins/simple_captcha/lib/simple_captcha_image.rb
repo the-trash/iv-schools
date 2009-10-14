@@ -8,8 +8,9 @@ module SimpleCaptcha #:nodoc
     
     include ConfigTasks
 
-    WIDTH = 200
-    HEIGHT = 40
+    WIDTH = 220
+    HEIGHT = 80
+    TEXT_SIZE = 50
 
     
     IMAGE_STYLES = [
@@ -51,7 +52,7 @@ module SimpleCaptcha #:nodoc
       text = Magick::Draw.new
       text.annotate(@image, 0, 0, 0, 5, simple_captcha_value(@simple_captcha_image_options[:simple_captcha_key])) do
         self.font_family = 'Arial'
-        self.pointsize = 32
+        self.pointsize = TEXT_SIZE
         self.fill = color
         self.gravity = Magick::CenterGravity
       end
@@ -92,11 +93,11 @@ module SimpleCaptcha #:nodoc
         @image = @image.wave(amplitude, frequency)
       end
 
-#      @image = @image.line(rand(WIDTH), rand(HEIGHT), rand(WIDTH), rand(HEIGHT))
+      # @image = @image.line(rand(WIDTH), rand(HEIGHT), rand(WIDTH), rand(HEIGHT))
     end
 
     def generate_simple_captcha_image(options={})  #:nodoc
-#      @image = Magick::Image.new(110, 30) do 
+      # @image = Magick::Image.new(110, 30) do 
       @image = Magick::Image.new(WIDTH, HEIGHT) do 
         self.background_color = 'white'
         self.format = 'JPG'

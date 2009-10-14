@@ -1,5 +1,60 @@
 - content_for :current_editor do
   = render :partial => "shared/current_editor_bar"
+
+#question_shower{:style=>'border:3px solid #FCC; padding:10px; margin:0 0 10px 0;'}
+  =link_to_function 'Задать вопрос прямо сейчас!', "$('question_shower').hide(); Effect.BlindDown('question_block', { duration: 0.5 });"
+
+#question_block{:style=>'display:none;'}
+  .edit_form
+    %h5
+      Задать вопрос
+      
+    -form_for :question, :url => questions_path do |f|
+      %label{:for=>:from}
+        От кого
+      %span
+        = f.text_field :from, :class=>:input
+        
+      %label{:for=>:from}
+        Для кого
+      %span
+        = f.text_field :to, :class=>:input
+        
+      %label{:for=>:topic}
+        Тема вопроса
+      %span
+        = f.text_field :topic, :class=>:input
+        
+      %label{:for=>:question}
+        Ваш вопрос
+      %span
+        = f.text_area :question, :class=>:textarea_small
+
+      %label{:for=>:website}
+        Сюда Вы можете вписать имя своего сайта
+      %span
+        = f.text_field :website, :class=>:input
+        
+      %label{:for=>:email}
+        Укажите электронную почту и мы будем знать как с вами связаться
+      %span
+        = f.text_field :email, :class=>:input
+    
+      = hidden_field_tag :captcher_code, @question.user.zip
+
+      %label{:for=>:title}
+        Вредные рекламные программы никогда не введут в это поле
+        %br
+        символы с картинки
+      %span
+        = show_simple_captcha :distortion=>'medium', :image_style=>['embosed_silver', 'simply_red', 'distorted_black', 'charcoal_grey'].rand
+      %br
+      %br
+      = submit_tag 'Задать вопрос', :class=>:submit
+      %br
+      %br
+      =link_to_function 'Спрятать эту форму', "Effect.BlindUp('question_block', { duration: 0.7 }); Element.show.delay(0.7, 'question_shower'); "
+
                   
 - @user.questions.each do |q|
   .comment

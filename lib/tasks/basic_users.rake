@@ -14,9 +14,18 @@ namespace :db do
       require "#{RAILS_ROOT}/spec/factories/users"
       require "#{RAILS_ROOT}/spec/factories/profile"
 
+      def zip_for_model(class_name)
+        zip= "#{(1000..9999).to_a.rand}-#{(1000..9999).to_a.rand}-#{(1000..9999).to_a.rand}"
+        while class_name.to_s.camelize.constantize.find_by_zip(zip)
+          zip= "#{(1000..9999).to_a.rand}-#{(1000..9999).to_a.rand}-#{(1000..9999).to_a.rand}"
+        end
+        zip
+      end
+    
       # Создать администратора
       user= Factory.create(:user,
         :login => 'portal',
+        :zip=> zip_for_model(:user),
         :email => 'admin@iv-schools.ru',
         :crypted_password=>'admin',
         :salt=>'salt',
@@ -26,10 +35,7 @@ namespace :db do
       profile= Factory.create(:empty_profile, :user_id => user.id)
       
       #--------------------------------------------------------------
-      s_zip= "#{(1000..9999).to_a.rand}-#{(1000..9999).to_a.rand}-#{(1000..9999).to_a.rand}"
-      while StorageSection.find_by_zip(s_zip)
-        s_zip= "#{(1000..9999).to_a.rand}-#{(1000..9999).to_a.rand}-#{(1000..9999).to_a.rand}"
-      end
+      s_zip= zip_for_model('StorageSection')
       ss= StorageSection.new(:user_id=>user.id, :name=>'Основное', :zip=>s_zip)
       ss.save!
       #--------------------------------------------------------------
@@ -43,6 +49,7 @@ namespace :db do
       logins.each do |login|
         user= Factory.create(:user,
           :login => "#{login}",
+          :zip=> zip_for_model(:user),
           :email => "#{login}@iv-schools.ru",
           :crypted_password=>"#{login}",
           :salt=>'salt',
@@ -57,6 +64,7 @@ namespace :db do
       logins.each do |login|
         user= Factory.create(:user,
           :login => "#{login}",
+          :zip=> zip_for_model(:user),
           :email => "#{login}@iv-schools.ru",
           :crypted_password=>"#{login}",
           :salt=>'salt',
