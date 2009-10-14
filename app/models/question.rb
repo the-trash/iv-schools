@@ -1,6 +1,20 @@
-class Question < ActiveRecord::Base
+class Question < ActiveRecord::Base    
   belongs_to :user
-  before_save :create_zip
+ 
+  # Валидация
+  validates_presence_of :from
+  validates_presence_of :to
+  validates_presence_of :topic
+  validates_presence_of :question  
+  apply_simple_captcha
+
+  # Подготовка полей перед сохранением
+  before_save :prepare_fields
+  
+  # Подготовка полей перед сохранением
+  def prepare_fields
+    (self.question = self.question.mb_chars[0..50]) unless (self.question.nil? || self.question.blank?)
+  end
   
   # ------------------------------------------------------------------
   # Машина состояний state
@@ -32,6 +46,7 @@ class Question < ActiveRecord::Base
   
   # ------------------------------------------------------------------  
   # Создать данному объекту zip код
+  before_save :create_zip
   def create_zip
     zip_code= "#{(1000..9999).to_a.rand}-#{(1000..9999).to_a.rand}-#{(1000..9999).to_a.rand}"
     while self.class.to_s.camelize.constantize.find_by_zip(zip_code)

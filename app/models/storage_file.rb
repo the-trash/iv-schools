@@ -13,4 +13,15 @@ class StorageFile < ActiveRecord::Base
   #validates_attachment_size :file,
   #                          :in => 1.kilobytes..2.megabytes,
   #                          :message=>'size_error'
+  
+  # ------------------------------------------------------------------  
+  # Создать данному объекту zip код
+  before_save :create_zip
+  def create_zip
+    zip_code= "#{(1000..9999).to_a.rand}-#{(1000..9999).to_a.rand}-#{(1000..9999).to_a.rand}"
+    while self.class.to_s.camelize.constantize.find_by_zip(zip_code)
+      zip_code= "#{(1000..9999).to_a.rand}-#{(1000..9999).to_a.rand}-#{(1000..9999).to_a.rand}"
+    end
+    self.zip= zip_code
+  end
 end

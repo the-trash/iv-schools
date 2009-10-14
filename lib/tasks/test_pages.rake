@@ -11,13 +11,8 @@ namespace :db do
       users.each do |u|
         # 10 раз сделать страницу
         10.times do
-          zip= "#{(1000..9999).to_a.rand}-#{(1000..9999).to_a.rand}-#{(1000..9999).to_a.rand}"
-          while Page.find_by_zip(zip)
-            zip= "#{(1000..9999).to_a.rand}-#{(1000..9999).to_a.rand}-#{(1000..9999).to_a.rand}"
-          end
           # Создать страницу
           page= u.pages.new(
-            :zip=>zip,
             :author=>Faker::Name.name,
             :keywords=>Faker::Lorem.sentence(2),
             :description=>Faker::Lorem.sentence(2),
@@ -34,13 +29,8 @@ namespace :db do
           if false #[true, false].rand
             # Пять раз
             5.times do
-              zip= "#{(1000..9999).to_a.rand}-#{(1000..9999).to_a.rand}-#{(1000..9999).to_a.rand}"
-              while Page.find_by_zip(zip)
-                zip= "#{(1000..9999).to_a.rand}-#{(1000..9999).to_a.rand}-#{(1000..9999).to_a.rand}"
-              end
               # Создать дочернюю страницу
               child_page= u.pages.new(
-                :zip=>zip,
                 :author=>Faker::Name.name,
                 :keywords=>Faker::Lorem.sentence(2),
                 :description=>Faker::Lorem.sentence(2),
@@ -59,13 +49,8 @@ namespace :db do
                 if [true, false].rand
                   # Пять раз
                   5.times do
-                    zip= "#{(1000..9999).to_a.rand}-#{(1000..9999).to_a.rand}-#{(1000..9999).to_a.rand}"
-                    while Page.find_by_zip(zip)
-                      zip= "#{(1000..9999).to_a.rand}-#{(1000..9999).to_a.rand}-#{(1000..9999).to_a.rand}"
-                    end
                     # Создать дочернюю страницу
                     level_child_page= u.pages.new(
-                      :zip=>zip,
                       :author=>Faker::Name.name,
                       :keywords=>Faker::Lorem.sentence(2),
                       :description=>Faker::Lorem.sentence(2),

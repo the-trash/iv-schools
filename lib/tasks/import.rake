@@ -7,14 +7,6 @@ namespace :db do
     desc 'import data form ivschools'
     task :start => :environment do
     
-    def zip_for_model(class_name)
-      zip= "#{(1000..9999).to_a.rand}-#{(1000..9999).to_a.rand}-#{(1000..9999).to_a.rand}"
-      while class_name.to_s.camelize.constantize.find_by_zip(zip)
-        zip= "#{(1000..9999).to_a.rand}-#{(1000..9999).to_a.rand}-#{(1000..9999).to_a.rand}"
-      end
-      zip
-    end
-    
     def content_type(path)
       type = (path.match(/\.(\w+)$/)[1] rescue "octet-stream").downcase
       case type
@@ -84,9 +76,8 @@ namespace :db do
     
       logins.each do |login|
         user= User.find_by_login(login)
-        
-        s_zip= zip_for_model('StorageSection')
-        ss= StorageSection.new(:user_id=>user.id, :name=>'Основное', :zip=>s_zip)
+
+        ss= StorageSection.new(:user_id=>user.id, :name=>'Основное')
         ss.save!
 
         eval("
@@ -117,7 +108,6 @@ namespace :db do
           
           if File.exists?(file_path)
             new_file_record= StorageFile.new( :user_id=>user.id,
-                                              :zip=>zip_for_model('StorageFile'),
                                               :storage_section_id=>ss.id,
                                               :name=>file.Description,
                                               :file_file_name=>file.Path.split('/')[-1],
@@ -143,7 +133,6 @@ namespace :db do
           file_path.gsub!("./files/#{login}/pages/", "#{RAILS_ROOT}/public/uploads/files/#{login}/")
           if File.exists?(file_path)
             new_file_record= StorageFile.new( :user_id=>user.id,
-                                              :zip=>zip_for_model('StorageFile'),
                                               :storage_section_id=>ss.id,
                                               :name=>file.Description,
                                               :file_file_name=>file.Path.split('/')[-1],
@@ -183,9 +172,7 @@ namespace :db do
           content.gsub!("./files/#{login}/common/", "/uploads/files/#{login}/")
           content.gsub!("./files/#{login}/pages/", "/uploads/files/#{login}/")
 
-          zip= zip_for_model('Page')
           page= Page.new( :user_id=>user.id,
-                          :zip=>zip,
                           :title=>title,
                           :content=>content
                          )

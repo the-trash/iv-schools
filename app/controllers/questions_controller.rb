@@ -1,6 +1,11 @@
 class QuestionsController < ApplicationController
   def index
     @question= @user.questions.new
+    @questions = Question.paginate_all_by_user_id(@user.id,
+                                                  :order=>"created_at DESC", #ASC, DESC
+                                                  :page => params[:page],
+                                                  :per_page=>3
+                                                  )
   end
   
   def create
@@ -16,10 +21,14 @@ class QuestionsController < ApplicationController
     
     # Если удалось сохранить (прошло валидацию)
     respond_to do |format|
-      if @question.save
+      if @question.save_with_captcha
         flash[:notice] = 'Ваш вопрос успешно оправлен'
         format.html { redirect_to(questions_path) }
       else
+        # Если все данные валидны и не валидна только капча
+        if @question.valid? && !@question.valid_with_captcha?
+          flash[:notice] = 'Ошибка при вводе защитного кода'
+        end
         format.html { render :action => "index" }
       end#if
     end#respond_to do |format|

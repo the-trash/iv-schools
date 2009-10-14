@@ -607,7 +607,7 @@ ul.storage_sections li{
 }
 /*time_list*/
 
-.std_captcha input#captcha{
+.std_captcha input#question_captcha{
   border:1px solid #F99;
   font-size:35pt;
   height:68px;

@@ -4,14 +4,6 @@ namespace :db do
     # rake db:import:asks
     desc 'import ASK data form ivschools'
     task :asks => :environment do
-      
-      def zip_for_model(class_name)
-        zip= "#{(1000..9999).to_a.rand}-#{(1000..9999).to_a.rand}-#{(1000..9999).to_a.rand}"
-        while class_name.to_s.camelize.constantize.find_by_zip(zip)
-          zip= "#{(1000..9999).to_a.rand}-#{(1000..9999).to_a.rand}-#{(1000..9999).to_a.rand}"
-        end
-        zip
-      end
     
       # Класс подключения к БД      
       class IvSchoolsConnect< ActiveRecord::Base
@@ -51,11 +43,9 @@ namespace :db do
           ask_data= Iconv.new("cp1251//IGNORE", "UTF-8").iconv(ask.Content)      
           ask_data= PHP.unserialize(ask_data)
           
-          zip= zip_for_model('Question')
           cp2utf= Iconv.new("UTF-8//IGNORE", "cp1251")
           
           u.questions.new(
-                          :zip=>zip,
                           :from=>cp2utf.iconv(ask_data['from']),                          
                           :to=>cp2utf.iconv(ask_data['to']),
                           :topic=>cp2utf.iconv(ask_data['topic']),

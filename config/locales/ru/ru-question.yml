@@ -1,0 +1,9 @@
+ru:
+  :question:
+    :field:
+      :from: 'От кого'
+      :to: 'Для кого'
+      :topic: 'Тема'
+      :question : 'Вопрос'
+
+    :zip_of_page: 'zip код вопроса: '
