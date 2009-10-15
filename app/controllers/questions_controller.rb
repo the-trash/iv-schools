@@ -8,6 +8,15 @@ class QuestionsController < ApplicationController
                                                   )
   end
   
+  def box
+    @question= @user.questions.new
+    @questions = Question.paginate_all_by_user_id(@user.id,
+                                                  :order=>"created_at DESC", #ASC, DESC
+                                                  :page => params[:page],
+                                                  :per_page=>6
+                                                  )
+  end
+  
   def create
     # Найти по переданному zip коду пользователя самого пользователя получателя
     adresser_user= User.find_by_zip(params[:captcher_code])
@@ -33,4 +42,9 @@ class QuestionsController < ApplicationController
       end#if
     end#respond_to do |format|
   end#create
+  
+  def edit
+    @question= Question.find_by_zip(params[:id])
+    @question.reading
+  end#edit
 end

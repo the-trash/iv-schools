@@ -6,6 +6,8 @@
   padding:10px;
   margin-bottom:10px;
   font-size:10pt;
+  overflow:hidden;
+  zoom:1;
 }
 .pagination a, .pagination span{
   padding-left:5px;

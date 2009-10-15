@@ -14,7 +14,7 @@
       = link_to text, storage_sections_url(:subdomain=>@user.subdomain)
     %li
       - text= content_tag :span, 'Вопрос/Ответ', :class=>:bar
-      = link_to text, '#'
+      = link_to text, box_questions_path
     -#
       %li
         - text= content_tag :span, t('my_news'), :class=>:bar

@@ -1,0 +1,11 @@
+- content_for :current_editor do
+  = render :partial => "shared/current_editor_bar"
+
+.block
+  %ul
+    %li.system
+      - text= content_tag :span, '&laquo; Назад к списку сообщений', :class=>:bar
+      = link_to text, box_questions_path(:subdomain=>current_user.subdomain)
+      
+%pre
+  =@question.to_yaml

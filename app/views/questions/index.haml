@@ -61,31 +61,31 @@
           
 - @questions.each do |q|
   .comment
+    .info
+      .date
+        =q.created_at.to_s(:db)
+      %a{:href=>"#"}
+        =q.from
     %b
       Кому:
     =q.to
     
-    %br
-    
+    %br    
     %b
       Тема:
     =q.topic
     .number
       ="#"
       =q.zip
-    .info
-      .date
-        =q.created_at.to_s(:db)
-      %a{:href=>"#"}
-        =q.from
     =q.question
     %br  
     %hr
     =q.answere
-    .controls
-      %a{:href=>"#"} Комментировать
-      %a{:href=>"#"} Правка
-      %a{:href=>"#"} Удалить
+    -#
+      .controls
+        %a{:href=>"#"} Комментировать
+        %a{:href=>"#"} Правка
+        %a{:href=>"#"} Удалить
 
 = will_paginate @questions  
 

@@ -18,7 +18,7 @@ class Question < ActiveRecord::Base
   
   # ------------------------------------------------------------------
   # Машина состояний state
-  state_machine :state, :initial => :new_question do
+  state_machine :state, :initial => :new_question do    
     # Чтание нового сообщения
     event :reading do
       # Новый вопрос просматривается и изменяет свое состояние
@@ -28,7 +28,13 @@ class Question < ActiveRecord::Base
     # Блокировка сообщения
     event :blocking do
       # Из всех состояний кроме delete должен перейти в это
-      transition all - :deleted => :block
+      transition all - :deleted => :blocked
+    end
+    
+    # Публикация сообщения
+    event :publication do
+      # Из просмотренного в публикацию
+      transition :seen => :publicated
     end
     
     # Разблокировка сообщения

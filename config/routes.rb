@@ -1,6 +1,7 @@
 ActionController::Routing::Routes.draw do |map|
   map.simple_captcha '/simple_captcha/:action', :controller => 'simple_captcha'
-  map.resources :questions
+  map.resources :questions,
+    :collection=>{ :box=>:get }
 
   map.resources :profiles,
     :member=>{ :name=>:put, :avatar=>:put }
@@ -76,8 +77,6 @@ end
   end#users
   
   # Стандартный роутинг для страниц
-
-
 
   map.resources :users do |user|
     user.resources :albums do |album|   #/users/:user_id/albums, /users/:user_id/albums/new

@@ -1,0 +1,44 @@
+- content_for :current_editor do
+  = render :partial => "shared/current_editor_bar"
+
+.block
+  %ul
+    %li.system
+      - text= content_tag :span, '&laquo; Назад в личный кабинет', :class=>:bar
+      = link_to text, cabinet_users_url(:subdomain=>current_user.subdomain)
+
+= will_paginate @questions
+          
+- @questions.each do |q|
+  -color_set= {:new_question=>'#BBD653', :seen=>'#CCC', :publicated=>'#00F', :blocked=>'#EC008B', :deleted=>'#E03D64'}
+  -color_set_names= {:new_question=>'новый', :seen=>'просмотрен', :publicated=>'опубликован', :blocked=>'блокирован', :deleted=>'удален'}
+
+  -color= color_set[q.state.to_sym]
+  .comment{:style=>"border:1px solid #{color};"}
+    %b{:style=>"color: #{color};"}
+      Статус:
+      =color_set_names[q.state.to_sym]
+    %br
+    %b
+      От кого
+    =q.from.mb_chars[0..30]
+    %br
+    %b
+      Кому:
+    =q.to.mb_chars[0..30]
+    %br
+    %b
+      Тема:
+    =q.topic.mb_chars[0..30]
+    
+    .controls
+      = link_to 'Просмотр', edit_question_path(q.zip)
+      %a{:href=>"#"} Удалить
+
+= will_paginate @questions  
+
+  
+  
+  
+  
+  
