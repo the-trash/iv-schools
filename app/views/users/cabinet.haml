@@ -15,6 +15,20 @@
     %li
       - text= content_tag :span, 'Вопрос/Ответ', :class=>:bar
       = link_to text, box_questions_path
+    
+    - if logged_in?
+      -# Если есть ролевой доступ к администрированию пользователей
+      - if current_user.has_role_policy?(:administrator, :users)
+        %li.system
+          - text= content_tag :span, "Пользователи", :class=>:bar
+          = link_to text, admins_users_path
+          
+      -# Если есть ролевой доступ к администрированию ролей
+      - if current_user.has_role_policy?(:administrator, :roles)
+        %li.system
+          - text= content_tag :span, "Роли", :class=>:bar
+          = link_to text, admins_roles_path
+
     -#
       %li
         - text= content_tag :span, t('my_news'), :class=>:bar

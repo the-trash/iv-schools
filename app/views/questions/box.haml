@@ -14,7 +14,7 @@
   -color_set_names= {:new_question=>'новый', :seen=>'просмотрен', :publicated=>'опубликован', :blocked=>'блокирован', :deleted=>'удален'}
 
   -color= color_set[q.state.to_sym]
-  .comment{:style=>"border:1px solid #{color};"}
+  .comment.overblock{:style=>"border:1px solid #{color};"}
     %b{:style=>"color: #{color};"}
       Статус:
       =color_set_names[q.state.to_sym]
@@ -33,7 +33,12 @@
     
     .controls
       = link_to 'Просмотр', edit_question_path(q.zip)
-      %a{:href=>"#"} Удалить
+      = link_to 'Удалить', q.zip, :method=>:delete, :confirm=>'Вы уверенны, что хотите удалить этот вопрос безвозвратно?'
+      
+      - if logged_in?
+        -# Если есть ролевой доступ к администрированию вопросов
+        - if current_user.has_role_policy?(:administrator, :questions)
+          = link_to 'Удалить физически', physic_delete_question_path(q.zip), :method=>:delete, :confirm=>'Вы уверенны, что хотите удалить этот вопрос безвозвратно (физическое удаление)?'
 
 = will_paginate @questions  
 

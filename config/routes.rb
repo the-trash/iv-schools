@@ -1,7 +1,8 @@
 ActionController::Routing::Routes.draw do |map|
   map.simple_captcha '/simple_captcha/:action', :controller => 'simple_captcha'
   map.resources :questions,
-    :collection=>{ :box=>:get }
+    :collection=>{ :box=>:get },
+    :member=>{ :physic_delete=>:delete }
 
   map.resources :profiles,
     :member=>{ :name=>:put, :avatar=>:put }

@@ -59,6 +59,12 @@
 
 = will_paginate @questions
           
+- if @questions.empty?
+  %br
+  %br
+  %br
+  %h4
+    К сожалению, опубликованных ответов на заданные вопросы еще нет
 - @questions.each do |q|
   .comment
     .info

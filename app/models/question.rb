@@ -16,6 +16,7 @@ class Question < ActiveRecord::Base
     (self.question = self.question.mb_chars[0..50]) unless (self.question.nil? || self.question.blank?)
   end
   
+  #new_question, seen, blocked, publicated, deleted
   # ------------------------------------------------------------------
   # Машина состояний state
   state_machine :state, :initial => :new_question do    

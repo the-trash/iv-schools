@@ -1,7 +1,7 @@
 class QuestionsController < ApplicationController
   def index
     @question= @user.questions.new
-    @questions = Question.paginate_all_by_user_id(@user.id,
+    @questions = Question.paginate_all_by_user_id_and_state(@user.id, 'publicated',
                                                   :order=>"created_at DESC", #ASC, DESC
                                                   :page => params[:page],
                                                   :per_page=>3
@@ -10,7 +10,7 @@ class QuestionsController < ApplicationController
   
   def box
     @question= @user.questions.new
-    @questions = Question.paginate_all_by_user_id(@user.id,
+    @questions = Question.paginate_all_by_user_id_and_state(@user.id, ['new_question','seen', 'publicated'],
                                                   :order=>"created_at DESC", #ASC, DESC
                                                   :page => params[:page],
                                                   :per_page=>6
@@ -47,4 +47,19 @@ class QuestionsController < ApplicationController
     @question= Question.find_by_zip(params[:id])
     @question.reading
   end#edit
+  
+  # Физического удаления не происходит,
+  # просто вопрос получает состояние - удален (deleted)
+  def destroy
+    @question= Question.find_by_zip(params[:id])
+    @question.deleting
+    redirect_back_or(question_url(:subdomain=>@user.subdomain))
+  end
+  
+  # Физическое удаление вопроса из БД - только для администратора
+  def physic_delete
+    @question= Question.find_by_zip(params[:id])
+    @question.destroy
+    redirect_back_or(question_url(:subdomain=>@user.subdomain))
+  end
 end
