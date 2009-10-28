@@ -37,6 +37,8 @@
       = f.text_area :answere, :class=>:textarea_small
 
     = submit_tag 'Обновить данные этого сообщения', :class=>:submit 
-
-  = button_to "Снять с публикации", {:controller=>:questions, :action=>:unpublication, :id=>@question.zip}, {:method=>:put}
-  = button_to "Опубликовать в разделе Вопрос / Ответ", {:controller=>:questions, :action=>:publication, :id=>@question.zip}, {:method=>:put}
+  
+  -if @question.state == 'seen'
+    = button_to "Опубликовать в разделе Вопрос / Ответ", {:controller=>:questions, :action=>:publication, :id=>@question.zip}, {:method=>:put}
+  -elsif @question.state == 'publicated'
+    = button_to "Снять с публикации", {:controller=>:questions, :action=>:unpublication, :id=>@question.zip}, {:method=>:put}

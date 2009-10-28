@@ -41,8 +41,8 @@ class PagesController < ApplicationController
     @page= Page.new(params[:page])
     @parent= nil
     @parent= Page.find_by_zip(params[:parent_id]) if params[:parent_id]
-    zip= zip_for_model('Page')
-    @page.zip= zip
+    #zip= zip_for_model('Page')
+    #@page.zip= zip
     @page.user_id= @user.id 
     respond_to do |format|
       if @page.save

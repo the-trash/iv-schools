@@ -1,6 +1,12 @@
 - content_for :current_editor do
   = render :partial => "shared/current_editor_bar"
 
+.block
+  %ul
+    %li.system
+      - text= content_tag :span, '&laquo; Назад в личный кабинет', :class=>:bar
+      = link_to text, cabinet_users_url(:subdomain=>current_user.subdomain)
+      
 %h5 Управление страницами сайта
 .admin_map
   = manager_pages_tree!(@pages_tree)

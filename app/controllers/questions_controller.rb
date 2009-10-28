@@ -48,6 +48,18 @@ class QuestionsController < ApplicationController
     @question.reading if @question.can_reading?
   end#edit
   
+  def update
+    @question= Question.find_by_zip(params[:id])
+    respond_to do |format|  
+      if @question.update_attributes(params[:question])
+        flash[:notice] = 'Вопрос изменен'
+        format.html { redirect_back_or(questions_path) }
+      else
+        format.html { render :action => "edit" }
+      end
+    end
+  end
+  
   # Физического удаления не происходит,
   # просто вопрос получает состояние - удален (deleted)
   def destroy
