@@ -11,6 +11,10 @@ class User < ActiveRecord::Base
   has_many    :pages                        # У пользователя много страниц
   has_many    :questions                    # У пользователя много вопросов
   
+  def new_questions
+    self.questions.select {|q| q.state == "new_question"}
+  end
+  
   has_many    :personal_policies            # Пользователь имеет много персональных политик
   has_many    :personal_resource_policies   # Пользователь имеет много персональных политик по отношению к объектам
 

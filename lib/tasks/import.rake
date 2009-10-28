@@ -22,13 +22,7 @@ namespace :db do
   
     class IvSchoolsPageConnect< ActiveRecord::Base
         establish_connection(
-          :adapter  => "mysql",
-          :host     => "localhost",
-          :username => "root",
-          #:password => "bdcrekcvfcnthbvfhuj",#server
-          :password => "", #Home
-          :database => "ivschools",
-          :encoding => "utf8"
+            :old_iv_schools
         )
     end
     

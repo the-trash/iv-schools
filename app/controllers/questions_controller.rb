@@ -45,7 +45,7 @@ class QuestionsController < ApplicationController
   
   def edit
     @question= Question.find_by_zip(params[:id])
-    @question.reading
+    @question.reading if @question.can_reading?
   end#edit
   
   # Физического удаления не происходит,
@@ -56,6 +56,18 @@ class QuestionsController < ApplicationController
     redirect_back_or(question_url(:subdomain=>@user.subdomain))
   end
   
+  def publication
+    @question= Question.find_by_zip(params[:id])
+    @question.publication
+    redirect_to(box_questions_url(:subdomain=>@user.subdomain))
+  end
+  
+  def unpublication
+    @question= Question.find_by_zip(params[:id])
+    @question.unpublication
+    redirect_to(box_questions_url(:subdomain=>@user.subdomain))
+  end
+
   # Физическое удаление вопроса из БД - только для администратора
   def physic_delete
     @question= Question.find_by_zip(params[:id])

@@ -2,18 +2,18 @@ class Question < ActiveRecord::Base
   belongs_to :user
  
   # Валидация
-  validates_presence_of :from
-  validates_presence_of :to
-  validates_presence_of :topic
-  validates_presence_of :question  
-  apply_simple_captcha
+  #validates_presence_of :from
+  #validates_presence_of :to
+  #validates_presence_of :topic
+  #validates_presence_of :question  
+  #apply_simple_captcha
 
   # Подготовка полей перед сохранением
   before_save :prepare_fields
   
   # Подготовка полей перед сохранением
   def prepare_fields
-    (self.question = self.question.mb_chars[0..50]) unless (self.question.nil? || self.question.blank?)
+    (self.question = self.question.mb_chars[0..600]) unless (self.question.nil? || self.question.blank?)
   end
   
   #new_question, seen, blocked, publicated, deleted
@@ -36,6 +36,12 @@ class Question < ActiveRecord::Base
     event :publication do
       # Из просмотренного в публикацию
       transition :seen => :publicated
+    end
+    
+    # Снять с публикации
+    event :unpublication do
+      # Из опубликованного в просмотреные (снять с публикации)
+      transition :publicated => :seen
     end
     
     # Разблокировка сообщения

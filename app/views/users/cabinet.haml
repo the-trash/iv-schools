@@ -5,7 +5,6 @@
     %li
       - text= content_tag :span, t('profile'), :class=>:bar
       = link_to text, profile_users_path(:subdomain=>@user.subdomain)
-      
     %li
       - text= content_tag :span, t('page.manage'), :class=>:bar
       = link_to text, manager_pages_path(:subdomain=>@user.subdomain)
@@ -13,7 +12,10 @@
       - text= content_tag :span, t('my_files'), :class=>:bar
       = link_to text, storage_sections_url(:subdomain=>@user.subdomain)
     %li
-      - text= content_tag :span, 'Вопрос/Ответ', :class=>:bar
+      -# Определяется кол-во новых сообщений, и если они есть - то формируется текст
+      - nqs= @user.new_questions.size
+      - new_questions_size = ( nqs > 0 ? "(новых : #{nqs})" : "")
+      - text= content_tag :span, "Вопрос/Ответ #{new_questions_size}", :class=>:bar
       = link_to text, box_questions_path
     
     - if logged_in?
@@ -28,7 +30,6 @@
         %li.system
           - text= content_tag :span, "Роли", :class=>:bar
           = link_to text, admins_roles_path
-
     -#
       %li
         - text= content_tag :span, t('my_news'), :class=>:bar
@@ -45,7 +46,3 @@
       %li
         - text= content_tag :span, t('my_documents'), :class=>:bar
         = link_to text, manager_pages_path(:subdomain=>current_user.subdomain)
-        
-
-      
-      

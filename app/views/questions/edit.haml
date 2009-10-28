@@ -6,6 +6,37 @@
     %li.system
       - text= content_tag :span, '&laquo; Назад к списку сообщений', :class=>:bar
       = link_to text, box_questions_path(:subdomain=>current_user.subdomain)
+
+= object_errors(@question)
+
+.edit_form.overblock
+  %h5
+    От кого:
+  %h5.gray
+    = @question.from
+
+  -form_for( :question, :url=>question_path, :html=>{:method=>:put} ) do |f|
+    %label{:for=>:to}
+      Для кого
+    %span
+      = f.text_field :to, :class=>:input
+
+    %label{:for=>:topic}
+      Тема вопроса
+    %span
+      = f.text_field :topic, :class=>:input
+
+    %label{:for=>:question}
+      Вопрос
+    %span
+      = f.text_area :question, :class=>:textarea_small
       
-%pre
-  =@question.to_yaml
+    %label{:for=>:answere}
+      Ответ
+    %span
+      = f.text_area :answere, :class=>:textarea_small
+
+    = submit_tag 'Обновить данные этого сообщения', :class=>:submit 
+
+  = button_to "Снять с публикации", {:controller=>:questions, :action=>:unpublication, :id=>@question.zip}, {:method=>:put}
+  = button_to "Опубликовать в разделе Вопрос / Ответ", {:controller=>:questions, :action=>:publication, :id=>@question.zip}, {:method=>:put}
