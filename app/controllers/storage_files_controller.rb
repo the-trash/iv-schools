@@ -1,8 +1,8 @@
 class StorageFilesController < ApplicationController
 
   before_filter :login_required
-  before_filter :access_to_controller_action_required,      :only => [:create, :destroy]
-  before_filter :storage_section_resourсe_access_required,  :only => [:create, :destroy]
+  #before_filter :access_to_controller_action_required,      :only => [:create, :destroy]
+  #before_filter :storage_section_resourсe_access_required,  :only => [:create, :destroy]
   before_filter :find_file,  :only => [:destroy]
   
   def create

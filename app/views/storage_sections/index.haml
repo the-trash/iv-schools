@@ -9,18 +9,23 @@
   %ul
     - @storage_sections.each do |section|
       %li{:style=>"padding:10px;margin:0 0 10px 0;"}
-        =link_to image_tag('iconza/blue/downloads_folder.png', :style=>'vertical-align:middle;') + " " + section.name, storage_section_url(section.zip), :style=>'font-weight:bold;'
+        =link_to image_tag('iconza/blue/downloads_folder.png', :style=>'vertical-align:middle;') + " " + section.name + " (#{section.storage_files.size.to_s} файлов)", storage_section_url(section.zip), :style=>'font-weight:bold;'
   
 = object_errors(@page)
 
 .edit_form
-  %h5
+  %h5{:style=>'line-height:150%;'}
+    На этапе тестирования Вам предлагается использовать единый каталог файлов,
+    который называется "Основное"
+    %br
+    В этой папке хранятся все ваши файлы из старой версии сайта
+  -#
     Создать новый раздел
-    
-  -form_for :storage_section, :url => storage_sections_path do |f|
-    %label{:for=>:title}
-      Название раздела
-    %span
-      = f.text_field :name, :class=>:input
       
-    = submit_tag 'Создать', :class=>:submit
+    -form_for :storage_section, :url => storage_sections_path do |f|
+      %label{:for=>:title}
+        Название раздела
+      %span
+        = f.text_field :name, :class=>:input
+        
+      = submit_tag 'Создать', :class=>:submit
