@@ -19,10 +19,12 @@ class StorageFilesController < ApplicationController
       extension = File.extname(@storage_file.file_file_name)
       @storage_file.file.instance_write(:file_name, "#{zip}#{extension}")
       respond_to do |format|
-        if @storage_file.save
+        if @storage_file.save!
           flash[:notice] = 'Успешно загружено'
+          render :text=>@storage_file.to_yaml and return
           format.html { redirect_to(storage_section_url(@storage_section.zip)) }
         else
+          render :text=>@storage_file.to_yaml and return
           @storage_section_files= StorageFile.paginate_all_by_storage_section_id(@storage_section.id,
                                  :order=>"created_at DESC", #ASC, DESC
                                  :page => params[:page],
