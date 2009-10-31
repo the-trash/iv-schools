@@ -11,6 +11,7 @@ class ApplicationController < ActionController::Base
   
   #rescue_from ActionController::RoutingError, :with => :page_not_found
   #rescue_from ActionController::UnknownAction, :with=> :page_not_found
+  #rescue_from WillPaginate::InvalidPage, :with=> :page_not_found
   
   helper :all # include all helpers, all the time
   protect_from_forgery # See ActionController::RequestForgeryProtection for details

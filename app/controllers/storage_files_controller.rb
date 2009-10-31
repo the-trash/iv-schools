@@ -4,7 +4,17 @@ class StorageFilesController < ApplicationController
   #before_filter :access_to_controller_action_required,      :only => [:create, :destroy]
   #before_filter :storage_section_resourсe_access_required,  :only => [:create, :destroy]
   before_filter :find_file,  :only => [:destroy]
-  
+
+  # Показать все файлы данной секции
+  def index
+    @storage_section= StorageSection.find_by_zip(params[:id])
+    @storage_section_files= StorageFile.paginate_all_by_storage_section_id(@storage_section.id,
+                           :order=>"created_at DESC", #ASC, DESC
+                           :page => params[:page],
+                           :per_page=>20
+                           )
+  end
+    
   def create
     if params[:storage_file] && params[:storage_file][:file]
       @storage_section = StorageSection.find_by_zip(params[:storage_section_zip])

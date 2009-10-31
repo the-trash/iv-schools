@@ -37,6 +37,8 @@
       %br 
       
       =submit_tag 'Загрузить', :class=>:submit
+
+= will_paginate @storage_section_files
     
 %ul
   - @storage_section_files.each do |file|
@@ -69,5 +71,5 @@
           %td{:style=>'width:20%;background:#EEE;text-align:center; vertical-align:middle;'}
             =link_to 'Удалить', storage_file_path(file.zip), :method=>:delete, :confirm=>'Вы уверены, что хотите удалить этот файл безвозвратно?'
           
-= will_paginate @storage_section_files, :params=>{:controller => :storage_sections, :action => @storage_section.zip, :id=>nil}
+= will_paginate @storage_section_files
 %br
