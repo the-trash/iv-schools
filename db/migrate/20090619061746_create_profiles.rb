@@ -36,7 +36,7 @@ class CreateProfiles < ActiveRecord::Migration
       t.string    :work_place        # место
       t.string    :work_status       # статус (должность)
       
-      t.text      :setting          # Набор различных настроек анкеты
+      t.text      :settings          # Набор различных настроек анкеты
       
       t.timestamps
     end

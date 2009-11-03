@@ -28,7 +28,7 @@ class CreatePages < ActiveRecord::Migration
       t.text   :prepared_content
       
       # Набор различных настроек :: сериализованные данные :: YAML :: должен быть организован единый интерфейс
-      t.text    :setting
+      t.text    :settings
       # Отображение страницы show (открыта), hide(скрыта), closed(закрыта), protected(управляется другими настройками)
       t.string  :display, :default => 'show'
       

@@ -16,42 +16,40 @@ class StorageFilesController < ApplicationController
   end
     
   def create
-    if params[:storage_file] && params[:storage_file][:file]
-      @storage_section = StorageSection.find_by_zip(params[:storage_section_zip])
+    @storage_section = StorageSection.find_by_zip(params[:storage_section_zip])
+    
+    if params[:storage_file] && params[:storage_file][:file]  
       @storage_file= @storage_section.storage_files.new(params[:storage_file])
       @storage_file.user_id= @user.id
     
       @storage_file.file= params[:storage_file][:file]
-
-      zip= zip_for_model('StorageFile')
-      @storage_file.zip= zip
+      @storage_file.zip= zip_for_model('StorageFile')
     
       extension = File.extname(@storage_file.file_file_name)
-      @storage_file.file.instance_write(:file_name, "#{zip}#{extension}")
+      @storage_file.file.instance_write(:file_name, "#{@storage_file.zip}#{extension}")
+      
       respond_to do |format|
-        if @storage_file.save!
+        if @storage_file.save
           flash[:notice] = 'Успешно загружено'
-          render :text=>@storage_file.to_yaml and return
-          format.html { redirect_to(storage_section_url(@storage_section.zip)) }
+          format.html { redirect_to(storage_files_url(:id=>@storage_section.zip)) }
         else
-          render :text=>@storage_file.to_yaml and return
           @storage_section_files= StorageFile.paginate_all_by_storage_section_id(@storage_section.id,
                                  :order=>"created_at DESC", #ASC, DESC
                                  :page => params[:page],
                                  :per_page=>20
                                  )
-          format.html { render  :template => "storage_sections/show" }
+          format.html { render :action => "index" }
         end
-      end
+      end#respond_to do |format|
     else
-      flash[:notice] = 'Кажется, Вы забыли указать файл'
-      redirect_to(storage_section_url(params[:storage_section_zip]))
+      flash[:warning] = 'Кажется, Вы забыли указать файл'
+      redirect_to(storage_files_url(:id=>@storage_section.zip))
     end# if params[:storage_file]
   end
   
   def destroy
     @file.destroy
-    flash[:notice] = 'Кажется, Вы удалили этот файл навсегда'
+    flash[:red_alert] = 'Кажется, Вы удалили этот файл навсегда'
     redirect_back_or(storage_sections_url)
   end
   

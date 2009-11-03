@@ -94,11 +94,11 @@ namespace :db do
         # Все прилинкованные файлы перебрать и создать записи
         file_storage.each do |file|
           file_path= file.Path.dup
-          file_path.gsub!("./files/#{login}/common/", "#{RAILS_ROOT}/public/uploads/files/#{login}/")
-          file_path.gsub!("./files/#{login}/pages/", "#{RAILS_ROOT}/public/uploads/files/#{login}/")
+          file_path.gsub!("./files/#{login}/common/", "#{RAILS_ROOT}/public/uploads/files/#{login}/original/")
+          file_path.gsub!("./files/#{login}/pages/", "#{RAILS_ROOT}/public/uploads/files/#{login}/original/")
           
-          file_path.gsub!("./files/common/", "#{RAILS_ROOT}/public/uploads/files/#{login}/")
-          file_path.gsub!("./files/#{login}/pages/", "#{RAILS_ROOT}/public/uploads/files/#{login}/")
+          file_path.gsub!("./files/common/", "#{RAILS_ROOT}/public/uploads/files/#{login}/original/")
+          file_path.gsub!("./files/#{login}/pages/", "#{RAILS_ROOT}/public/uploads/files/#{login}/original/")
           
           if File.exists?(file_path)
             new_file_record= StorageFile.new( :user_id=>user.id,
@@ -120,11 +120,11 @@ namespace :db do
         # Все общие файлы перебрать и создать записи
         file_storage.each do |file|
           file_path= file.Path.dup
-          file_path.gsub!("./files/#{login}/common/", "#{RAILS_ROOT}/public/uploads/files/#{login}/")
-          file_path.gsub!("./files/#{login}/pages/", "#{RAILS_ROOT}/public/uploads/files/#{login}/")
+          file_path.gsub!("./files/#{login}/common/", "#{RAILS_ROOT}/public/uploads/files/#{login}/original/")
+          file_path.gsub!("./files/#{login}/pages/", "#{RAILS_ROOT}/public/uploads/files/#{login}/original/")
           
-          file_path.gsub!("./files/common/", "#{RAILS_ROOT}/public/uploads/files/#{login}/")
-          file_path.gsub!("./files/#{login}/pages/", "#{RAILS_ROOT}/public/uploads/files/#{login}/")
+          file_path.gsub!("./files/common/", "#{RAILS_ROOT}/public/uploads/files/#{login}/original/")
+          file_path.gsub!("./files/#{login}/pages/", "#{RAILS_ROOT}/public/uploads/files/#{login}/original/")
           if File.exists?(file_path)
             new_file_record= StorageFile.new( :user_id=>user.id,
                                               :storage_section_id=>ss.id,
@@ -160,11 +160,15 @@ namespace :db do
           content.gsub!('<h1>Корневой раздел сайта</h1>', root_section_msg)
           content += file_div(files) unless files.empty?
           
-          content.gsub!("./files/common/", "/uploads/files/#{login}/")
-          content.gsub!("./files/pages/", "/uploads/files/#{login}/")
+          content.gsub!("./files/common/", "/uploads/files/#{login}/original/")
+          content.gsub!("./files/pages/", "/uploads/files/#{login}/original/")
+          content.gsub!("./files/pages/", "/uploads/files/#{login}/original/")
           
-          content.gsub!("./files/#{login}/common/", "/uploads/files/#{login}/")
-          content.gsub!("./files/#{login}/pages/", "/uploads/files/#{login}/")
+          # Такие блоки текста надо заменять на href="#" onclick="javascript:alert('после запуска новой версии сайта ссылка не действительна');return false;"
+          #href="http://iv36.iv-schools.ru/index.php?action=show&page_id=69"
+          
+          content.gsub!("./files/#{login}/common/", "/uploads/files/#{login}/original/")
+          content.gsub!("./files/#{login}/pages/", "/uploads/files/#{login}/original/")
 
           page= Page.new( :user_id=>user.id,
                           :title=>title,

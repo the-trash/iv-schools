@@ -36,6 +36,18 @@ module ApplicationHelper
       res+= flash_
     end
     
+    if flash[:red_alert]
+      flash_= ''
+      flash_= content_tag(:li, flash[:red_alert])
+      flash_= content_tag :ul, flash_
+      flash_= content_tag(:h3, 'Уведомление')+flash_
+      flash_= content_tag :div, flash_, :class=>:error
+      flash_= content_tag :div, flash_, :class=>:system_messages
+      # Обнулим флеш - иногда он имеет свойство проявляться
+      flash[:red_alert]= nil
+      res+= flash_
+    end
+    
     if flash[:warning]
       warn_= ''
       warn_= content_tag(:li, flash[:warning])

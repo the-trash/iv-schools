@@ -52,7 +52,6 @@ class User < ActiveRecord::Base
   validates_attachment_size :avatar,
                             :in => 5.kilobytes..200.kilobytes,
                             :message=>I18n.translate('paperclip.avatar.errors.size')
-
   #----------------------------------------------------------------------------------------------
   validates_uniqueness_of   :login, :case_sensitive => false
   validates_uniqueness_of   :email, :case_sensitive => false

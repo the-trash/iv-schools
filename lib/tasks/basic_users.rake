@@ -4,6 +4,7 @@ namespace :db do
   desc 'create basic data'
   
   task :basic_data => ['db:drop', 'db:create', 'db:migrate', 'db:roles:create', 'db:users:create', 'db:import:start', 'db:import:asks']
+  # rake paperclip:refresh CLASS='StorageFile'
       
   # Раздел создания базовых пользователей системы
   namespace :users do

@@ -9,8 +9,6 @@
       
 %h5
   =@storage_section.name
-  %span{:class=>'nobr', :style=>'color:#CCC;'}
-    (Я нахожусь в разделе)  
 
 = object_errors(@storage_file)  
     
@@ -22,8 +20,15 @@
       Добавить файл
 
     -form_for :storage_file, :url => storage_files_path, :html => { :multipart => true, :method=>:post } do |form|
+
+      %label{:style=>'color:#FF0000;'}
+        Пожалуйста, давайте файлам осмысленные имена
+        %br
+        (сейчас название файла нельзя изменить)
+      %br
       %label
         Название файла
+              
       %div{:style=>"margin:0 0 5px 0;"}
         =form.text_field :name
       %br 
@@ -35,7 +40,7 @@
       %div{:style=>"margin:0 0 5px 0;"}
         =form.file_field :file
       %br 
-      
+              
       =submit_tag 'Загрузить', :class=>:submit
 
 = will_paginate @storage_section_files
@@ -45,31 +50,91 @@
     %li{:style=>"padding:10px;margin:0 0 10px 0; border:3px solid #CCC;"}
       %table{:width=>'100%'}
         %tr
-          %td{:style=>'padding:5px 0'}
-            -file_name= file.name.blank? ? 'без имени' : file.name
-            =link_to file_name, file.file.url, :alt=>'Просмотр файла', :title=>'Просмотр файла'
-            = file.file.url(:mini)
-          %td{:style=>'width:20%;background:#EEE;text-align:center; vertical-align:middle;'}
-            =sprintf("%.3f", (file.file.size.to_f/1.kilobyte.to_f))
-            Kb
-        %tr
-          %td{:style=>'padding:5px 0'}
-            Адрес:
+          %td
+            .file_header
+              -url= (Project::ADDRESS+file.file.url).split('?').first
+              -file_name= file.name.blank? ? 'без имени' : file.name
+              =link_to file_name, url, :title=>'Просмотр файла'
+            
+            .file_block
+              %b
+                URL адрес файла
+              %input{:value=>url, :style=>'width:85%; font-family:Verdana;'}
+              
+            .file_block
+              %b
+                HTML код для вставки ссылки на этот файл
+              %input{:value=>link_to(file_name, url), :style=>'width:85%; font-family:Verdana;'}
+
+            -if file.is_image?        
+              .file_block
+                %b
+                  Код для вставки изображения
+                %input{:value=>image_tag(url, :title=>file_name), :style=>'width:85%; font-family:Verdana;'}
+            
+            .file_block
+              %b
+                Размер файла: 
+              =sprintf("%.3f", (file.file.size.to_f/1.kilobyte.to_f))
+              Kb
+
+          %td{:style=>'width:100px;'}
+            -if file.is_image?
+              = link_to(image_tag(file.file.url(:small), :alt=>'Изображение'), url, :title=>file_name)
+            -elsif file.is_doc?
+              = link_to(image_tag('doctype/100x100/doc.jpg', :alt=>'Документ'), url, :title=>file_name)
+            -elsif file.is_txt?
+              = link_to(image_tag('doctype/100x100/txt.jpg', :alt=>'Текст'), url, :title=>file_name)
+            -elsif file.is_ppt?
+              = link_to(image_tag('doctype/100x100/ppt.jpg', :alt=>'Презентация'), url, :title=>file_name)
+            -elsif file.is_xls?
+              = link_to(image_tag('doctype/100x100/xls.jpg', :alt=>'Электронная таблица'), url, :title=>file_name)
+            -elsif file.is_pdf?
+              = link_to(image_tag('doctype/100x100/pdf.jpg', :alt=>'PDF'), url, :title=>file_name)
+            -elsif file.is_psd?
+              = link_to(image_tag('doctype/100x100/psd.jpg', :alt=>'PSD'), url, :title=>file_name)
+            -elsif file.is_media?
+              = link_to(image_tag('doctype/100x100/media.jpg', :alt=>'Медиа файл'), url, :title=>file_name)
+            -elsif file.is_arch?
+              = link_to(image_tag('doctype/100x100/zip.jpg', :alt=>'Архив'), url, :title=>file_name)
+            -else
+              =image_tag 'doctype/100x100/default.jpg', :alt=>'Файл'
             %br
-            %input{:value=>(Project::ADDRESS+file.file.url).split('?').first, :style=>'width:85%; font-family:Verdana;'}
             %br
             %br
-            Вставка ссылки:
             %br
-            -url= (Project::ADDRESS+file.file.url).split('?').first
-            %input{:value=>link_to(url, url), :style=>'width:85%; font-family:Verdana;'}
-          %td{:style=>'width:20%;background:#EEE;text-align:center; vertical-align:middle;'}
-            Путь к файлу
-        %tr
-          %td{:style=>'padding:5px 0'}
-            &nbsp;
-          %td{:style=>'width:20%;background:#EEE;text-align:center; vertical-align:middle;'}
-            =link_to 'Удалить', storage_file_path(file.zip), :method=>:delete, :confirm=>'Вы уверены, что хотите удалить этот файл безвозвратно?'
+            .div{:style=>'text-align:center;'}
+              =link_to 'Удалить', storage_file_path(file.zip), :method=>:delete, :confirm=>'Вы уверены, что хотите удалить этот файл безвозвратно?', :style=>'color:red;'
+  -#              
+    - @storage_section_files.each do |file|
+      %li{:style=>"padding:10px;margin:0 0 10px 0; border:3px solid #CCC;"}
+        %table{:width=>'100%'}
+          %tr
+            %td{:style=>'padding:5px 0'}
+              -file_name= file.name.blank? ? 'без имени' : file.name
+              =link_to file_name, file.file.url, :title=>'Просмотр файла'
+              = file.file.url(:mini)
+            %td{:style=>'width:20%;background:#EEE;text-align:center; vertical-align:middle;'}
+              =sprintf("%.3f", (file.file.size.to_f/1.kilobyte.to_f))
+              Kb
+          %tr
+            %td{:style=>'padding:5px 0'}
+              Адрес:
+              %br
+              %input{:value=>(Project::ADDRESS+file.file.url).split('?').first, :style=>'width:85%; font-family:Verdana;'}
+              %br
+              %br
+              Вставка ссылки:
+              %br
+              -url= (Project::ADDRESS+file.file.url).split('?').first
+              %input{:value=>link_to(url, url), :style=>'width:85%; font-family:Verdana;'}
+            %td{:style=>'width:20%;background:#EEE;text-align:center; vertical-align:middle;'}
+              Путь к файлу
+          %tr
+            %td{:style=>'padding:5px 0'}
+              &nbsp;
+            %td{:style=>'width:20%;background:#EEE;text-align:center; vertical-align:middle;'}
+              =link_to 'Удалить', storage_file_path(file.zip), :method=>:delete, :confirm=>'Вы уверены, что хотите удалить этот файл безвозвратно?'
           
 = will_paginate @storage_section_files
 %br

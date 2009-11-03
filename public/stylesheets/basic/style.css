@@ -182,8 +182,14 @@ h3 a:hover{color:#2476FF;}
   padding:10px;
   text-align:center;
   font-weight:bold;
+  
+  /*
   border-bottom:1px solid #AAA;
   margin-bottom:10px;
+  */
+  border-top:1px solid #BBB;
+  border-bottom:1px solid #BBB;
+  margin-bottom:25px;
 }
 a .bar{
   font-size:8pt;
@@ -424,7 +430,7 @@ ul.system_navigation{
   border-width:1px 1px 1px 4px;
   font-family:Tahoma,Verdana,Arial;
   font-size:8pt;
-  height:700px;
+  height:600px;
   padding:5px 0 0 5px;
   width:95%;
   margin:0 0 15px 0;
@@ -614,4 +620,21 @@ ul.storage_sections li{
   padding-top:12pt;
   text-align:center;
   width:220px;
+}
+/*file storage*/
+.file_header{
+  margin:0 0 10px 0;
+  font-size:13pt;
+}
+.file_block{
+  margin:0 0 10px 0;
+  font-size:13pt;
+}
+.file_block b{
+  line-height:150%;
+  font-size:8pt;
+}
+.file_block input{
+  font-size:8pt;
+  border:1px solid #DDD;
 }
