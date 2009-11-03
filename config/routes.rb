@@ -1,20 +1,24 @@
 ActionController::Routing::Routes.draw do |map|
   map.simple_captcha '/simple_captcha/:action', :controller => 'simple_captcha'
+  
+  map.resources :users,
+    :collection=>{:cabinet=>:get, :profile=>:get},
+    :member=>{ :base_header=>:put }
+
+  map.resources :profiles,
+    :member=>{ :name=>:put, :avatar=>:put }
+
+  map.resources :pages,
+    :collection=>{ :map=>:get, :manager=>:get },
+    :member=>{ :up=>:get, :down=>:get }
+
+  map.resources :storage_sections
+  map.resources :storage_files
+              
   map.resources :questions,
     :collection=>{ :box=>:get },
     :member=>{ :physic_delete=>:delete }
 
-  map.resources :profiles,
-    :member=>{ :name=>:put, :avatar=>:put }
-  
-  map.resources :storage_sections
-  map.resources :storage_files
-  
-  map.resources :pages,
-    :collection=>{ :map=>:get, :manager=>:get },
-    :member=>{ :up=>:get, :down=>:get }
-  
-  map.resources :users, :collection=>{:cabinet=>:get, :profile=>:get}
   map.resource :session
 
   map.signup '/signup', :controller => 'users', :action => 'new'
@@ -38,7 +42,7 @@ ActionController::Routing::Routes.draw do |map|
   # /admins/roles/:role_id/sections/:id/delete_rule/?name=some_name
   map.namespace(:admins) do |admin|
     admin.resources :users,
-      :member=>{:change_role => :post}
+      :member=>{:change_role => :post }
 
     admin.resources :pages
     

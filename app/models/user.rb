@@ -42,6 +42,16 @@ class User < ActiveRecord::Base
     #:url => PROJECT['avatara_url']
     #avatara_path: ':rails_root/public/uploads/:attachment/:id/:id-:style.jpg'
     #avatara_url: '/uploads/:attachment/:id/:id-:style.jpg'
+    
+  has_attached_file :base_header,
+    :styles =>          {:original => ["900x250#", :jpg]},
+    :convert_options => {:all => "-strip"},
+    :url => Project::BASE_HEADER_URL,
+    :default_url=>Project::BASE_HEADER_DEFAULT
+    
+  validates_attachment_content_type :base_header,
+                                    :content_type => ['image/jpg', 'image/jpeg', 'image/pjpeg', 'image/gif', 'image/png', 'image/x-png'],
+                                    :message=>'Необходимо загрузить изображение размером 900x250 точек'
 
   # Валидация  
   #----------------------------------------------------------------------------------------------

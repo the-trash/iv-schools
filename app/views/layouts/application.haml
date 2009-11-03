@@ -39,12 +39,12 @@
       Иваново, Школьный портал
   %body
     .body
-      -if logged_in?
-        =render :partial => 'shared/main_bar_logined'
-      -else
-        =render :partial => 'shared/main_bar'
-        
-      =image_tag "basic/basic_header.jpg", :alt=>"iv36.iv-schools.ru"
+      -#if logged_in?
+      -# =render :partial => 'shared/main_bar_logined'
+      -#-else
+      -# =render :partial => 'shared/main_bar'
+
+      =image_tag @user.base_header.url, :alt=>"iv-schools.ru"
 
       .header{:id=>:header}
         - if @subdomain == 'portal' || @subdomain.nil?
@@ -54,11 +54,19 @@
 
       %ul.system_navigation
         %li
+          =link_to image_tag('star.png'), root_url(:subdomain=>false)
+          =link_to 'iv-schools.ru', root_url(:subdomain=>false)
+        %li
           =link_to t('questions'), url_for(:controller=>:questions)
         %li
           =link_to t('users'), users_path
         %li
           =link_to t('site_map'), pages_path(:subdomain=>@user.subdomain)
+        %li
+          - if logged_in?
+            =link_to t('exit'), logout_url(:subdomain=>@user.subdomain)
+          - else
+            =link_to t('login'), login_path(:subdomain=>false)
         -#
           %li
             =link_to t('news'), url_for(:controller=>:reports)
@@ -72,6 +80,11 @@
         %tbody
           %tr
             %td.navigation
+              .alpha
+                Сайт запущен в режиме тестирования
+                %br
+                Если Вы обнаружили ошибку или у Вас возник вопрос, то вам
+                =link_to 'cюда', 'http://portal.iv-schools.ru/questions', :style=>'color:blue;'
               = yield(:current_editor) unless yield(:current_editor).blank?
               = yield(:navigation_menu) unless yield(:navigation_menu).blank?
               

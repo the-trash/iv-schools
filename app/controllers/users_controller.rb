@@ -58,6 +58,29 @@ class UsersController < ApplicationController
     end
   end
   
+  def base_header
+    @user= User.find_by_zip(params[:id])
+    # Если нет данных о пользователе или Аватаре
+    if !params[:user] || !params[:user][:base_header]
+      flash[:notice]= 'Изображение не установлено'
+      redirect_to(cabinet_users_url(:subdomain=>current_user.subdomain)) and return
+    end
+    
+    @user.base_header= params[:user][:base_header]
+    extension = File.extname(@user.base_header_file_name)
+    @user.base_header.instance_write(:file_name, "#{Digest::SHA1.hexdigest(@user.login+Time.now.to_s)}#{extension}") 
+    
+    respond_to do |format|
+      if @user.save
+        flash[:notice]= 'Шапка сайта успешно обновлена'
+        redirect_to(cabinet_users_url(:subdomain=>current_user.subdomain)) and return
+      else
+        flash[:error]= 'Изображение не удалось загрузить'
+        format.html { render  :action => :cabinet }
+      end
+    end
+  end
+  
   protected
 
   def access_to_controller_action_required

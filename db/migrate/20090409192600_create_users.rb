@@ -32,6 +32,12 @@ class CreateUsers < ActiveRecord::Migration
       t.string    :avatar_content_type
       t.integer   :avatar_file_size
       t.datetime  :avatar_updated_at
+      
+      # Базовое изображение шапки сайта
+      t.string    :base_header_file_name
+      t.string    :base_header_content_type
+      t.integer   :base_header_file_size
+      t.datetime  :base_header_updated_at
 
       t.timestamps
     end

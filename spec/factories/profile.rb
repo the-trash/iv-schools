@@ -26,5 +26,5 @@ Factory.define :empty_profile, :class => Profile do |pf|
   pf.work_place   '---'
   pf.work_status   '---'
 
-  pf.setting(Hash.new.to_yaml)
+  pf.settings(Hash.new.to_yaml)
 end

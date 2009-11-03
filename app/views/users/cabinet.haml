@@ -30,6 +30,14 @@
         %li.system
           - text= content_tag :span, "Роли", :class=>:bar
           = link_to text, admins_roles_path
+          
+    .edit_form
+      %h5
+        Изображение для шапки Вашего сайта (900x250 точек):
+      -form_for :user, :url => base_header_user_path(@user.zip), :html => { :multipart => true, :method=>:put } do |form|
+        =form.file_field :base_header
+        =submit_tag 'Установить', :class=>:submit
+    
     -#
       %li
         - text= content_tag :span, t('my_news'), :class=>:bar
