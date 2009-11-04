@@ -87,7 +87,7 @@
                 Сайт запущен в режиме тестирования
                 %br
                 Если Вы обнаружили ошибку или у Вас возник вопрос, то вам
-                =link_to 'cюда', 'http://portal.iv-schools.ru/questions', :style=>'color:blue;'
+                =link_to 'cюда', url_for(:controller=>:questions, :subdomain=>false) , :style=>'color:blue;'
               = yield(:current_editor) unless yield(:current_editor).blank?
               = yield(:navigation_menu) unless yield(:navigation_menu).blank?
               
