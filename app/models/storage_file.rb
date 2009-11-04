@@ -28,7 +28,7 @@ class StorageFile < ActiveRecord::Base
                       :small=> '100x100#',
                       :mini=>  '50x50#'
                     },
-                    #:convert_options => { :all => "-strip" },
+                    :convert_options => { :all => "-strip" },
                     :url => Project::FILE_URL,
                     :default_url=>Project::FILE_DEFAULT,
                     :processors => lambda { |a| a.is_image? ? [ :thumbnail ] : [:empty_processor ] }
