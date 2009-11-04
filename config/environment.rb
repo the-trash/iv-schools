@@ -70,7 +70,7 @@ ActionView::Base.field_error_proc = proc { |input, instance| input }
 # Настройка ключа сессии для всех поддоменов. Авторизация действительная для всех поддоменов
 # ActionController::Base.session_options[:session_domain] = Site::COOKIES_SCOPE [rails < 2.3]
 ActionController::Base.session_options[:domain] = Project::COOKIES_SCOPE
-ActionController::Base.asset_host = "iv-schools.info:3000"
+ActionController::Base.asset_host = Project::ADDRESS
 
 # Данное определение можно убрать после запуска rake файлов, подготовливающих систему к запуску
 # require 'factory_girl'
