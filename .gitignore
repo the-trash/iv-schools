@@ -1,12 +1,8 @@
-lib
-config
 tmp
 db/schema.rb
 doc
 log
 config/database.yml
-config/environment.rb
-lib/project.rb
 *.txt
 *.bat
 public/system
