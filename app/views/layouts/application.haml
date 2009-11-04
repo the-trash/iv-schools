@@ -56,6 +56,9 @@
         %li
           =link_to image_tag('star.png'), root_url(:subdomain=>false)
           =link_to 'iv-schools.ru', root_url(:subdomain=>false)
+        - if logged_in?
+          %li
+            =link_to t('cabinet'), cabinet_users_url(:subdomain=>current_user.subdomain), :style=>'color:green;'
         %li
           =link_to t('questions'), url_for(:controller=>:questions)
         %li
