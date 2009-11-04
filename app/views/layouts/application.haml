@@ -56,6 +56,9 @@
         %li
           =link_to image_tag('star.png'), root_url(:subdomain=>false)
           =link_to 'iv-schools.ru', root_url(:subdomain=>false)
+        - if logged_in?
+          %li
+            =link_to t('cabinet'), cabinet_users_url(:subdomain=>current_user.subdomain), :style=>'color:green;'
         %li
           =link_to t('questions'), url_for(:controller=>:questions)
         %li
@@ -84,7 +87,7 @@
                 Сайт запущен в режиме тестирования
                 %br
                 Если Вы обнаружили ошибку или у Вас возник вопрос, то вам
-                =link_to 'cюда', 'http://portal.iv-schools.ru/questions', :style=>'color:blue;'
+                =link_to 'cюда', url_for(:controller=>:questions, :subdomain=>false) , :style=>'color:blue;'
               = yield(:current_editor) unless yield(:current_editor).blank?
               = yield(:navigation_menu) unless yield(:navigation_menu).blank?
               
@@ -102,4 +105,15 @@
             &nbsp;&nbsp;&nbsp;2006 &mdash; 2009 &copy;
             -# Язык интерфейса:
             =# select("local", "lang", {'английский'=>'/?lang=en', 'русский'=>'/?lang=ru'}, {:selected=>"/?lang=#{cookies[:lang]}"}, :onchange=>"top.location.href = this.options[this.selectedIndex].value")
+      .analitics{:style=>'display:none;'}
+        <script type="text/javascript">
+        var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+        document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+        </script>
+        <script type="text/javascript">
+        try {
+        var pageTracker = _gat._getTracker("UA-11434472-1");
+        pageTracker._setDomainName(".iv-schools.ru");
+        pageTracker._trackPageview();
+        } catch(err) {}</script>
                   
