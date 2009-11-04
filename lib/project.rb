@@ -1,7 +1,7 @@
 module Project
   # Project::AVATARA_URL
-  ADDRESS = "http://iv-schools.info"
-  COOKIES_SCOPE = ".iv-schools.info" # авторизация действительна для всех поддоменов (.poweruser.ru)
+  ADDRESS = "http://iv-schools.ru"
+  COOKIES_SCOPE = ".iv-schools.ru" # авторизация действительна для всех поддоменов (.poweruser.ru)
   
   AVATARA_DEFAULT = "/uploads/:attachment/default/:style/missing.jpg"
   AVATARA_URL = "/uploads/:attachment/:login/:style/:filename"
