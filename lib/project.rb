@@ -1,4 +1,5 @@
 module Project
+
   # Project::AVATARA_URL
   ADDRESS = "http://iv-schools.info"
   COOKIES_SCOPE = ".iv-schools.info" # авторизация действительна для всех поддоменов (.poweruser.ru)
