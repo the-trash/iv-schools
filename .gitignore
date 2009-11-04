@@ -3,6 +3,7 @@ db/schema.rb
 doc
 log
 config/database.yml
+config/environment.rb
 *.txt
 *.bat
 public/system
