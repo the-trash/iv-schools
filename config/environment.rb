@@ -88,5 +88,5 @@ ActionController::Base.session_options[:domain] = Project::COOKIES_SCOPE
 ActionController::Base.asset_host = "iv-schools.info:3000"
 
 # Данное определение можно убрать после запуска rake файлов, подготовливающих систему к запуску
- require 'factory_girl'
- require 'faker'
+# require 'factory_girl'
+# require 'faker'
