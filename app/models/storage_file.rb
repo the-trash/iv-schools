@@ -1,4 +1,3 @@
-
 class StorageFile < ActiveRecord::Base  
   belongs_to :user
   belongs_to :storage_section
@@ -12,6 +11,12 @@ class StorageFile < ActiveRecord::Base
                     :url => Project::FILE_URL,
                     :default_url=>Project::FILE_DEFAULT,
                     :processors => lambda { |a| a.is_image? ? [ :thumbnail ] : [:empty_processor ] }
+                    
+  validates_presence_of :name, :message=>"Необходимо указать имя файла"
+
+  validates_attachment_size :file,
+                            :in => 1.kilobytes..1.megabytes,
+                            :message=>'Размер должен быть более 1 Килобайта и менее 1 Мегабайта'
 
   def is_image?
     #['image/gif','image/jpeg','image/jpg','image/pjpeg','image/png','image/x-png','image/bmp']
@@ -49,15 +54,9 @@ class StorageFile < ActiveRecord::Base
   end
   
   def is_arch?
-    ['.zip','.rar','.gz','.tar'].include?(File.extname(file_file_name))
     #['application/x-zip','application/zip','application/x-zip-compressed','application/x-rar','application/rar','application/x-rar-compressed','application/x-tar'].include?(file.content_type)
+    ['.zip','.rar','.gz','.tar'].include?(File.extname(file_file_name))
   end
-                                  
-  validates_presence_of :name, :message=>"Необходимо указать имя файла"
-
-  #validates_attachment_size :file,
-  #                          :in => 1.kilobytes..1.megabytes,
-  #                          :message=>'Размер файла должен быть более 1 Килобайта и менее 1 Мегабайта'
     
   # ------------------------------------------------------------------  
   # Создать данному объекту zip код
