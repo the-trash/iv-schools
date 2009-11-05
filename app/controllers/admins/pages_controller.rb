@@ -1,5 +1,7 @@
 class Admins::PagesController < ApplicationController
   layout 'haml_scaffold_layout'
+
+  before_filter :login_required
   
   # GET /pages
   def index

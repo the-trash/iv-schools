@@ -1,3 +1,5 @@
+class Admins::RolesController < ApplicationController
+
 =begin
   Управление таблицей настроек
   CRUD таблицы настроек
@@ -9,9 +11,11 @@
   # Ключи хешей всегда сохранять как символы!
 
 =end
-class Admins::RolesController < ApplicationController
+
   layout 'haml_scaffold_layout'
   
+  before_filter :login_required
+    
   # GET /roles
   def index
     @roles = Role.paginate(:all,

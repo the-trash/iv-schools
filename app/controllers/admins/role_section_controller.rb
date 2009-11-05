@@ -1,14 +1,19 @@
+class Admins::RoleSectionController < ApplicationController
+
 =begin
   Функционал для работы с разделами настроек
   
   # Ключи хешей всегда сохранять как символы!
 
 =end
-class Admins::RoleSectionController < ApplicationController
+
   # взять набор и перевести его в хеш
   # Обнулить раздел 
   # перевести в YAML
   # сохранить
+  
+  before_filter :login_required
+  
   def destroy
     @role = Role.find(params[:role_id])
     section_name= params[:id].dup

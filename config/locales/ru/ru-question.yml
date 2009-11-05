@@ -5,6 +5,7 @@ ru:
       :from: 'От кого'
       :to: 'Для кого'
       :topic: 'Тема'
-      :question : 'Вопрос'
+      :question: 'Вопрос'
+      :captcha: 'Секретный код'
 
     :zip_of_page: 'zip код вопроса: '
