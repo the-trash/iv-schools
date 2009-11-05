@@ -1,64 +1,64 @@
 class Question < ActiveRecord::Base    
   belongs_to :user
  
-  # Валидация
-  #validates_presence_of :from
-  #validates_presence_of :to
-  #validates_presence_of :topic
-  #validates_presence_of :question  
-  #apply_simple_captcha
+  # Р’Р°Р»РёРґР°С†РёСЏ
+  validates_presence_of :from
+  validates_presence_of :to
+  validates_presence_of :topic
+  validates_presence_of :question  
+  apply_simple_captcha :message=>'РѕС€РёР±РєР° РІРІРѕРґР° Р·Р°С‰РёС‚РЅС‹С… СЃРёРјРІРѕР»РѕРІ'
 
-  # Подготовка полей перед сохранением
+  # РџРѕРґРіРѕС‚РѕРІРєР° РїРѕР»РµР№ РїРµСЂРµРґ СЃРѕС…СЂР°РЅРµРЅРёРµРј
   before_save :prepare_fields
   
-  # Подготовка полей перед сохранением
+  # РџРѕРґРіРѕС‚РѕРІРєР° РїРѕР»РµР№ РїРµСЂРµРґ СЃРѕС…СЂР°РЅРµРЅРёРµРј
   def prepare_fields
     (self.question = self.question.mb_chars[0..600]) unless (self.question.nil? || self.question.blank?)
   end
   
   #new_question, seen, blocked, publicated, deleted
   # ------------------------------------------------------------------
-  # Машина состояний state
+  # РњР°С€РёРЅР° СЃРѕСЃС‚РѕСЏРЅРёР№ state
   state_machine :state, :initial => :new_question do    
-    # Чтание нового сообщения
+    # Р§С‚Р°РЅРёРµ РЅРѕРІРѕРіРѕ СЃРѕРѕР±С‰РµРЅРёСЏ
     event :reading do
-      # Новый вопрос просматривается и изменяет свое состояние
+      # РќРѕРІС‹Р№ РІРѕРїСЂРѕСЃ РїСЂРѕСЃРјР°С‚СЂРёРІР°РµС‚СЃСЏ Рё РёР·РјРµРЅСЏРµС‚ СЃРІРѕРµ СЃРѕСЃС‚РѕСЏРЅРёРµ
       transition :new_question => :seen
     end
     
-    # Блокировка сообщения
+    # Р‘Р»РѕРєРёСЂРѕРІРєР° СЃРѕРѕР±С‰РµРЅРёСЏ
     event :blocking do
-      # Из всех состояний кроме delete должен перейти в это
+      # РР· РІСЃРµС… СЃРѕСЃС‚РѕСЏРЅРёР№ РєСЂРѕРјРµ delete РґРѕР»Р¶РµРЅ РїРµСЂРµР№С‚Рё РІ СЌС‚Рѕ
       transition all - :deleted => :blocked
     end
     
-    # Публикация сообщения
+    # РџСѓР±Р»РёРєР°С†РёСЏ СЃРѕРѕР±С‰РµРЅРёСЏ
     event :publication do
-      # Из просмотренного в публикацию
+      # РР· РїСЂРѕСЃРјРѕС‚СЂРµРЅРЅРѕРіРѕ РІ РїСѓР±Р»РёРєР°С†РёСЋ
       transition :seen => :publicated
     end
     
-    # Снять с публикации
+    # РЎРЅСЏС‚СЊ СЃ РїСѓР±Р»РёРєР°С†РёРё
     event :unpublication do
-      # Из опубликованного в просмотреные (снять с публикации)
+      # РР· РѕРїСѓР±Р»РёРєРѕРІР°РЅРЅРѕРіРѕ РІ РїСЂРѕСЃРјРѕС‚СЂРµРЅС‹Рµ (СЃРЅСЏС‚СЊ СЃ РїСѓР±Р»РёРєР°С†РёРё)
       transition :publicated => :seen
     end
     
-    # Разблокировка сообщения
+    # Р Р°Р·Р±Р»РѕРєРёСЂРѕРІРєР° СЃРѕРѕР±С‰РµРЅРёСЏ
     event :unblocking do
-      # Из состояния бока перейти в состояние просмотренного сообщения
+      # РР· СЃРѕСЃС‚РѕСЏРЅРёСЏ Р±РѕРєР° РїРµСЂРµР№С‚Рё РІ СЃРѕСЃС‚РѕСЏРЅРёРµ РїСЂРѕСЃРјРѕС‚СЂРµРЅРЅРѕРіРѕ СЃРѕРѕР±С‰РµРЅРёСЏ
       transition :block => :seen
     end
     
-    # Удаление сообщения
+    # РЈРґР°Р»РµРЅРёРµ СЃРѕРѕР±С‰РµРЅРёСЏ
     event :deleting do
-      # Из всех состояний должен перейти в это
+      # РР· РІСЃРµС… СЃРѕСЃС‚РѕСЏРЅРёР№ РґРѕР»Р¶РµРЅ РїРµСЂРµР№С‚Рё РІ СЌС‚Рѕ
       transition all => :deleted
     end
   end
   
   # ------------------------------------------------------------------  
-  # Создать данному объекту zip код
+  # РЎРѕР·РґР°С‚СЊ РґР°РЅРЅРѕРјСѓ РѕР±СЉРµРєС‚Сѓ zip РєРѕРґ
   before_create :create_zip
   def create_zip
     zip_code= "#{(1000..9999).to_a.rand}-#{(1000..9999).to_a.rand}-#{(1000..9999).to_a.rand}"

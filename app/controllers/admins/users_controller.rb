@@ -1,6 +1,8 @@
 class Admins::UsersController < ApplicationController
   layout 'admin_application.haml'
   
+  before_filter :login_required
+  
   # GET /users
   def index
     @users = User.paginate(:all,
