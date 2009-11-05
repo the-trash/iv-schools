@@ -100,11 +100,16 @@
             -else
               =image_tag 'doctype/100x100/default.jpg', :alt=>'Файл'
             %br
-            =File.extname(file.file_name)
             %br
             %br
             %br
             .div{:style=>'text-align:center;'}
+              =file.name
+              %br
+              =File.extname(file.file_file_name)
+              %br
+              =file.file_content_type
+              %br
               =link_to 'Удалить', storage_file_path(file.zip), :method=>:delete, :confirm=>'Вы уверены, что хотите удалить этот файл безвозвратно?', :style=>'color:red;'
   -#              
     - @storage_section_files.each do |file|

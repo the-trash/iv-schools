@@ -1,3 +1,4 @@
+
 class StorageFile < ActiveRecord::Base  
   belongs_to :user
   belongs_to :storage_section
@@ -13,13 +14,13 @@ class StorageFile < ActiveRecord::Base
                     :processors => lambda { |a| a.is_image? ? [ :thumbnail ] : [:empty_processor ] }
 
   def is_image?
-    ['.gif','.jpeg','.jpg','.pjpeg','.png','.bmp'].include?(File.extname(file_file_name))
     #['image/gif','image/jpeg','image/jpg','image/pjpeg','image/png','image/x-png','image/bmp']
+    ['.gif','.jpeg','.jpg','.pjpeg','.png','.bmp'].include?(File.extname(file_file_name))
   end
   
   def is_doc?
+    #['application/msword', 'application/x-doc'].include?(file.content_type)  
     ['.doc', '.docx'].include?(File.extname(file_file_name))
-    #['application/msword', 'application/x-doc'].include?(file.content_type)    
   end
   
   def is_txt?
@@ -39,8 +40,8 @@ class StorageFile < ActiveRecord::Base
   end  
   
   def is_psd?
-    ['.psd'].include?(File.extname(file_file_name))
     #['image/photoshop','image/x-photoshop','image/psd','application/photoshop','application/psd','zz-application/zz-winassoc-psd'].include?(file.content_type)
+    ['.psd'].include?(File.extname(file_file_name))
   end
   
   def is_media?
