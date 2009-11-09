@@ -5,8 +5,8 @@ class PagesController < ApplicationController
   # Исправить адрес по которому обращается пользователь к ресурсу
   # Проверка на политику доступа к обработчику, который не требует конкретного ресурса
   # Проверка на политику доступа к обработчику, который требует ресурс
-  before_filter :navigation_menu_init,                  :except=> [:show]  
-  before_filter :login_required,                        :except=> [:index, :show]
+  before_filter :navigation_menu_init,                  :except=> [:show, :edustat, :first]  
+  before_filter :login_required,                        :except=> [:index, :show, :edustat, :first]
   before_filter :find_page,                             :only=>   [:show, :edit, :update, :destroy, :up, :down]
   before_filter :fix_url_by_redirect,                   :only=>   [:show]
   before_filter :access_to_controller_action_required,  :only=>   [:new, :create, :manager]
@@ -16,6 +16,12 @@ class PagesController < ApplicationController
   # Выбрать дерево страниц, только те поля, которые учавствуют отображении
   def index
     @pages_tree= Page.find_all_by_user_id(@user.id, :select=>'id, title, zip, parent_id', :order=>"lft ASC")
+  end
+  
+  def first
+    @page= Page.find_all_by_user_id(@user.id, :order=>"lft ASC", :limit=>1).first
+    @parents= @page.self_and_ancestors if @page
+    @siblings= @page.children if @page
   end
 
   def show
@@ -28,7 +34,7 @@ class PagesController < ApplicationController
   
   # Карта сайта редактора
   def manager
-    @pages_tree= Page.find_all_by_user_id(@user.id, :order=>"lft ASC")    
+    @pages_tree= Page.find_all_by_user_id(@user.id, :order=>"lft ASC")
   end
   
   def new
@@ -100,6 +106,22 @@ class PagesController < ApplicationController
       flash[:notice]= t('page.has_children')
     end
     redirect_to(manager_pages_path(:subdomain=>@subdomain)) and return
+  end
+  
+  # Статистика для департамента
+  def edustat
+    #iv36 id-5
+    @lc43= Page.find_by_user_id(6, :order=>'created_at DESC', :limit=>1)
+    @lu43= Page.find_by_user_id(6, :order=>'updated_at DESC', :limit=>1)
+    #iv43 id-6
+    @lc36= Page.find_by_user_id(5, :order=>'created_at DESC', :limit=>1)
+    @lu36= Page.find_by_user_id(5, :order=>'updated_at DESC', :limit=>1)
+
+    respond_to do |format|
+      format.php  { render :action => 'edustat', :layout => false }
+      format.html { render :action => 'edustat', :layout => false }
+      format.any  { render :template => 'pages/edustat.html', :layout => false }
+    end
   end
  
   protected
