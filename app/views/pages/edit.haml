@@ -2,194 +2,9 @@
   =render :partial => "shared/navigation_menu/pages/new"
 
 - javascript_tag :defer => 'defer' do
-  function insertFormatTeg(){
-  var idTextArea='content';
-  var idSelector='tags';
+  =render :partial => "shared/editor/js"
 
-  var text_area = document.getElementById(idTextArea);
-  var format_teg = document.getElementById(idSelector);
-
-  if(format_teg.options.length > 0) {
-  var chaineAj = "";
-  var NbSelect = 0;
-
-  // Перебирает все элементы списка и находит выделенный
-  for(var i=0; i<format_teg.options.length; i++){
-  if (format_teg.options[i].selected){
-  NbSelect++;
-  if (NbSelect > 1) chaineAj += " ";
-  chaineAj += format_teg.options[i].value;
-  }
-  }
-
-  //IE support
-  // Если определен данный объект, то это IE. Вставим фрагмент текста в эту позицию
-  if (document.selection){
-  text_area.focus();
-  sel= document.selection.createRange();
-  sel.text= chaineAj;
-  }
-
-  //MOZILLA/NETSCAPE support
-  // Если определен один из приведенных объектов, то это не IE
-  // Метод вставки немного другой
-  else if (text_area.selectionStart || text_area.selectionStart == "0"){	
-  var startPos = text_area.selectionStart;
-  var endPos = text_area.selectionEnd;
-  var chaineSql = text_area.value;
-
-  text_area.value = chaineSql.substring(0, startPos) + chaineAj + chaineSql.substring(endPos, chaineSql.length);
-  }else{
-  text_area.value += chaineAj;
-  }
-  }
-  }
-
-  function insertFormatTeg2(text){
-  var idTextArea='content';
-  var text_area = document.getElementById(idTextArea);
-
-  if (document.selection){
-  text_area.focus();
-  sel= document.selection.createRange();
-  sel.text= text;
-  }
-  else if (text_area.selectionStart || text_area.selectionStart == "0"){	
-  var startPos = text_area.selectionStart;
-  var endPos = text_area.selectionEnd;
-  var chaineSql = text_area.value;
-
-  text_area.value = chaineSql.substring(0, startPos) + text + chaineSql.substring(endPos, chaineSql.length);
-  }else{
-  text_area.value += text;
-  }
-  }
-
-  function insertFormatTeg3(obj_id, elem){
-  var idTextArea=obj_id;
-  var text_area = document.getElementById(idTextArea);
-
-  text= "";
-
-  // Вставка
-  switch (elem){   
-  case 'img':
-  /* Эта фокусировка на текстовое поле ввода помогает производить вставку куда предполагается */
-  document.getElementById('page_content').focus();
-
-  img= prompt( "Укажите адрес изображения на сервере", "АДРЕС ИЗОБРАЖЕНИЯ" );
-  alt= prompt( "Введите описание изображения", "Мое изображение" );
-  text= "\n<img src=\""+img+"\" alt=\""+alt+"\" title=\""+alt+"\" />\n";
-  break;
-  case 'file':
-  document.getElementById('page_content').focus();
-
-  path= prompt( "Укажите путь к файлу (В сети Интернет или на сервере)", "ПУТЬ К ФАЙЛУ" );
-  alt= prompt( "Введите описание файла", "Важный файл с информацией" );
-  name= prompt( "Введите название файла", "Файл" );
-  text= "\n<a href=\""+path+"\" alt=\""+alt+"\" title=\""+alt+"\" >"+name+"</a>\n";
-  break;
-  case 'inet':
-  document.getElementById('page_content').focus();
-
-  path= prompt( "Укажите путь к Интернет странице (не удаляйте - http://)", "http://www.iv-schools.ru" );
-  alt= prompt( "Введите описание страницы", "Интернет страница с интересной информацией" );
-  name= prompt( "Введите название страницы", "Интернет страница" );
-  text= "\n<a href=\""+path+"\" alt=\""+alt+"\" title=\""+alt+"\" >"+name+"</a>\n";
-  break;
-  case 'email':
-  document.getElementById('page_content').focus();
-
-  email= prompt( "Укажите Адрес Электронной почты", "blabla@babla.ru" );
-  alt= prompt( "Описание ссылки на электронную почту", "Адрес электронной почты" );
-  name= prompt( "Кому будет отправлено письмо", "Иванов И.И." );
-  text= "\n<a href=\"mailto:"+email+"\"= alt=\""+alt+"\" title=\""+alt+"\" >"+name+"</a>\n";
-  break;
-  }
-
-  // Форматирование
-  switch (elem){  
-  case 'p':
-  text= "\n<p>\n\tТекст абзаца\n</p>\n";
-  break;
-  case 'br':
-  text= "\n<br />\n";
-  break;
-  case 'hr':
-  text= "\n<hr />\n";
-  break;
-  case 'center':
-  text= "\n<center>В центре</center>\n";
-  break;
-  case 'b':
-  text= "\n<b>Жирный шрифт</b>\n";
-  break;
-  case 'i':
-  text= "\n<i>Курсив</i>\n";
-  break;
-  case 'u':
-  text= "\n<u>Подчеркнутый</u>\n";
-  break;
-  }
-
-  // Заголовки
-  switch (elem){   
-  case 'h1':
-  document.getElementById('page_content').focus();
-
-  header= prompt( "Введите заголовок", "Заголовок" );
-  if(header=='')header=' ';
-  text= "\n<h1>"+header+"</h1>\n";
-  break;
-  case 'h2':
-  document.getElementById('page_content').focus();
-
-  header= prompt( "Введите заголовок", "Заголовок" );
-  if(header=='')header=' ';
-  text= "\n<h2>"+header+"</h2>\n";
-  break;
-  case 'h3':
-  document.getElementById('page_content').focus();
-
-  header= prompt( "Введите заголовок", "Заголовок" );
-  if(header=='')header=' ';
-  text= "\n<h3>"+header+"</h3>\n";
-  break;
-  case 'h4':
-  document.getElementById('page_content').focus();
-
-  header= prompt( "Введите заголовок", "Заголовок" );
-  if(header=='')header=' ';
-  text= "\n<h4>"+header+"</h4>\n";
-  break;
-  }
-
-  // Заголовки
-  switch (elem){   
-  case 'ul':
-  text= "\n<ul>\n\t<li>Элемент 1</li>\n\t<li>Элемент 2</li>\n\t<li>Элемент 3</li>\n</ul>\n";
-  break;
-  case 'ol':
-  text= "\n<ol>\n\t<li>Элемент 1</li>\n\t<li>Элемент 2</li>\n\t<li>Элемент 3</li>\n</ol>\n";
-  break;
-  }
-
-  // Алгоритм вставки для разных браузеров	
-  if (document.selection){
-  text_area.focus();
-  sel= document.selection.createRange();
-  sel.text= text;
-  }
-  else if (text_area.selectionStart || text_area.selectionStart == "0"){	
-  var startPos = text_area.selectionStart;
-  var endPos = text_area.selectionEnd;
-  var chaineText = text_area.value;
-
-  text_area.value = chaineText.substring(0, startPos) + text + chaineText.substring(endPos, chaineText.length);
-  }else{
-  text_area.value += text;
-  }
-  }
+= object_errors(@page)
 
 .block
   %ul
@@ -200,8 +15,6 @@
       - text= content_tag :span, '&laquo; К дереву страниц', :class=>:bar
       = link_to text,  manager_pages_path(:subdomain=>@user.subdomain)
       
-= object_errors(@page)
-
 .edit_form.overblock
   %h5
     Редактировать страницу:
@@ -240,29 +53,11 @@
       = f.text_area :annotation, :class=>:textarea_small
 
 
-    %label{:for=>:annotation}
+    %label{:for=>:marks}
       Вставка HTML разметки
     %br
     %center
-      =image_tag('editor/img.gif',     :onclick=>"javascript:insertFormatTeg3('page_content', 'img');", :alt=>'Картинка' ) 
-      =image_tag('editor/file.gif',    :onclick=>"javascript:insertFormatTeg3('page_content', 'file')", :alt=>'Ссылка на файл' ) 
-      =image_tag('editor/web_page.gif',:onclick=>"javascript:insertFormatTeg3('page_content', 'inet')", :alt=>'Ссылка&nbsp;на&nbsp;Web&nbsp;страницу' ) 
-      =image_tag('editor/email.gif',   :onclick=>"javascript:insertFormatTeg3('page_content', 'email')", :alt=>'Электронная почта' ) 
-      =image_tag('editor/p.gif',       :onclick=>"javascript:insertFormatTeg3('page_content', 'p')", :alt=>'Абзац' ) 
-      =image_tag('editor/br.gif',      :onclick=>"javascript:insertFormatTeg3('page_content', 'br')", :alt=>'Следующая строка' ) 
-      =image_tag('editor/hr.gif',      :onclick=>"javascript:insertFormatTeg3('page_content', 'hr')", :alt=>'Горизонтальная&nbsp;черта' ) 
-      =image_tag('editor/center.gif',  :onclick=>"javascript:insertFormatTeg3('page_content', 'center')", :alt=>'Центровка' ) 
-      =image_tag('editor/bold.gif',    :onclick=>"javascript:insertFormatTeg3('page_content', 'b')", :alt=>'Жирный шрифт' ) 
-      =image_tag('editor/it.gif',      :onclick=>"javascript:insertFormatTeg3('page_content', 'i')", :alt=>'Курсив' ) 
-      =image_tag('editor/u.gif',       :onclick=>"javascript:insertFormatTeg3('page_content', 'u')", :alt=>'Подчеркнутый' ) 
-      =image_tag('editor/ol.gif',      :onclick=>"javascript:insertFormatTeg3('page_content', 'ol')", :alt=>'Нумерованый список' ) 	
-      =image_tag('editor/ul.gif',      :onclick=>"javascript:insertFormatTeg3('page_content', 'ul')", :alt=>'Маркированый список' ) 		
-
-      =image_tag('editor/h1.gif',      :onclick=>"javascript:insertFormatTeg3('page_content', 'h1')", :alt=>'Заголовок 1 уровень' ) 
-      =image_tag('editor/h2.gif',      :onclick=>"javascript:insertFormatTeg3('page_content', 'h2')", :alt=>'Заголовок 2 уровень' ) 
-      =image_tag('editor/h3.gif',      :onclick=>"javascript:insertFormatTeg3('page_content', 'h3')", :alt=>'Заголовок 3 уровень' ) 	
-      =image_tag('editor/h4.gif',      :onclick=>"javascript:insertFormatTeg3('page_content', 'h4')", :alt=>'Заголовок 4 уровень' ) 
-
+      =render :partial => "shared/editor/buttons"
     %br                
     %label{:for=>:content}
       Содержимое страницы

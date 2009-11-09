@@ -25,7 +25,12 @@ ActionController::Routing::Routes.draw do |map|
   map.login '/login', :controller => 'sessions', :action => 'new'
   map.logout '/logout', :controller => 'sessions', :action => 'destroy'
   
-  map.root :controller=>'pages'
+  map.root :controller=>'pages', :action=>'first'
+  
+  # Для департамента образования
+  # edustat.php
+  map.connect '/edustat', :controller => 'pages', :action => 'edustat'
+  map.connect '/edustat.:format', :controller => 'pages', :action => 'edustat'
   
   # Администраторский роутер - работает с app/controllers/admins, app/view/admins
   # /admins/users/new, /admins/users/:id/edit

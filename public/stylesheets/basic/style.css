@@ -645,3 +645,4 @@ ul.storage_sections li{
   background:transparent url(/images/basic/alpha.jpg) no-repeat scroll 0 0;
   line-height:150%;
 }
+.editor_buttons img{cursor:pointer;}
