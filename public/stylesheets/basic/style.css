@@ -38,7 +38,7 @@ ol, ul        { list-style:none; }
 table, tr, td { vertical-align:top; border-collapse: collapse; border-spacing: 0; }
 a             { text-decoration: underline; color:#2476FF; }
 a:hover       { text-decoration: none;}
-p             { margin:0 0 15px 0; line-height:160%; font-size:8pt; text-indent:15px;}
+p             { margin:0 0 15px 0; line-height:160%; font-size:8pt;}
 .nobr{white-space:nowrap;}
 .black{color:#000;}
 a.back{color:#CCCCCC;}
@@ -639,9 +639,10 @@ ul.storage_sections li{
   border:1px solid #DDD;
 }
 .alpha{
-  margin:5px 5px 15px 0px;
+  margin-top:10px;
   padding:40px 5px 5px 5px;
-  border:3px solid #F00;
+  border-top:1px solid #FCC;
+  border-bottom:1px solid #FCC;
   background:transparent url(/images/basic/alpha.jpg) no-repeat scroll 0 0;
   line-height:150%;
 }

@@ -69,9 +69,12 @@
   .comment
     .info
       .date
-        =q.created_at.to_s(:db)
-      %a{:href=>"#"}
-        =q.from
+        =q.created_at.to_s(:db).split(' ').first    
+    %b
+      От кого:
+    =q.from
+    %br
+    
     %b
       Кому:
     =q.to
@@ -80,18 +83,16 @@
     %b
       Тема:
     =q.topic
-    .number
-      ="#"
-      =q.zip
-    =q.question
-    %br  
-    %hr
-    =q.answere
     -#
-      .controls
-        %a{:href=>"#"} Комментировать
-        %a{:href=>"#"} Правка
-        %a{:href=>"#"} Удалить
+      .number
+        ="#"
+        =q.zip
+    =q.question
+    %br
+    %p{:style=>'background:#EEE; padding:5px; margin-top:5px;'}
+      %b
+        Ответ:
+      =q.answere
 
 = will_paginate @questions  
 
