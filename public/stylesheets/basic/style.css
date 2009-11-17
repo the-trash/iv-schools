@@ -641,7 +641,7 @@ ul.storage_sections li{
   border:1px solid #DDD;
 }
 .alpha{
-  margin-top:15px;
+  margin-top:5px;
   padding:40px 5px 5px 5px;
   border-top:1px solid #FCC;
   border-bottom:1px solid #FCC;
@@ -649,7 +649,4 @@ ul.storage_sections li{
   line-height:150%;
 }
 .editor_buttons img{cursor:pointer;}
-
-.linked_files{
-  border:7px solid #CCCCFF;
-}
+.linked_files{ border:7px solid #CCCCFF; }
