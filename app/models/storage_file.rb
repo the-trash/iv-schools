@@ -3,16 +3,13 @@ class StorageFile < ActiveRecord::Base
   belongs_to :storage_section
     
   has_attached_file :file,
-                    :styles => {
-                      :small=> '100x100#',
-                      :mini=>  '50x50#'
-                    },
+                    :styles => { :small=> '100x100#', :mini=>  '50x50#' },
                     :convert_options => { :all => "-strip" },
                     :url => Project::FILE_URL,
                     :default_url=>Project::FILE_DEFAULT,
                     :processors => lambda { |a|
-                      return [:thumbnail] if a.is_image?
-                      return [:empty_processor]
+                      return [:empty_processor] unless a.is_image?
+                      return [:thumbnail]
                     }
                     
   validates_presence_of :name, :message=>"Необходимо указать имя файла"
