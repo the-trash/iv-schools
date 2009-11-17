@@ -94,10 +94,14 @@
           .moderator
             
           .portal
-            = link_to t('site_description'), root_url(:subdomain=>false)
-            &copy;
-            &nbsp;&nbsp;&nbsp;2006 &mdash; 2009
-            
+            %p
+              = link_to t('site_description'), root_url(:subdomain=>false)
+              
+              &copy;
+              &nbsp;&nbsp;&nbsp;2006 &mdash; 2009
+            %p
+              =mail_to 'iv-schools@yandex.ru', image_tag('basic/email.gif'), :encode => 'hex'
+
           .alpha
             rev. alpha 0.0031 17:08 17.11.2009
             %br
