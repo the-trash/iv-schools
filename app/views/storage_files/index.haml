@@ -80,7 +80,8 @@
 
           %td{:style=>'width:100px;'}
             -if file.is_image?
-              = link_to(image_tag(file.file.url(:small), :alt=>'Изображение'), url, :title=>file_name)
+              = link_to(image_tag('doctype/100x100/img.jpg', :alt=>'Изображение'), url, :title=>file_name)
+              =# link_to(image_tag(file.file.url(:small), :alt=>'Изображение'), url, :title=>file_name)
             -elsif file.is_doc?
               = link_to(image_tag('doctype/100x100/doc.jpg', :alt=>'Документ'), url, :title=>file_name)
             -elsif file.is_txt?
