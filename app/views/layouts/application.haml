@@ -56,6 +56,8 @@
         %li
           =link_to image_tag('star.png'), root_url(:subdomain=>false)
           =link_to 'iv-schools.ru', root_url(:subdomain=>false)
+        %li
+          =link_to t('site_map'), pages_path(:subdomain=>@user.subdomain)
         - if logged_in?
           %li
             =link_to t('cabinet'), cabinet_users_url(:subdomain=>current_user.subdomain), :style=>'color:green;'
@@ -63,8 +65,6 @@
           =link_to t('questions'), url_for(:controller=>:questions)
         %li
           =link_to t('users'), users_path
-        %li
-          =link_to t('site_map'), pages_path(:subdomain=>@user.subdomain)
         %li
           - if logged_in?
             =link_to t('exit'), logout_url(:subdomain=>@user.subdomain)
