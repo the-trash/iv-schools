@@ -10,26 +10,28 @@ class StorageFile < ActiveRecord::Base
                     :convert_options => { :all => "-strip" },
                     :url => Project::FILE_URL,
                     :default_url=>Project::FILE_DEFAULT,
-                    :processors => lambda { |a| a.is_image? ? [ :thumbnail ] : [:empty_processor ] }
+                    :processors => lambda { |a| a.is_image? ? [:thumbnail] : [:empty_processor] }
                     
   validates_presence_of :name, :message=>"Необходимо указать имя файла"
-
   validates_attachment_size :file,
                             :in => 1.kilobytes..1.megabytes,
                             :message=>'Размер должен быть более 1 Килобайта и менее 1 Мегабайта'
 
+  #['image/gif','image/jpeg','image/jpg','image/pjpeg','image/png','image/x-png','image/bmp']
+  #['application/msword', 'application/x-doc'].include?(file.content_type)
+  #['image/photoshop','image/x-photoshop','image/psd','application/photoshop','application/psd','zz-application/zz-winassoc-psd'].include?(file.content_type)
+  #['application/x-zip','application/zip','application/x-zip-compressed','application/x-rar','application/rar','application/x-rar-compressed','application/x-tar'].include?(file.content_type)
+    
   def is_image?
-    #['image/gif','image/jpeg','image/jpg','image/pjpeg','image/png','image/x-png','image/bmp']
     ['.gif','.jpeg','.jpg','.pjpeg','.png','.bmp'].include?(File.extname(file_file_name))
   end
   
   def is_doc?
-    #['application/msword', 'application/x-doc'].include?(file.content_type)  
     ['.doc', '.docx'].include?(File.extname(file_file_name))
   end
   
   def is_txt?
-    ['text/plain'].include?(file.content_type)    
+    ['text/plain'].include?(file.content_type)
   end
   
   def is_ppt?
@@ -45,7 +47,6 @@ class StorageFile < ActiveRecord::Base
   end  
   
   def is_psd?
-    #['image/photoshop','image/x-photoshop','image/psd','application/photoshop','application/psd','zz-application/zz-winassoc-psd'].include?(file.content_type)
     ['.psd'].include?(File.extname(file_file_name))
   end
   
@@ -54,13 +55,12 @@ class StorageFile < ActiveRecord::Base
   end
   
   def is_arch?
-    #['application/x-zip','application/zip','application/x-zip-compressed','application/x-rar','application/rar','application/x-rar-compressed','application/x-tar'].include?(file.content_type)
     ['.zip','.rar','.gz','.tar'].include?(File.extname(file_file_name))
   end
-    
+
   # ------------------------------------------------------------------  
   # Создать данному объекту zip код
-  before_create :create_zip
+  before_validation_on_create :create_zip
   def create_zip
     # Если zip уже установлен ранее
     return unless (zip.nil? || zip.empty?)
