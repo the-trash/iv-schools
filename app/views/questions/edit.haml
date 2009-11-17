@@ -12,10 +12,14 @@
 .edit_form.overblock
   %h5
     От кого:
-  %h5.gray
     = @question.from
 
   -form_for( :question, :url=>question_path, :html=>{:method=>:put} ) do |f|
+    %label{:for=>:from}
+      От кого
+    %span
+      = f.text_field :from, :class=>:input
+      
     %label{:for=>:to}
       Для кого
     %span

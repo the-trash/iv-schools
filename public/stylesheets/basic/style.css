@@ -94,8 +94,8 @@ h3 a:hover{color:#2476FF;}
 }
 .content .page ul{
   margin:3px;
-  border:7px solid #CCF;
   padding:10px;
+  /* border:7px solid #CCF; */
 }
 .content .page ul li{
   list-style-image:none;
@@ -159,11 +159,13 @@ h3 a:hover{color:#2476FF;}
   margin:10px 10px 20px 10px ;
 }
 .footer .block .portal{
+}
+.footer .block .portal p{
   font-size:8pt;
   margin-bottom:5px;
 }
 .footer .block .portal a{
-  font-size:9pt;
+  font-size:8pt;
 }
 .footer .block .portal a:hover{
 }
@@ -647,3 +649,7 @@ ul.storage_sections li{
   line-height:150%;
 }
 .editor_buttons img{cursor:pointer;}
+
+.linked_files{
+  border:7px solid #CCCCFF;
+}
