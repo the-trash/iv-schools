@@ -53,7 +53,7 @@ class QuestionsController < ApplicationController
     @question= Question.find_by_zip(params[:id])
     respond_to do |format|  
       if @question.update_attributes(params[:question])
-        flash[:notice] = 'Вопрос изменен'
+        flash[:notice] = 'Данные сохранены'
         format.html { redirect_back_or(questions_path) }
       else
         format.html { render :action => "edit" }
