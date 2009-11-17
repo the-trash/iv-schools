@@ -10,7 +10,10 @@ class StorageFile < ActiveRecord::Base
                     :convert_options => { :all => "-strip" },
                     :url => Project::FILE_URL,
                     :default_url=>Project::FILE_DEFAULT,
-                    :processors => lambda { |a| a.is_image? ? [:thumbnail] : [:empty_processor] }
+                    :processors => lambda { |a|
+                      return [:thumbnail] if a.is_image?
+                      return [:empty_processor]
+                    }
                     
   validates_presence_of :name, :message=>"Необходимо указать имя файла"
   validates_attachment_size :file,
