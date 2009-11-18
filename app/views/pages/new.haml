@@ -1,8 +1,8 @@
 - content_for :navigation_menu do
   =render :partial => "shared/navigation_menu/pages/new"
 
-- javascript_tag :defer => 'defer' do
-  =render :partial => "shared/editor/js"
+- content_for :js do
+  =javascript_include_tag "js/editor"
   
 = object_errors(@page)
 
