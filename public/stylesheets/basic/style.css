@@ -1,65 +1,39 @@
-/*
-  killich's design
-  killich@yandex.ru
-  Илья Зыкин
-
-  A2B3D3 серо-синий
-  2476FF голубой
-  16181D черный
-  F9F9F9 еле заметный серо-синий
-  CCCCCC серый
-  DCDCDC светлосерый
-  C2E5EA морская волна
-  FF7211 оранжевый
-  FFABAB сетло красный
-  A5C9FF светло голубой
-  E0ECFF еле заметная морская волна
-*/
-/* reset */
-html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6,
-p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em,
-font, img, ins, kbd, q, s, samp, small, strike, strong, tt, var,
-b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table,
-caption, tbody, tfoot, thead, tr, th, td
-{ margin:0; padding:0; border:0; outline:0; font-size: 100.01%; vertical-align:baseline; background:transparent; line-height:100%; }
-html, body, div, applet, object, iframe,
-p, blockquote, pre, abbr, acronym, address, cite, code, del, dfn,
-font, img, ins, kbd, q, s, samp, small, strike, tt, var, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table,
-caption, tbody, tfoot, thead, tr, th, td{
-  font-weight:normal;
-}
-.overblock{overflow:hidden; zoom:1;}
-img{ vertical-align:top; }
-sup, sub{padding:0;margin:0; font-size:85%; zoom:1;}
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, img, font, pre, blockquote, i, b, u, s, strike, sub, sup, tt, big, small, center, abbr, em, code, acronym, address, ins, del, strong, var, cite, dfn, kbd, samp, dd, dl, dt, ol, ul, li, caption, table, tbody, tfoot, thead, tr, th, td, form, fieldset, legend, label{ margin:0; padding:0; border:0; outline:0; font-size: 100.01%; vertical-align:baseline; background:transparent; line-height:100%; }
+html, body, div, applet, object, iframe, img, p, pre, blockquote, dd, dl, dt, ol, ul, li, caption, table, tbody, tfoot, thead, tr, th, td, form, fieldset, legend, label{ font-weight:normal; padding:0 0 1px 0; } /*!attention!*/
+img, p, pre, blockquote, dd, dt, li, caption, legend, label{ line-height:150%; }
+table, tr, td {vertical-align:top; border-collapse:collapse; border-spacing:0;}
+sup, sub{padding:0; margin:0; font-size:85%; zoom:1;}
+p { margin:0 0 15px 0; line-height:150%;}
+a {text-decoration:underline; color:#2476FF; }
+a:hover {text-decoration:none;}
+img{vertical-align:top;}
 sup{vertical-align:40%;}
 sub{vertical-align:-40%;}
-
-ol, ul        { list-style:none; }
-table, tr, td { vertical-align:top; border-collapse: collapse; border-spacing: 0; }
-a             { text-decoration: underline; color:#2476FF; }
-a:hover       { text-decoration: none;}
-p             { margin:0 0 15px 0; line-height:160%; font-size:8pt;}
+ol, ul {list-style:none;}
+li{list-style-position:inside;}
+.overblock{ overflow:hidden; zoom:1; }
 .nobr{white-space:nowrap;}
+
 .black{color:#000;}
-a.back{color:#CCCCCC;}
-a.back:hover{color:#FF7211;}
 .red_string{text-indent:10px;}
 .green{color:#0F0;}
 .red{color:#F00;}
 .blue{color:#00F;}
 
-/* reset */
+a.back{color:#CCCCCC;}
+a.back:hover{color:#FF7211;}
+
 body        { background:#FFF; font-family:Verdana,Trebuchet MS,Tahoma,Arial,serif; font-size:9pt; behavior:url("/stylesheets/basic/hover.htc");}
 .body       { width:900px; margin:auto; }
-/* headers */
-h1,h2,h3,h4,h5,h6 {font-weight:bold; margin-bottom:20px; border-bottom:1px solid #EEE;}
+
+h1,h2,h3,h4,h5,h6 {font-weight:bold; margin-bottom:20px; line-height:120%; border-bottom:1px solid #EEE;}
 h1{ font-size:22pt; }
 h2{ font-size:20pt; }
 h3{ font-size:18pt; }
 h4{ font-size:16pt; }
 h5{ font-size:14pt; }
 h6{ font-size:12pt; }
-/* headers */
+
 h3 a{color:#000; text-decoration:none;}
 h3 a:hover{color:#2476FF;}
 
@@ -658,3 +632,6 @@ ul.storage_sections li{
 }
 .editor_buttons img{cursor:pointer;}
 .linked_files{ border:7px solid #CCCCFF; }
+
+.img_left{  margin:5px 10px 5px 0; float:left;  }
+.img_right{ margin:5px 0 5px 10px; float:right; } 
