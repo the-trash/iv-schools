@@ -85,13 +85,14 @@ function insertFormatTeg3(obj_id, elem){
 			
 			header= prompt( "Введите заголовок", "Заголовок" );
 			if(header=='')header=' ';
-			text= "\n<h3>"+header+"</h3>\n";
+			//text= "\n<h3>"+header+"</h3>\n";
+      alert('hello');
 			break;
 		case 'h4':
 			document.getElementById('page_content').focus();
 			
 			header= prompt( "Введите заголовок", "Заголовок" );
-			if(header=='')header=' ';
+			//if(header=='')header=' ';
 			text= "\n<h4>"+header+"</h4>\n";
 			break;
 	}
