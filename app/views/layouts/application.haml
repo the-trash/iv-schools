@@ -95,15 +95,14 @@
             
           .portal
             %p
-              = link_to t('site_description'), root_url(:subdomain=>false)
-              
+              = link_to t('site_description'), root_url(:subdomain=>false), :class=>'logolink'
               &copy;
-              &nbsp;&nbsp;&nbsp;2006 &mdash; 2009
+              &nbsp;2006 &mdash; 2009
             %p
               =mail_to 'iv-schools@yandex.ru', image_tag('basic/email.gif'), :encode => 'hex'
-
+              
           .alpha
-            rev. alpha 0.0032 20:56 17.11.2009
+            rev. alpha 0.0033 17:11 18.11.2009
             %br
             Сайт запущен в режиме тестирования
             %br
@@ -122,5 +121,4 @@
           var pageTracker = _gat._getTracker("UA-11434472-1");
           pageTracker._setDomainName(".iv-schools.ru");
           pageTracker._trackPageview();
-          } catch(err) {}</script>
-                  
+          } catch(err) {}</script>    
