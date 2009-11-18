@@ -7,3 +7,4 @@ config/database.yml
 *.bat
 public/system
 public/uploads
+public/uploads*
