@@ -2,10 +2,14 @@
   =render :partial => 'site_map_navigation'
   
 - content_for :current_editor do
-  = render :partial => "shared/current_editor_bar"
-
-
-.page
-  -if @page
+  = render :partial => "shared/current_editor_bar"     
+-if @page
+  - content_for :title do
+    = @page.title
+  - content_for :meta do
+    %meta{ :name => "description", :content => "#{h @page.description}" }
+    %meta{ :name => "keywords", :content => "#{h @page.keywords}" }
+    %meta{ :name => "author", :content => "#{h @page.author}" }
+  .page
     %h2= @page.title
     = @page.content

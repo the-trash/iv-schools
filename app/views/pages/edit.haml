@@ -1,8 +1,14 @@
 - content_for :navigation_menu do
   =render :partial => "shared/navigation_menu/pages/new"
+- content_for :title do
+  = @page.title
+- content_for :meta do
+  %meta{ :name => "description", :content => "#{h @page.description}" }
+  %meta{ :name => "keywords", :content => "#{h @page.keywords}" }
+  %meta{ :name => "author", :content => "#{h @page.author}" }
 - content_for :js do
   =javascript_include_tag "js/editor"
-
+    
 -# javascript_tag :defer => 'defer' do =render :partial => "shared/editor/js"
 
 = object_errors(@page)
