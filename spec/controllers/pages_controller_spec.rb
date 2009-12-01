@@ -1,6 +1,9 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe PagesController do
+
+=begin
+
   #before(:all) do
   #end
   
@@ -168,7 +171,7 @@ describe PagesController do
 ###################################################################################################
 # Testing Helpers
 ###################################################################################################
-  
+
   # Создать 2 тестовых пользователя
   def make2users(name0, name1)
       u0= Factory.create(name0)
@@ -197,7 +200,7 @@ describe PagesController do
       page.save # Сохранить страницу
     end #count.times    
   end#create_pages_for(user)
-  
+=end  
 ###################################################################################################
 # Testing Helpers
 ###################################################################################################

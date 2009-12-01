@@ -9,11 +9,11 @@ describe AdminsController do
     controller.should be_an_instance_of(AdminsController)
   end
 
-
-  describe "GET 'index'" do
+  # ¬ход в панель админа без регистрации
+  describe "GET 'index' -- go to admins panel -- have no premissions" do
     it "should be successful" do
       get 'index'
-      response.should be_success
+      response.should be_redirect
     end
   end
 end

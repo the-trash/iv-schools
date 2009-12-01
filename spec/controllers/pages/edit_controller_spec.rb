@@ -10,7 +10,7 @@ describe PagesController do
       zip
     end
     
-    before(:all) do
+    before(:each) do
       # Создать роли
       @registrated_user_role=    Factory.create(:registrated_user_role)
       @guaranted_user_role=      Factory.create(:guaranted_user_role)
@@ -19,7 +19,7 @@ describe PagesController do
       @administrator_role=       Factory.create(:administrator_role)
       
       # Имеет доступ к edit страниц всех пользователей
-      @admin= Factory.create(:admin)
+      @admin= Factory.create(:empty_user, :login=>'1111page_administrator', :email=>'1111page_administrator@email.com')
       @admin.update_role(@administrator_role)
       @admin_page= Factory.create(:test_page, :user_id=>@admin.id, :zip=>create_zip_for_page)
       
@@ -67,8 +67,8 @@ describe PagesController do
       edit_page_path(:subdomain=>@admin.login, :id=>1).should == 'http://admin.test.host/pages/1/edit'
       edit_page_url(:subdomain=>@admin.login, :id=>1).should == 'http://admin.test.host/pages/1/edit'
       
-      edit_user_page_path(:user_id=>@admin.login, :id=>1).should == '/users/admin/pages/1/edit'
-      edit_user_page_url( :user_id=>@admin.login, :id=>1).should == 'http://test.host/users/admin/pages/1/edit'
+      #edit_user_page_path(:user_id=>@admin.login, :id=>1).should == '/users/admin/pages/1/edit'
+      #edit_user_page_url( :user_id=>@admin.login, :id=>1).should == 'http://test.host/users/admin/pages/1/edit'
       edit_user_page_path(:subdomain=>@admin.login, :user_id=>@admin.login, :id=>1).should == 'http://admin.test.host/users/admin/pages/1/edit'
       edit_user_page_url( :subdomain=>@admin.login, :user_id=>@admin.login, :id=>1).should == 'http://admin.test.host/users/admin/pages/1/edit'
       
@@ -123,9 +123,9 @@ describe PagesController do
       response.should be_success
     end
     
-    # Администратор заходит редактировать страницу администратора сайта пользователя
+    # Администратор заходит редактировать страницу пользователя-администратора сайта 
     # current_user= @admin
-    # @user= @admin
+    # @user= @site_administrator
     it "14:02 02.08.2009" do
       controller.stub!(:current_user).and_return(@admin)
       controller.stub!(:current_subdomain).and_return(@site_administrator.login)
@@ -146,9 +146,12 @@ describe PagesController do
       # de facto: get 'http://admin.test.host/pages/:id/edit'
       get :edit, :id=>@admin_page.zip
       
+      assigns[:current_user].should eql(@site_administrator)
       assigns[:user].should eql(@admin)
       response.should_not be_success
-      response.should redirect_to(new_session_path)  
+      response.should be_redirect
+      #response.should_not be_success
+      #response.should redirect_to(new_session_path)  
     end
     
     # Администратор заходит редактировать страницу которой не существует
