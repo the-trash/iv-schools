@@ -1,3 +1,9 @@
+- content_for :css do
+  =stylesheet_link_tag 'basic/std_form.css', :media=>'screen'
+- content_for :title do
+  Вход в систему:
+  =t('portal_name')
+  
 %div{:style=>'border:2px solid #FCC;padding:10px; margin:10px 0;line-height:150%;'}
   Уважаемые пользователи!
   %br

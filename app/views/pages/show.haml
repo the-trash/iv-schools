@@ -5,7 +5,10 @@
   = render :partial => "shared/current_editor_bar"     
 -if @page
   - content_for :title do
+    = "#{@user.login}.iv-schools.ru &raquo; "
     = @page.title
+    |
+    =t('portal_name')
   - content_for :meta do
     %meta{ :name => "description", :content => "#{h @page.description}" }
     %meta{ :name => "keywords", :content => "#{h @page.keywords}" }

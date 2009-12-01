@@ -1,6 +1,12 @@
 - content_for :current_editor do
   = render :partial => "shared/current_editor_bar"
-
+- content_for :css do
+  =stylesheet_link_tag 'basic/map.css', :media=>'screen'
+- content_for :title do
+  Карта сайта пользователя:
+  =@user.login
+  |
+  =t('portal_name')  
 -if @pages_tree.empty?
   .map
     %h5
