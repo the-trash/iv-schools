@@ -4,6 +4,7 @@ img, p, pre, blockquote, dd, dt, li, caption, legend, label{line-height:150%;}
 table, tr, td{vertical-align:top; border-collapse:collapse; border-spacing:0;}
 ol, ul{list-style:none; margin: 0 0 15px 0;}
 li{list-style-position:inside;}
+img{padding:0;}
 p{margin:0 0 15px 0; line-height:150%;}
 a{text-decoration:underline; color:#2476FF;}
 a:hover {text-decoration:none;}
