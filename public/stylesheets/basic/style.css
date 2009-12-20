@@ -7,7 +7,11 @@
 a.back{color:#CCCCCC;}
 a.back:hover{color:#FF7211;}
 
-body        { background:#FFF; font-family:Verdana,Trebuchet MS,Tahoma,Arial,serif; font-size:9pt; behavior:url("/stylesheets/basic/hover.htc");}
+body{
+  background:#FFF url(/images/basic/snowstar.jpg);
+  font-family:Verdana,Trebuchet MS,Tahoma,Arial,serif; font-size:9pt;
+  behavior:url("/stylesheets/basic/hover.htc");
+}
 .body       { width:900px; margin:auto; }
 
 .img_left{  margin:5px 10px 5px 0; float:left;  }
@@ -57,3 +61,11 @@ body        { background:#FFF; font-family:Verdana,Trebuchet MS,Tahoma,Arial,ser
 }
 .editor_buttons img{cursor:pointer;}
 .linked_files{ border:7px solid #CCCCFF; } 
+
+.message{
+  text-align: center;
+  padding: 10px;
+  border:3px solid #2476FF;
+  font-weight:bold;
+  line-height:125%;
+}
