@@ -5,12 +5,13 @@ class PagesController < ApplicationController
   # Исправить адрес по которому обращается пользователь к ресурсу
   # Проверка на политику доступа к обработчику, который не требует конкретного ресурса
   # Проверка на политику доступа к обработчику, который требует ресурс
-  before_filter :navigation_menu_init,                  :except=> [:show, :edustat, :first]  
-  before_filter :login_required,                        :except=> [:index, :show, :edustat, :first]
+  before_filter :login_required,                        :except=> [:index, :show, :edustat, :first] 
+  before_filter :page_resourсe_access_required,         :only=>   [:edit, :update, :destroy, :up, :down]
+  before_filter :access_to_controller_action_required,  :only=>   [:new, :create, :manager]
   before_filter :find_page,                             :only=>   [:show, :edit, :update, :destroy, :up, :down]
   before_filter :fix_url_by_redirect,                   :only=>   [:show]
-  before_filter :access_to_controller_action_required,  :only=>   [:new, :create, :manager]
-  before_filter :page_resourсe_access_required,         :only=>   [:edit, :update, :destroy, :up, :down]
+  before_filter :navigation_menu_init,                  :except=> [:show, :edustat, :first]
+  
 
   # Карта сайта
   # Выбрать дерево страниц, только те поля, которые учавствуют отображении

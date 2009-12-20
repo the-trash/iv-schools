@@ -1,14 +1,14 @@
 require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
 
 describe PagesController do
-    before(:all) do
+    before(:each) do
       @registrated_user_role=    Factory.create(:registrated_user_role)
       #@guaranted_user_role=      Factory.create(:guaranted_user_role)
       #@site_administrator_role=  Factory.create(:site_administrator_role)
       @page_administrator_role=  Factory.create(:page_administrator_role)
       @administrator_role=       Factory.create(:administrator_role)
       
-      @admin=           Factory.create(:admin)
+      @admin= Factory.create(:admin)
       @admin.update_role(@administrator_role)
       
       @page_admin=      Factory.create(:empty_user, :login=>'page_admin',         :email=>'page_admin@email.com')
@@ -28,8 +28,9 @@ describe PagesController do
     # Общедоступная страница
     it "18:24 23.07.2009" do
       get :index
-      response.should be_redirect
-      response.should redirect_to(root_path(:subdomain=>'admin'))
+      response.should render_template("pages/first.haml")
+      response.should_not be_redirect
+      #response.should redirect_to(root_path(:subdomain=>'admin'))
     end
     
     # действие index

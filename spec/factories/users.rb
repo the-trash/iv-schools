@@ -10,13 +10,18 @@
 ###################################################################################################
 # Пользователи
 ###################################################################################################
+
 Factory.define :user do |u| end
+Factory.define :empty_user, :class => User do |u|
+  u.crypted_password '1111111111'
+  u.salt 'salt'
+end
   
 # Создал фабрику для Пользователя (User) admin
 Factory.define :admin, :class => User do |u|
   u.login 'admin'
   u.email 'admin@iv-schools.ru'
-  u.crypted_password 'admin'
+  u.crypted_password 'admin-admin'
   u.salt 'salt'
   u.name 'Зыкин Илья Николаевич'
 end

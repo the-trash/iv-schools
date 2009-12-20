@@ -1,3 +1,10 @@
+- content_for :css do
+  =stylesheet_link_tag 'basic/edit_form.css', :media=>'screen'
+- content_for :title do
+  Хранилище файлов:
+  =@user.login
+  |
+  =t('portal_name')
 .block
   %ul
     %li.system

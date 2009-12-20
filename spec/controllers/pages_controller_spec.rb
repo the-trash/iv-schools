@@ -7,30 +7,11 @@ describe PagesController do
   #before(:each) do
   #end
   
-###################################################################################################
-# PagesController Basic Tests
-###################################################################################################
-
-  describe "PagesController Basic Tests" do  
-    #Контроллер должен быть контроллером PagesController
-    it "should use PagesController" do
-      controller.should be_an_instance_of(PagesController)
-    end
-  
-    # Проверить наличие before фильтров
-    it "11:00 14.07.2009, should be successful" do
-      # должен существовать фильтр с такими опциями
-      controller.before_filters.should include(:login_required)
-      controller.before_filter(:login_required).should have_options(:except=>[:index, :show])
-      
-      # должен существовать фильтр с такими опциями
-      controller.before_filters.should include(:page_manager_required)
-      controller.before_filter(:page_manager_required).should have_options(:except=>[:index, :show])
-      
-      # должен существовать фильтр с такими опциями
-      controller.before_filters.should include(:navigation_menu_init)
-      controller.before_filter(:navigation_menu_init).should have_options(:except=>[:show])
-    end#11:00 14.07.2009
+=begin
+  Этот набор тестов производит базовое тестирование
+  Контроллера страниц
+  Запрет на доступ к привилегированным действиям для не зарегистрированных пользователей
+=end
 
 ###################################################################################################
 # PagesController Anomaly Tests
@@ -41,7 +22,7 @@ describe PagesController do
     # Будет возвращено сообщение и успешный ответ
     it "10:37 14.07.2009, should be successful" do
       get('index')
-      response.should have_text(Messages::System[:have_no_users])
+      response.should have_text(I18n.translate('system.have_no_users'))
       response.should be_success
     end#10:37 14.07.2009
   end# describe "PagesController Anomaly Tests"
@@ -125,7 +106,7 @@ describe PagesController do
       #  Пользователи :admin, :ivanov
       #  Иванов хочет просмотреть страницу с редактированием страниц
       #  Иванов зарегистрирован, но не имеет прав на это
-      it "21:05 14.07.2009, should be successful" do
+      it "21:18 02.12.2009, should be successful" do
         # Подменить реальный метод контроллера и заставить его возвращать нужный результат
         controller.stub!(:current_user).and_return(@user[:petrov])
         
@@ -138,8 +119,8 @@ describe PagesController do
         # Отправим Иванова на страницу регистрации.. пусть подумает о своем поведении =)
         response.should_not be_success
         response.should redirect_to(new_session_path)
-        flash[:notice].should have_text(Messages::Policies[:have_no_policy])
-      end# 21:05 14.07.2009
+        flash[:notice].should be_nil
+      end# 21:18 02.12.2009
       
       #  Пользователи :admin, :admin
       #  :admin хочет просмотреть страницу с редактированием страниц
@@ -168,7 +149,7 @@ describe PagesController do
 ###################################################################################################
 # Testing Helpers
 ###################################################################################################
-  
+
   # Создать 2 тестовых пользователя
   def make2users(name0, name1)
       u0= Factory.create(name0)
@@ -197,7 +178,7 @@ describe PagesController do
       page.save # Сохранить страницу
     end #count.times    
   end#create_pages_for(user)
-  
+
 ###################################################################################################
 # Testing Helpers
 ###################################################################################################

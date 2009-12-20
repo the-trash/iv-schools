@@ -1,3 +1,12 @@
+- content_for :css do
+  =stylesheet_link_tag 'basic/edit_form.css', :media=>'screen'
+
+- content_for :title do
+  Центр управления:
+  = @user.login
+  |
+  =t('portal_name')
+      
 %h3=t('cabinet')
 
 .block
@@ -33,7 +42,7 @@
           
     .edit_form
       %h5
-        Изображение для шапки Вашего сайта (900x250 точек):
+        Изображение для шапки Вашего сайта (900x250 точек)
       -form_for :user, :url => base_header_user_path(@user.zip), :html => { :multipart => true, :method=>:put } do |form|
         =form.file_field :base_header
         =submit_tag 'Установить', :class=>:submit

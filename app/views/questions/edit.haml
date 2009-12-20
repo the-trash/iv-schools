@@ -1,6 +1,12 @@
 - content_for :current_editor do
   = render :partial => "shared/current_editor_bar"
-
+- content_for :css do
+  =stylesheet_link_tag 'basic/edit_form.css', :media=>'screen'
+- content_for :title do
+  Редактировать заданный вопрос
+  | Пользователь:
+  = @user.login
+    
 .block
   %ul
     %li.system
