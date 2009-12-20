@@ -67,10 +67,10 @@ describe PagesController do
       new_page_path(:subdomain=>@admin.login).should == 'http://admin.test.host/pages/new'
       new_page_url(:subdomain=>@admin.login).should == 'http://admin.test.host/pages/new'
       
-      new_user_page_path( :user_id=>@admin.login).should == '/users/admin/pages/new'
-      new_user_page_url(  :user_id=>@admin.login).should == 'http://test.host/users/admin/pages/new'
-      new_user_page_path( :user_id=>@admin.login, :subdomain=>@admin.login).should == 'http://admin.test.host/users/admin/pages/new'
-      new_user_page_url(  :user_id=>@admin.login, :subdomain=>@admin.login).should == 'http://admin.test.host/users/admin/pages/new'
+      #new_user_page_path( :user_id=>@admin.login).should == '/users/admin/pages/new'
+      #new_user_page_url(  :user_id=>@admin.login).should == 'http://test.host/users/admin/pages/new'
+      #new_user_page_path( :user_id=>@admin.login, :subdomain=>@admin.login).should == 'http://admin.test.host/users/admin/pages/new'
+      #new_user_page_url(  :user_id=>@admin.login, :subdomain=>@admin.login).should == 'http://admin.test.host/users/admin/pages/new'
     end
 
 #---------------------------------------------------------------
@@ -162,20 +162,6 @@ describe PagesController do
 
       # de facto: get 'http://site_administrator.test.host/pages/new'
       get :new
-      
-      assigns[:user].should eql(@site_administrator)
-      response.should render_template("pages/new.haml")
-      response.should be_success
-    end
-    
-    # Администратор школьного сайта заходит к себе
-    # current_user= @site_administrator
-    # @user= @site_administrator
-    it "15:43 02.08.2009" do
-      controller.stub!(:current_user).and_return(@site_administrator)
-
-      # de facto: get 'http://test.host/users/site_administrator/pages/new'
-      get :new, :user_id=>'site_administrator'
       
       assigns[:user].should eql(@site_administrator)
       response.should render_template("pages/new.haml")
