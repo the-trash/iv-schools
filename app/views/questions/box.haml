@@ -2,6 +2,7 @@
   = render :partial => "shared/current_editor_bar"
 - content_for :css do
   =stylesheet_link_tag 'basic/comment.css', :media=>'screen'
+  =stylesheet_link_tag 'basic/paginator', :media=>'screen'
   - content_for :title do
     Список всех входящих вопросов для пользователя:
     =@user.login
