@@ -9,6 +9,7 @@ class User < ActiveRecord::Base
   # Пользовательский раздел
   has_one     :profile                      # У пользователя есть профайл
   has_many    :pages                        # У пользователя много страниц
+  has_many    :reports                      # У пользователя много новостей (репортажей)
   has_many    :questions                    # У пользователя много вопросов
   
   def new_questions

@@ -1,19 +1,15 @@
-class Page < ActiveRecord::Base  
+class Report < ActiveRecord::Base
   # Действуй как дерево, привязанное к владельцу (пользователю)
   acts_as_nested_set :scope=>:user
   belongs_to :user
-  
+
   validates_presence_of :user_id,     :message=>"Не определен идентификатор владельца страницы"
   validates_presence_of :zip,         :message=>"Не определен zip-идентификатор страницы"
-
-  validates_presence_of :author
-  validates_presence_of :keywords
-  validates_presence_of :description
-  validates_presence_of :copyright
-  validates_presence_of :title, :message=>"У страницы должен быть заголовок"
   
-  # ------------------------------------------------------------------  
-  # Создать данному объекту zip код
+  validates_presence_of :title, :message=>"У новости должен быть заголовок"
+  validates_presence_of :description
+  validates_presence_of :content
+
   before_validation_on_create :create_zip
   def create_zip
     # Если zip уже установлен ранее
@@ -24,4 +20,5 @@ class Page < ActiveRecord::Base
     end
     self.zip= zip_code
   end
+  
 end

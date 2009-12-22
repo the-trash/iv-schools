@@ -1,0 +1,120 @@
+
+.body
+  %h1
+    Редактирование Report
+    
+  %table
+    %tr
+      %td
+        
+        -form_for(@report) do |f|
+          = f.error_messages
+          %table.object_card
+            
+            
+            
+            %tr
+              %td.field
+                ID
+              %td
+                
+                = h @report.id
+                                                       
+            
+            
+            %tr
+              %td.field
+                Владелец
+              %td
+                
+                  
+                %span
+                  = f.text_field :user_id, :class=>:scaffold_field
+                                                                         
+            
+            
+            %tr
+              %td.field
+                zip-code
+              %td
+                
+                  
+                %span
+                  = f.text_field :zip_code, :class=>:scaffold_field
+                                                                         
+            
+            
+            %tr
+              %td.field
+                Заголовок
+              %td
+                
+                  
+                %span
+                  = f.text_field :title, :class=>:scaffold_field
+                                                                         
+            
+            
+            %tr
+              %td.field
+                Описание
+              %td
+                
+                  
+                %span
+                  = f.text_field :description, :class=>:scaffold_field
+                                                                         
+            
+            
+            %tr
+              %td.field
+                Содержимое
+              %td
+                
+                  
+                %span
+                  = f.text_field :content, :class=>:scaffold_field
+                                                                         
+            
+            
+            %tr
+              %td.field
+                Безопасный контент
+              %td
+                
+                  
+                .editable_text_field
+                  %span
+                    = f.text_area :prepared_content, :class=>:scaffold_textarea
+                                                                         
+            
+            
+            %tr
+              %td.field
+                Состояние отображения
+              %td
+                
+                  
+                .editable_text_field
+                  %span
+                    = f.text_area :display_state, :class=>:scaffold_textarea
+                                                                         
+            
+            
+            %tr
+              %td.field
+                Хеш настроек
+              %td
+                
+                  
+                .editable_text_field
+                  %span
+                    = f.text_area :settings, :class=>:scaffold_textarea
+                                                                         
+            %tr
+              %td.field
+                Управление
+              %td
+                = f.submit "Обновить"
+                = link_to 'Показать', report_path(@report)
+                = link_to 'Полный список', reports_path

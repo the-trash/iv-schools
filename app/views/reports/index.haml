@@ -1,0 +1,115 @@
+
+.body
+  -if flash[:notice]
+    .notice
+      = flash[:notice]
+
+  -if flash[:error]
+    .error
+      = flash[:error]
+
+  %h1
+    Список объектов Reports 
+    = link_to "Весь список", reports_path
+
+  %br
+  = link_to 'Новый объект Report', new_report_path
+  %br
+  %br
+  = will_paginate @reports, :class=>:scaffold_pagination, :previous_label=>"&larr;", :next_label=>"&rarr;"
+
+
+  %table
+    %tr
+    
+      %td
+      
+        ID
+          
+      %td
+      
+        Владелец
+          
+      %td
+      
+        zip-code
+          
+      %td
+      
+        Заголовок
+          
+      %td
+      
+        Описание
+          
+      %td
+      
+        Содержимое
+          
+      %td
+      
+        Безопасный контент
+          
+      %td
+      
+        Состояние отображения
+          
+      %td
+      
+        Хеш настроек
+              
+
+      %td
+        Управление
+        
+    -for report in @reports
+      %tr
+      
+        %td
+        
+          =h report.id  
+              
+        %td
+        
+          =h report.user_id  
+              
+        %td
+        
+          =h report.zip
+              
+        %td
+        
+          =h report.title  
+              
+        %td
+        
+          =h report.description  
+              
+        %td
+        
+          =h report.content  
+              
+        %td
+        
+          =h report.prepared_content  
+              
+        %td
+        
+          =h report.display_state  
+              
+        %td
+        
+          =h report.settings  
+              
+        %td
+          %div{:style=>"height:25px;"}
+            = link_to 'Показать', report_path(report)
+          %div{:style=>"height:25px;"}
+            = link_to 'Редактировать', edit_report_path(report)
+          %div{:style=>"height:25px;"}
+            = link_to 'Удалить', report_path(report), :confirm => 'Вы уверены?', :method => :delete
+
+
+
+  %br
+  = will_paginate @reports, :class=>:scaffold_pagination, :previous_label=>"&larr;", :next_label=>"&rarr;"
