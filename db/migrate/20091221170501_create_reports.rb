@@ -9,7 +9,7 @@ class CreateReports < ActiveRecord::Migration
       t.text :content
       t.text :prepared_content
       
-      t.string :display_state, :default => 'show'
+      t.string :state
       t.text :settings
       
       t.integer :parent_id

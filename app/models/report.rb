@@ -5,11 +5,30 @@ class Report < ActiveRecord::Base
 
   validates_presence_of :user_id,     :message=>"Не определен идентификатор владельца страницы"
   validates_presence_of :zip,         :message=>"Не определен zip-идентификатор страницы"
-  
-  validates_presence_of :title, :message=>"У новости должен быть заголовок"
+  validates_presence_of :title,       :message=>"У новости должен быть заголовок"
   validates_presence_of :description
   validates_presence_of :content
 
+  #publicated, hided
+  state_machine :state, :initial => :hided do
+    # Публикация новости
+    event :publication do
+      transition :hided => :publicated
+    end
+    # Снятие с публикации
+    event :hiding do
+      transition :publicated => :hided
+    end
+    # Пробник (Удалить)
+    event :fixer do
+      transition :show => all
+    end
+  end
+  
+  def to_param
+    zip
+  end
+  
   before_validation_on_create :create_zip
   def create_zip
     # Если zip уже установлен ранее

@@ -1,10 +1,11 @@
 class ReportsController < ApplicationController
   # GET /reports
   def index
-    @reports = Report.paginate(:all,
+    @reports = @user.reports.paginate(:all,
                            :order=>"created_at ASC", #ASC, DESC
+                           :select=>'title, zip, updated_at',
                            :page => params[:page],
-                           :per_page=>10
+                           :per_page=>2
                            )
                            
     respond_to do |format|
@@ -32,7 +33,7 @@ class ReportsController < ApplicationController
 
   # GET /reports/1/edit
   def edit
-    @report = Report.find(params[:id])
+    @report = Report.find_by_zip(params[:id])
   end
 
   # POST /reports
@@ -51,7 +52,7 @@ class ReportsController < ApplicationController
 
   # PUT /reports/1
   def update
-    @report = Report.find(params[:id])
+    @report = Report.find_by_zip(params[:id])
 
     respond_to do |format|
       if @report.update_attributes(params[:report])
@@ -65,7 +66,7 @@ class ReportsController < ApplicationController
 
   # DELETE /reports/1
   def destroy
-    @report = Report.find(params[:id])
+    @report = Report.find_by_zip(params[:id])
     @report.destroy
 
     respond_to do |format|

@@ -11,7 +11,23 @@ class Page < ActiveRecord::Base
   validates_presence_of :description
   validates_presence_of :copyright
   validates_presence_of :title, :message=>"У страницы должен быть заголовок"
-  
+
+  #publicated, hided
+  state_machine :state, :initial => :hided do
+    # Публикация новости
+    event :publication do
+      transition :hided => :publicated
+    end
+    # Снятие с публикации
+    event :hiding do
+      transition :publicated => :hided
+    end    
+    event :fixer do
+      transition :show => all
+    end
+  end
+
+        
   # ------------------------------------------------------------------  
   # Создать данному объекту zip код
   before_validation_on_create :create_zip

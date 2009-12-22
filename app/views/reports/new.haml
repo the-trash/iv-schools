@@ -8,21 +8,6 @@
     Создать Новость
   
   -form_for :report, :url => reports_path do |f|
-    %label{:for=>:title}
-      Заголовок
-    %span
-      = f.text_field :title, :class=>:input
-      
-    %label{:for=>:description}
-      Описание
-    %span
-      = f.text_field :description, :class=>:input
-      
-    %label{:for=>:content}
-      Содержимое
-    %span
-      = f.text_area :content, :class=>:textarea_mid
-
-    = submit_tag 'Создать', :class=>:submit
+    =render :partial => 'form', :locals => {:f => f, :button=>'Создать'}
 
 = link_to 'Полный список', reports_path
