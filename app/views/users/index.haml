@@ -24,13 +24,13 @@
             = link_to h(user.name), root_url(:subdomain=>user.subdomain)
             %br
             %br
-            = case user.role.name
+            -case user.role.name
               -when 'administrator'
-                -'Автор портала iv-schools.ru'
+                ='Автор портала iv-schools.ru'
               -when 'site_administrator'
-                -'Администартор сайта'
+                ='Администартор сайта'
               -when 'page_administrator'
-                -'Модератор страниц'
+                ='Модератор страниц'
   
-%br
-= will_paginate @users
+    %br
+    = will_paginate @users
