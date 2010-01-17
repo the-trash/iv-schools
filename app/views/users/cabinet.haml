@@ -11,12 +11,15 @@
 
 .block
   %ul
-    %li
-      - text= content_tag :span, t('profile'), :class=>:bar
-      = link_to text, profile_users_path(:subdomain=>@user.subdomain)
+    
     %li
       - text= content_tag :span, t('page.manage'), :class=>:bar
       = link_to text, manager_pages_path(:subdomain=>@user.subdomain)
+    %li
+      - text= content_tag :span, t('report.manage'), :class=>:bar
+      = link_to text, reports_path(:subdomain=>@user.subdomain)
+    
+    
     %li
       - text= content_tag :span, t('my_files'), :class=>:bar
       = link_to text, storage_sections_url(:subdomain=>@user.subdomain)
@@ -26,6 +29,9 @@
       - new_questions_size = ( nqs > 0 ? "(новых : #{nqs})" : "")
       - text= content_tag :span, "Вопрос/Ответ #{new_questions_size}", :class=>:bar
       = link_to text, box_questions_path
+    %li
+      - text= content_tag :span, t('profile'), :class=>:bar
+      = link_to text, profile_users_path(:subdomain=>@user.subdomain)
     
     - if logged_in?
       -# Если есть ролевой доступ к администрированию пользователей
