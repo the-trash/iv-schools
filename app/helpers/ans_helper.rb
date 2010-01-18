@@ -41,7 +41,7 @@ module AnsHelper
       opts[:localize][:edit]=                         (opts[:localize][:edit])                          ? (opts[:localize][:edit])                          : 'edit: '
       opts[:localize][:create_child]=                 (opts[:localize][:create_child])                  ? (opts[:localize][:create_child])                  : 'create child: '
       opts[:localize][:delete]=                       (opts[:localize][:delete])                        ? (opts[:localize][:delete])                        : 'delete: '
-      opts[:localize][:delete_confirm]=               (opts[:localize][:delete_confirm])                ? (opts[:localize][:delete_confirm])                : 'delete confirm'
+      opts[:localize][:delete_confirm]=               (opts[:localize][:delete_confirm])                ? (opts[:localize][:delete_confirm])                : 'delete confirm.'
       opts[:localize][:sub_sections_must_be_deleted]= (opts[:localize][:sub_sections_must_be_deleted])  ? (opts[:localize][:sub_sections_must_be_deleted])  : 'sub-sections must be deleted.'
       #--------------------------------------------------
       # Если первый элемент - то, ссылку вверх не генерируем
