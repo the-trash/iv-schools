@@ -5,10 +5,9 @@ class StorageFile < ActiveRecord::Base
   has_attached_file :file,
                     :url => Project::FILE_URL,
                     :default_url=>Project::FILE_DEFAULT,
-                    :processors => [:empty_processor]
+                    :styles => { :small=> '100x100#', :mini=>  '50x50#' },
+                    :convert_options => { :all => "-strip" }
                     
-                    #:styles => { :small=> '100x100#', :mini=>  '50x50#' },
-                    #:convert_options => { :all => "-strip" },
                     #lambda { |a|
                       #return [:empty_processor] unless a.is_image?
                       #return [:thumbnail]
@@ -18,7 +17,8 @@ class StorageFile < ActiveRecord::Base
   validates_attachment_size :file,
                             :in => 1.kilobytes..1.megabytes,
                             :message=>'Размер должен быть более 1 Килобайта и менее 1 Мегабайта'
-
+  
+  #:processors => [:empty_processor]
   #['image/gif','image/jpeg','image/jpg','image/pjpeg','image/png','image/x-png','image/bmp']
   #['application/msword', 'application/x-doc'].include?(file.content_type)
   #['image/photoshop','image/x-photoshop','image/psd','application/photoshop','application/psd','zz-application/zz-winassoc-psd'].include?(file.content_type)
@@ -26,6 +26,10 @@ class StorageFile < ActiveRecord::Base
     
   def is_image?
     ['.gif','.jpeg','.jpg','.pjpeg','.png','.bmp'].include?(File.extname(file_file_name))
+  end
+  
+  def need_thumb?
+    is_image?
   end
   
   def is_doc?

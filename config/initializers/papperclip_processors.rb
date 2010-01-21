@@ -1,3 +1,4 @@
+=begin
 module Paperclip
   class EmptyProcessor < Processor
 
@@ -18,3 +19,4 @@ module Paperclip
     end # make
   end
 end
+=end

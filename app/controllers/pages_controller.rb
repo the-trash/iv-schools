@@ -45,12 +45,10 @@ class PagesController < ApplicationController
   end
   
   def create
-    @page= Page.new(params[:page])
+    @page= @user.pages.new(params[:page])
     @parent= nil
     @parent= Page.find_by_zip(params[:parent_id]) if params[:parent_id]
-    #zip= zip_for_model('Page')
-    #@page.zip= zip
-    @page.user_id= @user.id 
+
     respond_to do |format|
       if @page.save
         @page.move_to_child_of(@parent) if @parent
@@ -148,17 +146,17 @@ class PagesController < ApplicationController
   end
   
   def page_resourсe_access_required
-      access_denied if current_user.has_complex_resource_block_for?(@page, :administrator, controller_name)
-      return true   if current_user.has_complex_resource_access_for?(@page, :administrator, controller_name)
-      return true   if current_user.has_role_policy?(:administrator, controller_name)
-      access_denied if current_user.has_complex_block?(:administrator, controller_name)
-      return true   if current_user.has_complex_access?(:administrator, controller_name)
-      access_denied if current_user.has_complex_resource_block_for?(@page, controller_name, action_name)
-      return true   if current_user.has_complex_resource_access_for?(@page, controller_name, action_name)
-      access_denied if current_user.has_complex_block?(controller_name, action_name)
-      return true   if current_user.has_complex_access?(controller_name, action_name)
-      return true   if current_user.has_role_policy?(controller_name, action_name) && current_user.is_owner_of?(@page)
-      access_denied
+    access_denied if current_user.has_complex_resource_block_for?(@page, :administrator, controller_name)
+    return true   if current_user.has_complex_resource_access_for?(@page, :administrator, controller_name)
+    return true   if current_user.has_role_policy?(:administrator, controller_name)
+    access_denied if current_user.has_complex_block?(:administrator, controller_name)
+    return true   if current_user.has_complex_access?(:administrator, controller_name)
+    access_denied if current_user.has_complex_resource_block_for?(@page, controller_name, action_name)
+    return true   if current_user.has_complex_resource_access_for?(@page, controller_name, action_name)
+    access_denied if current_user.has_complex_block?(controller_name, action_name)
+    return true   if current_user.has_complex_access?(controller_name, action_name)
+    return true   if current_user.has_role_policy?(controller_name, action_name) && current_user.is_owner_of?(@page)
+    access_denied
   end
   
   # for :new, :create, :manager

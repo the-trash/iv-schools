@@ -18,6 +18,8 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :questions,
     :collection=>{ :box=>:get },
     :member=>{ :physic_delete=>:delete }
+    
+  map.resources :reports
 
   map.resource :session
 

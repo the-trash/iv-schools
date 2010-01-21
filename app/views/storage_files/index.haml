@@ -53,10 +53,10 @@
       =submit_tag 'Загрузить', :class=>:submit
 
 = will_paginate @storage_section_files
-    
+ 
 %ul
   - @storage_section_files.each do |file|
-    %li{:style=>"padding:10px;margin:0 0 10px 0; border:3px solid #CCC;"}
+    %li{:style=>"padding:10px;margin:0 20px 10px 0; border:3px solid #CCC;"}
       %table{:width=>'100%'}
         %tr
           %td
@@ -68,18 +68,21 @@
             .file_block
               %b
                 URL адрес файла
-              %input{:value=>url, :style=>'width:85%; font-family:Verdana;'}
+              %p
+                %input{:value=>url, :style=>'width:400px; font-family:Verdana;'}
               
             .file_block
               %b
                 HTML код для вставки ссылки на этот файл
-              %input{:value=>link_to(file_name, url), :style=>'width:85%; font-family:Verdana;'}
+              %p
+                %input{:value=>link_to(file_name, url), :style=>'width:400px; font-family:Verdana;'}
 
             -if file.is_image?        
               .file_block
                 %b
                   Код для вставки изображения
-                %input{:value=>image_tag(url, :title=>file_name), :style=>'width:85%; font-family:Verdana;'}
+                %p
+                  %input{:value=>image_tag(url, :title=>file_name), :style=>'width:400px; font-family:Verdana;'}
             
             .file_block
               %b
@@ -89,8 +92,8 @@
 
           %td{:style=>'width:100px;'}
             -if file.is_image?
-              = link_to(image_tag('doctype/100x100/img.jpg', :alt=>'Изображение'), url, :title=>file_name)
-              =# link_to(image_tag(file.file.url(:small), :alt=>'Изображение'), url, :title=>file_name)
+              =# link_to(image_tag('doctype/100x100/img.jpg', :alt=>'Изображение'), url, :title=>file_name)
+              = link_to(image_tag(file.file.url(:small), :alt=>'Изображение'), url, :title=>file_name)
             -elsif file.is_doc?
               = link_to(image_tag('doctype/100x100/doc.jpg', :alt=>'Документ'), url, :title=>file_name)
             -elsif file.is_txt?
