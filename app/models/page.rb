@@ -13,15 +13,15 @@ class Page < ActiveRecord::Base
   validates_presence_of :copyright
   validates_presence_of :title, :message=>"У страницы должен быть заголовок"
 
-  #publicated, hided
-  state_machine :state, :initial => :hided do
+  #publicated, hidden
+  state_machine :state, :initial => :hidden do
     # Публикация новости
     event :publication do
-      transition :hided => :publicated
+      transition :hidden => :publicated
     end
     # Снятие с публикации
     event :hiding do
-      transition :publicated => :hided
+      transition :publicated => :hidden
     end    
     event :fixer do
       transition :show => all
