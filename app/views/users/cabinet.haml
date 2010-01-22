@@ -15,9 +15,10 @@
     %li
       - text= content_tag :span, t('page.manage'), :class=>:bar
       = link_to text, manager_pages_path(:subdomain=>@user.subdomain)
-    %li
-      - text= content_tag :span, t('report.manage'), :class=>:bar
-      = link_to text, reports_path(:subdomain=>@user.subdomain)
+    -#
+      %li
+        - text= content_tag :span, t('report.manage'), :class=>:bar
+        = link_to text, reports_path(:subdomain=>@user.subdomain)
     
     
     %li
