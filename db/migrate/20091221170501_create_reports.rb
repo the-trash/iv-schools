@@ -1,6 +1,6 @@
 class CreateReports < ActiveRecord::Migration
   def self.up
-    create_table :reports do |t|
+    create_table :reports, :force => true do |t|
       t.integer :user_id
       t.string :zip
       
@@ -9,7 +9,7 @@ class CreateReports < ActiveRecord::Migration
       t.text :content
       t.text :prepared_content
       
-      t.string :state
+      t.string :state, :default=>"hidden"
       t.text :settings
       
       t.integer :parent_id
