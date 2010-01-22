@@ -5,7 +5,7 @@
 #/usr/local/ImageMagick-6.4.8
 #which convert
 #FREE BSD /usr/local/bin/convert
-# Ubuntu Paperclip.options[:command_path] = "/usr/bin/"
+#Ubuntu Paperclip.options[:command_path] = "/usr/bin/"
 #Paperclip.options[:command_path] = '/usr/local/bin/'
 #sudo apt-get install imagemagick ?
 
