@@ -2,6 +2,25 @@
   =stylesheet_link_tag 'basic/edit_form.css', :media=>'screen'
   =stylesheet_link_tag 'basic/data_storage.css', :media=>'screen'
   =stylesheet_link_tag 'basic/paginator', :media=>'screen'
+  =stylesheet_link_tag '/javascripts/jq/lightbox/gallery/gallery', :media=>'screen'  
+- content_for :gallery_lightbox do
+  -# lightbox gallery 0.5
+  =javascript_include_tag "jq/lightbox/gallery/gallery.pack"
+  -javascript_tag do
+    $(function(){
+    $('a.gallery').lightBox({
+    overlayBgColor: '#000',
+    overlayOpacity: 0.6,
+    imageLoading: '/javascripts/jq/lightbox/gallery/loading.gif',
+    imageBtnClose: '/javascripts/jq/lightbox/gallery/close.gif',
+    imageBtnPrev: '/javascripts/jq/lightbox/gallery/prev.gif',
+    imageBtnNext: '/javascripts/jq/lightbox/gallery/next.gif',
+    containerResizeSpeed: 350,
+    txtImage: 'Изображения: ',
+    txtOf: 'из'
+    });//$('a.gallery')
+    });//$(function(){
+    
 - content_for :title do
   Все файлы пользователя:
   =@user.login
@@ -93,7 +112,8 @@
           %td{:style=>'width:100px;'}
             -if file.is_image?
               =# link_to(image_tag('doctype/100x100/img.jpg', :alt=>'Изображение'), url, :title=>file_name)
-              = link_to(image_tag(file.file.url(:small), :alt=>'Изображение'), url, :title=>file_name)
+              -zoom = content_tag :span, '', :class=>:zoom
+              = link_to(image_tag(file.file.url(:small), :alt=>'Увеличить изображение') + zoom, url, :title=>file_name, :class=>:gallery)
             -elsif file.is_doc?
               = link_to(image_tag('doctype/100x100/doc.jpg', :alt=>'Документ'), url, :title=>file_name)
             -elsif file.is_txt?
@@ -112,12 +132,8 @@
               = link_to(image_tag('doctype/100x100/zip.jpg', :alt=>'Архив'), url, :title=>file_name)
             -else
               =image_tag 'doctype/100x100/default.jpg', :alt=>'Файл'
-            %br
-            %br
-            %br
-            %br
-            .div{:style=>'text-align:center;'}
-              =link_to 'Удалить', storage_file_path(file.zip), :method=>:delete, :confirm=>'Вы уверены, что хотите удалить этот файл безвозвратно?', :style=>'color:red;'
+            .trash
+              =link_to '', storage_file_path(file.zip), :method=>:delete, :confirm=>'Вы уверены, что хотите удалить этот файл безвозвратно?', :class=>'file_delete', :alt=>'Удалить Файл', :title=>'Удалить Файл'
   -#              
     - @storage_section_files.each do |file|
       %li{:style=>"padding:10px;margin:0 0 10px 0; border:3px solid #CCC;"}
