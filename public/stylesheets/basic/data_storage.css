@@ -46,4 +46,41 @@ ul.storage_sections li{
   font-size:8pt;
   border:1px solid #DDD;
 }
+.gallery{
+    border:3px solid #000;
+    display:block;
+    position:relative;
+    overflow:hidden;
+    zoom:1;
+}
+.gallery:hover{
+    border:3px solid #2476FF;
+}
+.gallery .zoom{
+    display:block;
+    position:absolute;
+    border-top:2px solid #000;
+    border-left:2px solid #000;
+    top:76px;
+    left:76px;
+    width:24px;
+    height:24px;
+    background:#FFF url(/images/iconza/red/zoom.png) no-repeat scroll 0 0;
+}
+.trash{
+    margin-top:35px;
+    overflow:hidden;
+    zoom:1;
+}
+.file_delete{
+    float:right;
+    display:block;
+    width:24px;
+    height:24px;
+    border:2px solid #FCC;
+    background:#FFF url(/images/iconza/red/trash.png) no-repeat scroll center center;
+}
+.file_delete:hover{
+    border:2px solid #F00;
+}
 /*file storage*/
