@@ -19,6 +19,10 @@
     =stylesheet_link_tag 'basic/content.css', :media=>'screen'            # Оформление сожержимого страниц
     =stylesheet_link_tag 'basic/footer.css', :media=>'screen'             # Ножки сайта
     =stylesheet_link_tag 'basic/current_editor_bar.css', :media=>'screen' # Выпадающее меню - текущий автор
+    
+    =javascript_include_tag "jq/jquery-1.4.min"
+    =javascript_include_tag "jq/jquery-ui-1.7.2.min"
+    =javascript_include_tag "jq/application"
     -#
       =#stylesheet_link_tag 'basic/main_bar.css', :media=>'screen'
       =#stylesheet_link_tag 'basic/std_form.css', :media=>'screen'
@@ -27,16 +31,17 @@
       =#stylesheet_link_tag 'basic/map.css', :media=>'screen'
       =#stylesheet_link_tag 'basic/admin_map.css', :media=>'screen'
       =#stylesheet_link_tag 'basic/users_listing.css', :media=>'screen'
-      =#stylesheet_link_tag 'basic/paginator', :media=>'screen'
+      =#stylesheet_link_tag 'basic/paginator', :media=>'screen'      
+      =#stylesheet_link_tag 'haml_scaffolds/reset', :media=>'screen'
+      =#stylesheet_link_tag 'haml_scaffolds/style', :media=>'screen'
+      - content_for :js do      
+        =javascript_include_tag "jq/jquery-1.4.min"
+        =javascript_include_tag "jq/jquery-ui-1.7.2.min"
+        =javascript_include_tag "jq/application"
       
-    - content_for :js do      
-      =javascript_include_tag "jq/jquery-1.4.min"
-      =javascript_include_tag "jq/jquery-ui-1.7.2.min"
-      =javascript_include_tag "jq/application"
-      
-      
-    =yield  :js
-    =yield  :css
+    =yield :js
+    =yield :gallery_lightbox
+    =yield :css
 
     - content_for :meta do
       %meta{:name=>"description", :content=>"Ивановский региональный школьный портал"}
@@ -44,8 +49,6 @@
       %meta{:name=>"author", :content=>"killich@yandex.ru, Илья Зыкин"}
       
     - content_for :css do
-      =#stylesheet_link_tag 'haml_scaffolds/reset', :media=>'screen'
-      =#stylesheet_link_tag 'haml_scaffolds/style', :media=>'screen'
       =stylesheet_link_tag 'basic/paginator', :media=>'screen'
       
     - content_for :title do
@@ -118,7 +121,7 @@
               =mail_to 'iv-schools@yandex.ru', image_tag('basic/email.gif'), :encode => 'hex'
               
           .alpha
-            rev. alpha 0.004 22:26 20.12.2009
+            rev. alpha 0.005 12:08 23.01.2010
             %br
             Сайт запущен в режиме тестирования
             %br
@@ -127,15 +130,15 @@
             
             -# Язык интерфейса:
             =# select("local", "lang", {'английский'=>'/?lang=en', 'русский'=>'/?lang=ru'}, {:selected=>"/?lang=#{cookies[:lang]}"}, :onchange=>"top.location.href = this.options[this.selectedIndex].value")
-        -#
-          .analitics{:style=>'display:none;'}
-            <script type="text/javascript">
-            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
-            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
-            </script>
-            <script type="text/javascript">
-            try {
-            var pageTracker = _gat._getTracker("UA-11434472-1");
-            pageTracker._setDomainName(".iv-schools.ru");
-            pageTracker._trackPageview();
-            } catch(err) {}</script>    
+
+        .analitics{:style=>'display:none;'}
+          <script type="text/javascript">
+          var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+          document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+          try {
+          var pageTracker = _gat._getTracker("UA-11434472-1");
+          pageTracker._setDomainName(".iv-schools.ru");
+          pageTracker._trackPageview();
+          } catch(err) {}</script>    
