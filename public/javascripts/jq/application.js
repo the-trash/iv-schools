@@ -18,4 +18,35 @@ function hide_question_form(){
     $('#question_block').hide("blind", { direction: "vertical" }, 500);
     $('#question_shower').delay(500).show("blind", { direction: "vertical" }, 500);
 }
-    
+/*
+    block_id
+    block_id_show_link
+    block_id_hide_link
+*/
+function show_block(id){
+    var id_name = '#' + id;
+    var show_link = id_name + '_show_link';
+    var hide_link = id_name + '_hide_link';
+    $(show_link).hide();
+    $(hide_link).show();
+    $(id_name).show("blind", { direction: "vertical" }, 500);
+}
+function hide_block(id){
+    var id_name = '#' + id;
+    var show_link = id_name + '_show_link';
+    var hide_link = id_name + '_hide_link';
+    $(hide_link).hide();
+    $(show_link).show();
+    $(id_name).hide("blind", { direction: "vertical" }, 500);
+}
+
+function show_version_block(){
+    $('#show_version_link').hide();
+    $('#hide_version_link').show();
+    $('#version').show("blind", { direction: "vertical" }, 500);
+}
+function hide_version_block(){
+    $('#hide_version_link').hide();
+    $('#show_version_link').show();
+    $('#version').hide("blind", { direction: "vertical" }, 500);
+}
