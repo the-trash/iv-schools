@@ -18,7 +18,7 @@ function hide_question_form(){
     $('#question_block').hide("blind", { direction: "vertical" }, 500);
     $('#question_shower').delay(500).show("blind", { direction: "vertical" }, 500);
 }
-/*
+/*  try
     block_id
     block_id_show_link
     block_id_hide_link
