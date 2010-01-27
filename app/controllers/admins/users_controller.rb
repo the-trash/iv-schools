@@ -1,5 +1,4 @@
 class Admins::UsersController < ApplicationController
-  layout 'admin_application.haml'
   
   before_filter :login_required
   
@@ -8,7 +7,7 @@ class Admins::UsersController < ApplicationController
     @users = User.paginate(:all,
                            :order=>"created_at ASC", #ASC, DESC
                            :page => params[:page],
-                           :per_page=>6
+                           :per_page=>3
                            )
                            
     respond_to do |format|

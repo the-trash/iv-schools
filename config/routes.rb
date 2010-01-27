@@ -1,6 +1,9 @@
 ActionController::Routing::Routes.draw do |map|
   map.simple_captcha '/simple_captcha/:action', :controller => 'simple_captcha'
   
+  #map.resources :admins,
+  #  :collection=>{:index=>:get}
+
   map.resources :users,
     :collection=>{:cabinet=>:get, :profile=>:get},
     :member=>{ :base_header=>:put }
@@ -20,8 +23,8 @@ ActionController::Routing::Routes.draw do |map|
     :member=>{ :physic_delete=>:delete }
     
   map.resources :reports
-
   map.resource :session
+  
 
   map.signup '/signup', :controller => 'users', :action => 'new'
   map.login '/login', :controller => 'sessions', :action => 'new'

@@ -1,62 +1,60 @@
-.body
-  -if flash[:notice]
-    .notice
-      = flash[:notice]
+- content_for :css do
+  =stylesheet_link_tag 'admins/style', :media=>'screen'
+  =stylesheet_link_tag 'basic/paginator', :media=>'screen'
 
-  -if flash[:error]
-    .error
-      = flash[:error]
-
-  %h1
-    Список объектов roles
-    = link_to "Весь список", admins_roles_path
-
-  %br
-  = link_to 'Новый объект role', new_admins_role_path
-  %br
-  %br
-  = will_paginate @roles, :class=>:scaffold_pagination, :previous_label=>"&larr;", :next_label=>"&rarr;"
-
-  %table
-    %tr
-      -for role in @roles
-        %td
-          %table.object_card
+- content_for :css do
+  =stylesheet_link_tag 'basic/edit_form.css', :media=>'screen'
+  
+.block
+  %ul
+    %li.system
+      - text= content_tag :span, '&laquo; Назад в личный кабинет', :class=>:bar
+      = link_to text, cabinet_users_url(:subdomain=>current_user.subdomain)
+    %li.system
+      - text= content_tag :span, 'Роли', :class=>:bar
+      = link_to text,  admins_roles_path
+   
+  = will_paginate @roles
+  
+  .body
+    %h1
+      Роли
+    .admins
+      %table.listing
+        %tr
+          %th.id
+            ID
+          %th.login
+            Название
+          %th
+            Редактировать
+        -color= true
+        -for role in @roles
+          - title = role.title.blank? ? 'Нет имени' : role.title
+          -# Строчка с подсветкой
+          -if color
+            -color= !color
             %tr
-              %td.field
-                Управление
+              %td.id
+                =h role.id     
               %td
-                = link_to 'Показать', admins_role_path(role)
-                = link_to 'Редактировать', edit_admins_role_path(role)
-                = link_to 'Удалить', admins_role_path(role), :confirm => 'Вы уверены?', :method => :delete
+                = link_to title, admins_role_path(role)
+              %td
+                = link_to title, edit_admins_role_path(role)
+          -else
+            -color= !color
+            %tr.item
+              %td.id
+                =h role.id     
+              %td
+                = link_to title, admins_role_path(role)
+              %td
+                = link_to title, edit_admins_role_path(role)
 
-            %tr
-              %td.field
-                ID
-              %td 
-                =h role.id
-                                       
-            %tr
-              %td.field
-                Название
-              %td
-                =h role.title
-                                       
-            %tr              
-              %td.field
-                Описание
-              %td
-                .text_field
-                  =(h truncate(role.description.chars, 250, "")).gsub("\n", "<br />")
-                  &hellip;
-                                                                                         
-            %tr
-              %td.field
-                Управление
-              %td
-                = link_to 'Показать', admins_role_path(role)
-                = link_to 'Редактировать', edit_admins_role_path(role)
-                = link_to 'Удалить', admins_role_path(role), :confirm => 'Вы уверены?', :method => :delete
+  %p
+    = will_paginate @roles, :class=>:pagination
 
-  %br
-  = will_paginate @roles, :class=>:scaffold_pagination, :previous_label=>"&larr;", :next_label=>"&rarr;"
+  %ul
+    %li.system
+      - text= content_tag :span, 'Новая Роль', :class=>:bar
+      = link_to text,  new_admins_role_path

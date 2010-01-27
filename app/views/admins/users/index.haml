@@ -3,6 +3,7 @@
   
 - content_for :css do
   =stylesheet_link_tag 'admins/style', :media=>'screen'
+  =stylesheet_link_tag 'basic/paginator', :media=>'screen'
 
 -if flash[:notice]
   .notice
@@ -11,18 +12,17 @@
 -if flash[:error]
   .error
     = flash[:error]
-
-.admins
-  %h1
-    Пользователи
-
-  %p
-    = link_to '&laquo; Назад', "/admins"
-  %p
+      
     =# link_to 'Создать пользователя', new_admins_user_path
     =# link_to 'список пользователей', admins_users_path
     
+.block
+  %ul    
+    %li.system
+      - text= content_tag :span, "Панель управления", :class=>:bar
+      = link_to text, "/admins"
 
+.admins   
   = will_paginate @users, :class=>:pagination, :previous_label=>"&larr;", :next_label=>"&rarr;"
 
   %table.listing

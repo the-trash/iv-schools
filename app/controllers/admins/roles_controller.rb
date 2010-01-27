@@ -6,13 +6,9 @@ class Admins::RolesController < ApplicationController
   Настройки играют главную роль при разграничении действий между поьзователями
   и при рабте с объектами
   С помощью групп настроек реализуется правовой контроль
-  
-  
+    
   # Ключи хешей всегда сохранять как символы!
-
 =end
-
-  layout 'haml_scaffold_layout'
   
   before_filter :login_required
     
@@ -21,7 +17,7 @@ class Admins::RolesController < ApplicationController
     @roles = Role.paginate(:all,
                            :order=>"created_at ASC", #ASC, DESC
                            :page => params[:page],
-                           :per_page=>10
+                           :per_page=>3
                            )
                            
     respond_to do |format|
