@@ -105,3 +105,12 @@ body{
   font-weight:bold;
   line-height:125%;
 }
+/*pagetop_portal_info*/
+.pagetop_portal_info{
+    border:2px solid #EEE;
+    padding:3px;
+    line-height:100%;
+    text-align:right;
+}
+.pagetop_portal_info a{color:#CCC; font-size:8pt;margin-right:20px;}
+.pagetop_portal_info a:hover{color:#2476FF;}

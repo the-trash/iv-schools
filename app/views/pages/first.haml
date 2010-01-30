@@ -12,35 +12,8 @@
       #appreciably_information_hide_link{:style=>'display:none;'}
         =link_to_function 'Скрыть информацию об этой странице', "hide_block('appreciably_information')"
     #appreciably_information{:style=>'display:none;'}
-      - sd= (@user.login == 'portal') ? nil : @user.login
-      - link_to_page = page_url(@page.zip, :subdomain=>sd)
-        
-      -form_tag do
-        %label{:for=>:path}
-          Адрес этой страницы в Интернет:
-        %span
-          = text_field_tag 'path', link_to_page
-          
-        %label{:for=>:created_at}
-          Страница создана:
-        %span
-          = text_field_tag 'created_at', @page.created_at.strftime("%d-%m-%Y")
-          
-        %label{:for=>:updated_at}
-          Страница обновлена:
-        %span
-          = text_field_tag 'updated_at', @page.updated_at.strftime("%d-%m-%Y")
-          
-        %label{:for=>:site_admin}
-          Этот раздел сайта наполняет:
-        %span
-          = text_field_tag 'site_admin', @user.name
-          
-        %label{:for=>:sd}
-          Имя этого раздела в рамках портала:
-        %span
-          = text_field_tag 'sd', @user.login
-          
+      = render :partial => "shared/pages/page_basic_info", :locals => {:user => @user, :page=>@page}
+                
 -if @page
   - content_for :title do
     = "#{@user.login}.iv-schools.ru &raquo; "
