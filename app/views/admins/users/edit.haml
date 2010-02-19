@@ -1,11 +1,17 @@
-.admins
-  %p
-    = link_to 'Управление', "/admins"
-    |
-    = link_to 'список пользователей', admins_users_path
+- content_for :css do
+  =stylesheet_link_tag 'basic/edit_form.css', :media=>'screen'
+  
+.block
+  %ul    
+    %li.system
+      - text= content_tag :span, "Панель управления", :class=>:bar
+      = link_to text, "/admins"
       
+    %li.system
+      - text= content_tag :span, "Пользователи", :class=>:bar
+      = link_to text, admins_users_path
 
-  .std_form
+  .edit_form
     %h3
       Редактирование пользователя
     %p

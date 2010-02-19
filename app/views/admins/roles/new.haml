@@ -1,40 +1,19 @@
+- content_for :css do
+  =stylesheet_link_tag 'basic/edit_form.css', :media=>'screen'
+  
+.block
+  %ul
+    %li.system
+      - text= content_tag :span, '&laquo; Назад в личный кабинет', :class=>:bar
+      = link_to text, cabinet_users_url(:subdomain=>current_user.subdomain)
+    %li.system
+      - text= content_tag :span, 'Роли', :class=>:bar
+      = link_to text,  admins_roles_path
 
-.body
-  %h1
-    Новый объект role
+  = object_errors(@role)
 
-  %table
-    %tr
-      %td
-        -form_for(@role, :url => admins_roles_path) do |f|
-          = f.error_messages
-          %table.object_card
-            
-            %tr
-              %td.field
-                Имя (En)
-              %td
-                %span
-                  = f.text_field :name, :class=>:scaffold_field                
-
-            %tr
-              %td.field
-                Название
-              %td
-                %span
-                  = f.text_field :title, :class=>:scaffold_field
-            
-            %tr
-              %td.field
-                Описание
-              %td
-                                  
-                .editable_text_field
-                  %span
-                    = f.text_area :description, :class=>:scaffold_textarea                                                                         
-            %tr
-              %td.field
-                Управление
-              %td
-                = f.submit "Создать"
-                = link_to 'Полный список', admins_roles_path
+.edit_form.overblock
+  %h5
+    Создать Роль
+  -form_for(@role, :url => admins_roles_path) do |f|
+    =render :partial => 'form', :locals => {:f => f, :button=>'Создать'}

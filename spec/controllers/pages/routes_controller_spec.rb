@@ -15,11 +15,6 @@ describe PagesController do
     
     pages_path(:subdomain=>'petrov').should == 'http://petrov.test.host/pages'
     pages_url(:subdomain=>'petrov').should  == 'http://petrov.test.host/pages'
-
-    #user_pages_url(:user_id=>'petrov').should                       == 'http://test.host/users/petrov/pages'
-    #user_pages_path(:user_id=>'petrov').should                      == '/users/petrov/pages'
-    #user_pages_path(:subdomain=>'petrov', :user_id=>'admin').should == 'http://petrov.test.host/users/admin/pages'
-    #user_pages_url(:subdomain=>'petrov', :user_id=>'admin').should  == 'http://petrov.test.host/users/admin/pages'
   end
   
   # Если не указано никаких других параметров
@@ -31,6 +26,10 @@ describe PagesController do
   end
   
 =begin
+  #user_pages_url(:user_id=>'petrov').should                       == 'http://test.host/users/petrov/pages'
+  #user_pages_path(:user_id=>'petrov').should                      == '/users/petrov/pages'
+  #user_pages_path(:subdomain=>'petrov', :user_id=>'admin').should == 'http://petrov.test.host/users/admin/pages'
+  #user_pages_url(:subdomain=>'petrov', :user_id=>'admin').should  == 'http://petrov.test.host/users/admin/pages'
 
   #route_for(:controller => 'pages', :action => 'index').should          == '/pages/'
   #route_for(:controller => 'pages', :action => 'show', :id=>'1').should == '/pages/show/1'

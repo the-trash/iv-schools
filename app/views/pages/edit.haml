@@ -15,15 +15,6 @@
 -# javascript_tag :defer => 'defer' do =render :partial => "shared/editor/js"
 
 = object_errors(@page)
-
-.block
-  %ul
-    %li.system
-      - text= content_tag :span, '&laquo; Назад в личный кабинет', :class=>:bar
-      = link_to text, cabinet_users_url(:subdomain=>current_user.subdomain)
-    %li.system
-      - text= content_tag :span, '&laquo; К дереву страниц', :class=>:bar
-      = link_to text,  manager_pages_path(:subdomain=>@user.subdomain)
       
 .edit_form.overblock
   %h5
@@ -32,46 +23,4 @@
     = @page.title
 
   -form_for( :page, :url=>page_path, :html=>{:method=>:put} ) do |f|
-    %label{:for=>:title}
-      Заголовок страницы
-    %span
-      = f.text_field :title, :class=>:input
-
-    %label{:for=>:author}
-      Автор страницы
-    %span
-      = f.text_field :author, :class=>:input
-      
-    %label{:for=>:keywords}
-      Ключевые слова
-    %span
-      = f.text_field :keywords, :class=>:input
-
-    %label{:for=>:description}
-      Краткое описание
-    %span
-      = f.text_field :description, :class=>:input
-      
-    %label{:for=>:copyright}
-      Авторское право
-    %span
-      = f.text_field :copyright, :class=>:input
-
-    %label{:for=>:annotation}
-      Аннотация страницы (о чем рассказывает страница)
-    %span
-      = f.text_area :annotation, :class=>:textarea_small
-
-
-    %label{:for=>:marks}
-      Вставка HTML разметки
-    %br
-    %center
-      =render :partial => "shared/editor/buttons"
-    %br                
-    %label{:for=>:content}
-      Содержимое страницы
-    %span
-      = f.text_area :content, :class=>:textarea_mid 
- 	
-    = submit_tag 'Обновить', :class=>:submit
+    =render :partial => 'form', :locals => {:f => f, :button=>'Обновить страницу'}

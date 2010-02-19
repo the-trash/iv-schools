@@ -8,6 +8,16 @@
       =yield :title
     =yield :meta
 
+    -# Если это администратор, то вывести на экран
+    -# Меню со всеми функциями
+    -# -------------------------------------------------------------------------
+    -# if logged_in?
+    -# content_for :css do      
+    -# content_for :all_function_bar do 
+    =# render :partial => "shared/all_function_bar"
+    -#if current_user.has_role_policy?(:administrator , :all)
+    -# -------------------------------------------------------------------------
+                
     =stylesheet_link_tag 'basic/reset.css', :media=>'screen'              # Сборос
     =stylesheet_link_tag 'basic/headers.css', :media=>'screen'            # Заголовки
     =stylesheet_link_tag 'basic/style.css', :media=>'screen'              # Базовые стили
@@ -18,47 +28,21 @@
     =stylesheet_link_tag 'basic/system_navigation.css', :media=>'screen'  # Верхнее меню
     =stylesheet_link_tag 'basic/content.css', :media=>'screen'            # Оформление сожержимого страниц
     =stylesheet_link_tag 'basic/footer.css', :media=>'screen'             # Ножки сайта
-    =stylesheet_link_tag 'basic/current_editor_bar.css', :media=>'screen' # Выпадающее меню - текущий автор
+    =stylesheet_link_tag 'basic/site_map_block.css', :media=>'screen'
+    =stylesheet_link_tag 'basic/menu_tree.css', :media=>'screen'
+    
     
     =javascript_include_tag "jq/jquery-1.4.min"
     =javascript_include_tag "jq/jquery-ui-1.7.2.min"
     =javascript_include_tag "jq/application"
-    -#
-      =#stylesheet_link_tag 'basic/main_bar.css', :media=>'screen'
-      =#stylesheet_link_tag 'basic/std_form.css', :media=>'screen'
-      =#stylesheet_link_tag 'basic/edit_form.css', :media=>'screen'
-      =#stylesheet_link_tag 'basic/comment.css', :media=>'screen'
-      =#stylesheet_link_tag 'basic/map.css', :media=>'screen'
-      =#stylesheet_link_tag 'basic/admin_map.css', :media=>'screen'
-      =#stylesheet_link_tag 'basic/users_listing.css', :media=>'screen'
-      =#stylesheet_link_tag 'basic/paginator', :media=>'screen'      
-      =#stylesheet_link_tag 'haml_scaffolds/reset', :media=>'screen'
-      =#stylesheet_link_tag 'haml_scaffolds/style', :media=>'screen'
-      - content_for :js do      
-        =javascript_include_tag "jq/jquery-1.4.min"
-        =javascript_include_tag "jq/jquery-ui-1.7.2.min"
-        =javascript_include_tag "jq/application"
       
     =yield :js
     =yield :gallery_lightbox
     =yield :css
 
-    - content_for :meta do
-      %meta{:name=>"description", :content=>"Ивановский региональный школьный портал"}
-      %meta{:name=>"keywords", :content=>"Ивановский региональный школьный портал"}
-      %meta{:name=>"author", :content=>"killich@yandex.ru, Илья Зыкин"}
-      
-    - content_for :css do
-      =stylesheet_link_tag 'basic/paginator', :media=>'screen'
-      
-    - content_for :title do
-      Иваново, Школьный портал
   %body
     .body
-      -#if logged_in?
-      -# =render :partial => 'shared/main_bar_logined'
-      -#-else
-      -# =render :partial => 'shared/main_bar'
+      = render :partial => 'shared/pagetop_portal_info'
       = render :partial => 'shared/message'
       =image_tag @user.base_header.url, :alt=>"iv-schools.ru"
 
@@ -66,21 +50,22 @@
         - if @subdomain == 'portal' || @subdomain.nil?
           = link_to "Ивановский школьный портал iv-schools.ru", root_path
         - else
-          = link_to @subdomain.to_s + ".iv-schools.ru", root_path(:subdomain=>@subdomain)
+          = link_to @user.subdomain + ".iv-schools.ru", root_path(:subdomain=>@subdomain)
 
       %ul.system_navigation
         %li
-          =link_to image_tag('star.png'), root_url(:subdomain=>false)
-          =link_to 'iv-schools.ru', root_url(:subdomain=>false)
+          - if @subdomain == 'portal' || @subdomain.nil?
+            = link_to "iv-schools.ru", root_path
+          - else
+            = link_to @user.subdomain + ".iv-schools.ru", root_path(:subdomain=>@subdomain)
         %li
           =link_to t('site_map'), pages_path(:subdomain=>@user.subdomain)
+        
         - if logged_in?
           %li
             =link_to t('cabinet'), cabinet_users_url(:subdomain=>current_user.subdomain), :style=>'color:green;'
         %li
           =link_to t('questions'), url_for(:controller=>:questions)
-        %li
-          =link_to t('users'), users_path
         %li
           - if logged_in?
             =link_to t('exit'), logout_url(:subdomain=>@user.subdomain)
@@ -93,15 +78,24 @@
             =link_to t('albums'), url_for(:controller=>:albums)
           %li
             =link_to t('documents'), url_for(:controller=>:documents)
+          %li
+            =link_to 'iv36.iv-schools.ru', users_path
+          %li
+            =link_to 'Карта сайта', users_path
+          %li
+            =link_to 'Новости', users_path
+          %li
+            =link_to 'Документы', users_path
+          %li
+            =link_to 'Обратная связь', users_path            
 
-            
       %table.main
         %tbody
           %tr
             %td.navigation
-              = render :partial => "shared/current_editor_bar" unless (controller_name == 'users' && action_name == 'index')
-              =# yield(:current_editor) unless yield(:current_editor).blank?
               = yield(:navigation_menu) unless yield(:navigation_menu).blank?
+              =# render :partial => "shared/some_partions_exemple" unless (controller_name == 'users' && action_name == 'index')
+              =# yield :all_function_bar
               
             %td.content
               .block
@@ -139,15 +133,5 @@
             
             -# Язык интерфейса:
             =# select("local", "lang", {'английский'=>'/?lang=en', 'русский'=>'/?lang=ru'}, {:selected=>"/?lang=#{cookies[:lang]}"}, :onchange=>"top.location.href = this.options[this.selectedIndex].value")
-
-        .analitics{:style=>'display:none;'}
-          <script type="text/javascript">
-          var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
-          document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
-          </script>
-          <script type="text/javascript">
-          try {
-          var pageTracker = _gat._getTracker("UA-11434472-1");
-          pageTracker._setDomainName(".iv-schools.ru");
-          pageTracker._trackPageview();
-          } catch(err) {}</script>  
+          
+          =render :partial => "shared/layouts/analitics"     

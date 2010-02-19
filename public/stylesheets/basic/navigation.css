@@ -1,3 +1,4 @@
+/*
 .navigation a{
   font-size:9pt;
   color:#A2B3D3;
@@ -11,9 +12,10 @@
  zoom:1;
 }
 .navigation li.parent{
-  padding-bottom:20px;
-  background:transparent url(/images/basic/pointer.jpg) no-repeat scroll 50% 100%;
+  padding-bottom:10px;
+  background:transparent url(/images/basic/pointer.jpg) no-repeat scroll 50% 95%;
 }
 .navigation li.parent.parent.current.last{
   background-image:none;
 }
+*/

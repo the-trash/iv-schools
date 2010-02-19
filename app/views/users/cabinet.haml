@@ -20,7 +20,6 @@
         - text= content_tag :span, t('report.manage'), :class=>:bar
         = link_to text, reports_path(:subdomain=>@user.subdomain)
     
-    
     %li
       - text= content_tag :span, t('my_files'), :class=>:bar
       = link_to text, storage_sections_url(:subdomain=>@user.subdomain)
@@ -38,8 +37,9 @@
       -# Если есть ролевой доступ к администрированию пользователей
       - if current_user.has_role_policy?(:administrator, :users)
         %li.system
-          - text= content_tag :span, "Пользователи", :class=>:bar
-          = link_to text, admins_users_path
+          - text= content_tag :span, "Панель управления", :class=>:bar
+          = link_to text, '/admins'
+          
           
       -# Если есть ролевой доступ к администрированию ролей
       - if current_user.has_role_policy?(:administrator, :roles)
