@@ -1,8 +1,4 @@
-- content_for :navigation_menu do
-  =render :partial => 'site_map_navigation'
-  
-- content_for :current_editor do
-  = render :partial => "shared/current_editor_bar"
+=render :partial => 'site_map_navigation', :locals=>{:navigation_menu=>@navigation_menu}
 
 - content_for :page_information do
   .appreciably_information_block

@@ -19,7 +19,7 @@ describe PagesController do
       @administrator_role=       Factory.create(:administrator_role)
       
       # Имеет доступ к edit страниц всех пользователей
-      @admin= Factory.create(:empty_user, :login=>'1111page_administrator', :email=>'1111page_administrator@email.com')
+      @admin= Factory.create(:empty_user, :login=>'admin', :email=>'admin@email.com')
       @admin.update_role(@administrator_role)
       @admin_page= Factory.create(:test_page, :user_id=>@admin.id, :zip=>create_zip_for_page)
       
@@ -41,6 +41,10 @@ describe PagesController do
       @registrated_user= Factory.create(:empty_user, :login=>'registrated_user', :email=>'registrated_user@email.com')
       @registrated_user.update_role(@registrated_user_role)    
     end
+    
+    after(:all) do
+      User.destroy_all
+    end
 
     # У пользователей те роли, которые требуются
     it "18:24 23.07.2009" do
@@ -61,19 +65,17 @@ describe PagesController do
     end
     
     # pages::edit routing    
-    it "18:24 23.07.2009" do
+    it "11:09 31.01.2010" do
       edit_page_path(:id=>1).should == '/pages/1/edit'
       edit_page_url(:id=>1).should == 'http://test.host/pages/1/edit'
+      
+      edit_page_path(:subdomain=>@admin.login, :id=>1).should == 'http://admin.test.host/pages/1/edit'
+      edit_page_url(:subdomain=>@admin.login, :id=>1).should == 'http://admin.test.host/pages/1/edit'
+
       edit_page_path(:subdomain=>@admin.login, :id=>1).should == 'http://admin.test.host/pages/1/edit'
       edit_page_url(:subdomain=>@admin.login, :id=>1).should == 'http://admin.test.host/pages/1/edit'
       
-      #edit_user_page_path(:user_id=>@admin.login, :id=>1).should == '/users/admin/pages/1/edit'
-      #edit_user_page_url( :user_id=>@admin.login, :id=>1).should == 'http://test.host/users/admin/pages/1/edit'
-      edit_user_page_path(:subdomain=>@admin.login, :user_id=>@admin.login, :id=>1).should == 'http://admin.test.host/users/admin/pages/1/edit'
-      edit_user_page_url( :subdomain=>@admin.login, :user_id=>@admin.login, :id=>1).should == 'http://admin.test.host/users/admin/pages/1/edit'
-      
       params_from(:get, '/pages/1/edit').should == {:controller => 'pages', :action => 'edit', :id=>'1'}
-      params_from(:get, '/users/admin/pages/1/edit').should == {:controller => 'pages', :action => 'edit', :user_id=>'admin', :id=>'1'}
     end
 
 #---------------------------------------------------------------
@@ -90,7 +92,7 @@ describe PagesController do
       # de facto: get 'http://admin.test.host/pages/:id/edit'
       get :edit, :id=>@admin_page.zip
       
-      assigns[:user].should eql(@admin)
+      assigns[:user].should == @admin
       response.should render_template("pages/edit.haml")
       response.should be_success
     end
@@ -136,7 +138,9 @@ describe PagesController do
       assigns[:user].should eql(@site_administrator)
       response.should render_template("pages/edit.haml")
       response.should be_success
-      
+    end
+    
+    it "11:42 31.01.2010" do
       # А вот сам администратор сайта зайти в edit страницы администратора портала не может
       # current_user= @site_administrator
       # @user= @admin
@@ -145,13 +149,26 @@ describe PagesController do
       
       # de facto: get 'http://admin.test.host/pages/:id/edit'
       get :edit, :id=>@admin_page.zip
-      
-      assigns[:current_user].should eql(@site_administrator)
-      assigns[:user].should eql(@admin)
+=begin
+      p '---------------------------------- 1'
+      p controller.send(:current_subdomain)      
+      p '---------------------------------- 1'
+      p controller.send(:current_user)
+      p '---------------------------------- 2'
+      p assigns[:subdomain]
+      p '---------------------------------- 3'
+      p assigns[:user]
+      p '---------------------------------- 4'
+      p @site_administrator
+      p '---------------------------------- 5'
+      p @admin
+=end
+      controller.send(:current_user).should == @site_administrator
+      assigns[:user].should == @admin
       response.should_not be_success
       response.should be_redirect
-      #response.should_not be_success
-      #response.should redirect_to(new_session_path)  
+      response.should_not be_success
+      response.should redirect_to(new_session_path)  
     end
     
     # Администратор заходит редактировать страницу которой не существует
@@ -212,4 +229,5 @@ describe PagesController do
     # На данный момент я предполагаю, что все функционирует верно
     # Начинаю работу по запуску прототипа
     # 20:09 02.08.2009
+    
 end

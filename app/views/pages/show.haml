@@ -1,5 +1,5 @@
-- content_for :navigation_menu do
-  =render :partial => 'site_map_navigation'
+=render :partial => 'site_map_navigation', :locals=>{:navigation_menu=>@navigation_menu}
+
 - content_for :page_information do
   .appreciably_information_block
     .links
@@ -9,9 +9,7 @@
         =link_to_function 'Скрыть информацию об этой странице', "hide_block('appreciably_information')"
     #appreciably_information{:style=>'display:none;'}
       = render :partial => "shared/pages/page_basic_info", :locals => {:user => @user, :page=>@page}
-  
-- content_for :current_editor do
-  = render :partial => "shared/current_editor_bar"     
+
 -if @page
   - content_for :title do
     = "#{@user.login}.iv-schools.ru &raquo; "

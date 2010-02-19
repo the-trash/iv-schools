@@ -64,7 +64,7 @@ class User < ActiveRecord::Base
                             :in => 5.kilobytes..200.kilobytes,
                             :message=>I18n.translate('paperclip.avatar.errors.size')
   #----------------------------------------------------------------------------------------------
-  validates_uniqueness_of   :login, :case_sensitive => false
+  validates_uniqueness_of   :login, :case_sensitive => false, :message=>'Вероятно, что имя пользователя недопустимо.'
   validates_uniqueness_of   :email, :case_sensitive => false
   validates_presence_of     :login, :email
   
@@ -94,6 +94,12 @@ class User < ActiveRecord::Base
   #----------------------------------------------------------------------------------------------
   before_save :encrypt_password
   before_save :fields_downcase
+  
+  # Адрес сайта пользователя
+  def site_name
+    return "iv-schools.ru" if login == 'portal'
+    login + ".iv-schools.ru"
+  end
 
 #----------------------------------------------------------------------------
 # Стандартные определения

@@ -11,8 +11,8 @@ class PagesController < ApplicationController
   before_filter :page_resourсe_access_required,         :only=>   [:edit, :update, :destroy, :up, :down]
   before_filter :fix_url_by_redirect,                   :only=>   [:show]
   before_filter :navigation_menu_init,                  :except=> [:show, :edustat, :first]
+  before_filter :navigation_menu,                       :only=> [:first, :show]
   
-
   # Карта сайта
   # Выбрать дерево страниц, только те поля, которые учавствуют отображении
   def index
@@ -39,6 +39,11 @@ class PagesController < ApplicationController
   end
   
   def new
+    #render :text=>request.subdomains and return
+    #remote_ip() 
+    #remote_addr()
+    #request.referer
+
     @parent= nil
     @parent= Page.find_by_zip(params[:parent_id]) if params[:parent_id]
     @page= Page.new
@@ -133,6 +138,10 @@ class PagesController < ApplicationController
   def fix_url_by_redirect
     return true if @user.is_owner_of?(@page)
     redirect_to page_url(@page.zip, :subdomain=>@page.user.subdomain)
+  end
+  
+  def navigation_menu
+    @navigation_menu= Page.find_all_by_user_id(@user.id, :select=>'id, title, zip, parent_id', :order=>"lft ASC")
   end
   
   def access_to_controller_action_required

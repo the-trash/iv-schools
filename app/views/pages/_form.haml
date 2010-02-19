@@ -1,0 +1,47 @@
+%fieldset
+  %label{:for=>:page_title}
+    Заголовок страницы
+  %span
+    = f.text_field :title, :class=>:input
+
+  %label{:for=>:page_author}
+    Автор страницы
+  %span
+    = f.text_field :author, :class=>:input
+    
+  %label{:for=>:page_keywords}
+    Ключевые слова
+  %span
+    = f.text_field :keywords, :class=>:input
+
+  %label{:for=>:page_description}
+    Краткое описание
+  %span
+    = f.text_field :description, :class=>:input
+    
+  %label{:for=>:page_copyright}
+    Авторское право
+  %span
+    = f.text_field :copyright, :class=>:input
+
+  %label{:for=>:page_annotation}
+    Аннотация страницы (о чем рассказывает страница)
+  %span
+    = f.text_area :annotation, :class=>:textarea_small
+
+
+  %h5
+    Вставка HTML разметки
+  %br
+  %div{:style=>'text-align:center;'}
+    =render :partial => "shared/editor/buttons"
+  %br                
+  
+  %h5
+    Содержимое страницы
+  %span
+    = f.text_area :content, :class=>:textarea_mid 
+  = submit_tag button, :class=>:submit
+  
+  =# submit_tag 'Обновить', :class=>:submit
+

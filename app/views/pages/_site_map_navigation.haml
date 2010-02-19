@@ -1,22 +1,9 @@
-.block        
-  %ul 
-    %li{:class=>"parent"}
-      - text= content_tag :span, "Карта сайта", :class=>:bar
-      = link_to text, pages_path(:subdomain=>@page_subdomain)
-    -if @parents
-      - @parents.each do |parent|
-        -# Проверяет по id текущая ли это страница - к ней применяется css стиль current
-        -# Если текущая - проверяется есть ли у элемента дочки, если нет - добавляет ему класс last
-        - current= (parent.id == @page.id) ? "current #{'last' if @siblings.empty?}" : ''
-        %li{:class=>"parent #{current}"}
-          - text= content_tag :span, parent.title, :class=>:bar
-          = link_to text, page_path(parent.zip, :subdomain=>@page_subdomain)
-          
-        -if parent.id == @page.id
-          -# Фактически вложенные элементы
-          - @siblings.each do |elem|
-            %li
-              - text= content_tag :span, elem.title, :class=>:bar
-              = link_to text, page_path(elem.zip, :subdomain=>@page_subdomain)
-
-    -# %li.system
+- content_for :navigation_menu do
+  .block
+    :ruby
+      localize={
+        :id_of_element=>'код страницы: '
+      }
+    %ul.menu_tree
+      =ans_show_tree(navigation_menu, :idname=>:zip, :localize=>localize)
+    

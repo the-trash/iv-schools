@@ -1,6 +1,7 @@
 #site_map_block{
     padding:3px;
     border:5px solid #CBA135;
+    margin-bottom:15px;
 }
 #site_map_block a{
     color:#2476FF;

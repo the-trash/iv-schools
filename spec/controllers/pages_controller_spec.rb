@@ -73,7 +73,7 @@ describe PagesController do
         @action = :index
         @params = {}
 
-        send @method, @action, @params
+        send @method, @action, @params  
               
         # Ожидаемые результаты
         assigns[:pages_tree].should have(pages_count).items
