@@ -56,7 +56,7 @@
         %li
           - if @subdomain == 'portal' || @subdomain.nil?
             = link_to "iv-schools.ru", root_path
-          - else
+          -#else
             = link_to @user.subdomain + ".iv-schools.ru", root_path(:subdomain=>@subdomain)
         %li
           =link_to t('site_map'), pages_path(:subdomain=>@user.subdomain)
@@ -66,6 +66,8 @@
             =link_to t('cabinet'), cabinet_users_url(:subdomain=>current_user.subdomain), :style=>'color:green;'
         %li
           =link_to t('questions'), url_for(:controller=>:questions)
+        %li
+          =link_to t('updates'), url_for(:controller=>:updates)
         %li
           - if logged_in?
             =link_to t('exit'), logout_url(:subdomain=>@user.subdomain)

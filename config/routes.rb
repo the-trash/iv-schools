@@ -14,6 +14,8 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :pages,
     :collection=>{ :map=>:get, :manager=>:get },
     :member=>{ :up=>:get, :down=>:get }
+    
+  map.resources :updates
 
   map.resources :storage_sections
   map.resources :storage_files

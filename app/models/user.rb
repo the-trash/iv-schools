@@ -11,6 +11,7 @@ class User < ActiveRecord::Base
   has_many    :pages                        # У пользователя много страниц
   has_many    :reports                      # У пользователя много новостей (репортажей)
   has_many    :questions                    # У пользователя много вопросов
+  has_many    :update_events                # У пользователя много событий об обновлениях
   
   def new_questions
     self.questions.select {|q| q.state == "new_question"}
@@ -109,6 +110,7 @@ class User < ActiveRecord::Base
   # anything else you want your user to change should be added here.
   attr_accessible :login, :email, :password, :password_confirmation
   attr_accessible :avatar, :avatar_file_name, :avatar_content_type, :avatar_file_size, :avatar_updated_at
+  attr_accessible :update_event
   
   # Перевести в нижний регистр логин и email
   def subdomain
