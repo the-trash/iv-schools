@@ -50,3 +50,13 @@ function hide_version_block(){
     $('#show_version_link').show();
     $('#version').hide("blind", { direction: "vertical" }, 500);
 }
+function show_anti_msie_declaration(){
+  $('#anti_msie_declaration').show("blind", { direction: "vertical" }, 1000);
+}
+function anti_msie_declaration_close(){
+  $('#anti_msie_declaration').hide("blind", { direction: "vertical" }, 1000);
+}
+function browser_select(){
+  $('#anti_msie_declaration_txt').hide("blind", { direction: "vertical" }, 500);
+  $('#browser_select').delay(500).show("blind", { direction: "vertical" }, 500);
+}

@@ -32,15 +32,16 @@
     =stylesheet_link_tag 'basic/menu_tree.css', :media=>'screen'
     
     
-    =javascript_include_tag "jq/jquery-1.4.min"
+    =javascript_include_tag "jq/jquery-1.4.2.min"
     =javascript_include_tag "jq/jquery-ui-1.7.2.min"
     =javascript_include_tag "jq/application"
       
     =yield :js
     =yield :gallery_lightbox
     =yield :css
-
   %body
+    =render :partial => "shared/anti_msie6.haml"
+    
     .body
       = render :partial => 'shared/pagetop_portal_info'
       = render :partial => 'shared/message'
@@ -105,7 +106,7 @@
                 =yield
       
       =yield :page_information
-              
+    
       .footer
         .block
           .portal
@@ -118,7 +119,7 @@
               
           .alpha.overblock
             %span{:class=>'ml100'}
-              версия: 0.007 от 11:00 22.02.2010
+              версия: 0.008 от 21:00 22.02.2010
             %span#show_version_link
               =link_to_function 'Узнать больше или сообщить об ошибке на сайте', 'show_version_block()', :class=>:version_block
             %span#hide_version_link{:style=>'display:none;'}
@@ -135,5 +136,10 @@
             
             -# Язык интерфейса:
             =# select("local", "lang", {'английский'=>'/?lang=en', 'русский'=>'/?lang=ru'}, {:selected=>"/?lang=#{cookies[:lang]}"}, :onchange=>"top.location.href = this.options[this.selectedIndex].value")
-          
-          =render :partial => "shared/layouts/analitics"     
+          -javascript_tag do
+            jQuery(document).ready(function($){
+            if (jQuery.browser.msie && (jQuery.browser.version == 6)){
+            show_anti_msie_declaration();
+            }
+            });
+          =render :partial => "shared/layouts/analitics"
