@@ -15,13 +15,15 @@
 
 %table.time_list
   %tbody
-  %tr
-    %th Описание
-    %th Объект
-    %th Событие
-    %th Время
+    %tr
+      %th Описание
+      %th Объект
+      %th Событие
+      %th Время
+    - odd_even = 1
     -for upevt in @update_events
-      %tr
+      - odd_even += 1
+      %tr{:class=>"#{(odd_even & 1 == 0) ? 'even' : 'odd'}"}
         %td.name
           -if upevt.event_object_zip.blank?
             =link_to upevt.event_object_title, '#'
@@ -50,7 +52,10 @@
             -else
               = 'Не определено'
         %td
-          =upevt.created_at.strftime("%H:%M %d-%m-%Y")
-          
+          %span.nobr
+            =upevt.created_at.strftime("%H:%M")
+          %span.nobr
+            =upevt.created_at.strftime("%d-%m-%Y")
+        
 
 = will_paginate @update_events

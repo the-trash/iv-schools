@@ -113,3 +113,75 @@ body{
 }
 .pagetop_portal_info a{color:#CCC; font-size:8pt;margin-right:20px;}
 .pagetop_portal_info a:hover{color:#2476FF;}
+
+/* anti_msie_declaration FIXED PATCH */
+#anti_msie_declaration { position: absolute; left: 20%; top: 20%;  }
+div#anti_msie_declaration {
+	border: 25px solid #F60D23;
+	background: transparent;
+	background: #FFCF7A;
+	display:block;
+	z-index: 1000;
+	width: 700px;
+  height: 470px;
+	color: #000;
+  /*
+  -top: expression( ((document.documentElement.clientHeight/10)*2)+(ignoreMe = document.documentElement.scrollTop) + 'px' );
+  filter:alpha(opacity=80);
+  -moz-opacity: 0.8;
+  -khtml-opacity: 0.8;
+  opacity: 0.8;
+  */
+}
+body > div#anti_msie_declaration { position: fixed; top: 20%; left: 20%; }
+#anti_msie_declaration iframe{
+	position:absolute;
+	top:0;
+	left:0;
+	z-index:-1;
+	filter:mask();
+	width: 700px;
+  height: 470px;
+}
+#anti_msie_declaration .block{
+  position:absolute;
+  top:20px;
+  left:25px;
+	width:630px;
+	height:420px;
+  background: #FFF;
+  padding:10px 10px 0 10px;
+  background:#FFF url(/images/basic/msie6.jpg) no-repeat scroll right bottom;
+}
+#anti_msie_declaration ul li{
+  margin-bottom:10px;
+}
+#anti_msie_declaration ul li a{
+  text-decoration:none;
+  border-bottom:1px dotted #2476FF;
+}
+#anti_msie_declaration ul li a:hover{
+  text-decoration:none;
+  border-bottom:1px solid #2476FF;
+}
+#browser_select{
+ position:absolute;
+  top:20px;
+  left:25px;
+	width:630px;
+	height:420px;
+  background: #FFF;
+  padding:10px 10px 0 10px;
+}
+#browser_select table tr td{
+  vertical-align:middle;
+  padding-left:5px;
+}
+#browser_select .reccom{
+  font-size:8pt; color:#2A0EA6;
+}
+#browser_select .noreccom{
+  font-size:8pt; color:#F00;
+}
+/* FIXED PATCH */
+/* anti_msie_declaration FIXED PATCH */

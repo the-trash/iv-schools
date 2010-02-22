@@ -5,8 +5,9 @@
 }
 .time_list th, .time_list td{
   padding:10px;
-  vertical-align:middle;
+  vertical-align:top;
   border-bottom:1px solid #CCC;
+  line-height:150%;
 }
 .time_list th{ font-weight:bold; }
 .time_list .name p{
@@ -16,5 +17,8 @@
   overflow:hidden;
   white-space:nowrap;
 }
-.time_list .item{ background:#F9F9F9; }
+.time_list tr.even{
+  background:#F1F1F1;
+}
+.time_list .item{ background:#F9F9F9;}
 /*time_list*/

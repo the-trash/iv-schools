@@ -82,10 +82,11 @@ class PagesController < ApplicationController
   # PUT /pages/2343-5674-3345
   def update
     respond_to do |format|
+      last_update= @page.updated_at # Когда был обновлен объект в последний раз
+
       if @page.update_attributes(params[:page])
-      
-        # СОБЫТИЕ ДЛЯ СТАТИСТИКИ ОБНОВЛЕНИЙ
-        if (@page.updated_at + 1.minutes > Time.now)
+        # СОБЫТИЕ ДЛЯ СТАТИСТИКИ ОБНОВЛЕНИЙ          
+        if ((last_update + 5.minutes).to_datetime < DateTime.now)
           updevt = @user.update_events.new(:event_object=>@page,
                                            :event_object_zip=>@page.zip,
                                            :event_object_title=>@page.title,
@@ -94,7 +95,7 @@ class PagesController < ApplicationController
           updevt.save!
         end
         #~СОБЫТИЕ ДЛЯ СТАТИСТИКИ ОБНОВЛЕНИЙ
-      
+        
         flash[:notice] = t('page.updated')
         format.html { redirect_back_or(manager_pages_path(:subdomain=>@subdomain)) }
       else
