@@ -57,6 +57,16 @@ class PagesController < ApplicationController
     respond_to do |format|
       if @page.save
         @page.move_to_child_of(@parent) if @parent
+        
+        # СОБЫТИЕ ДЛЯ СТАТИСТИКИ ОБНОВЛЕНИЙ
+        updevt = @user.update_events.new(:event_object=>@page,
+                                         :event_object_zip=>@page.zip,
+                                         :event_object_title=>@page.title,
+                                         :event_type=>'page_create'
+                                        )
+        updevt.save! if updevt.valid?
+        #~СОБЫТИЕ ДЛЯ СТАТИСТИКИ ОБНОВЛЕНИЙ
+        
         flash[:notice] = t('page.created')
         format.html { redirect_to(edit_page_path(@page.zip)) }
       else
@@ -73,6 +83,18 @@ class PagesController < ApplicationController
   def update
     respond_to do |format|
       if @page.update_attributes(params[:page])
+      
+        # СОБЫТИЕ ДЛЯ СТАТИСТИКИ ОБНОВЛЕНИЙ
+        if (@page.updated_at + 1.minutes > Time.now)
+          updevt = @user.update_events.new(:event_object=>@page,
+                                           :event_object_zip=>@page.zip,
+                                           :event_object_title=>@page.title,
+                                           :event_type=>'page_update'
+                                          )
+          updevt.save!
+        end
+        #~СОБЫТИЕ ДЛЯ СТАТИСТИКИ ОБНОВЛЕНИЙ
+      
         flash[:notice] = t('page.updated')
         format.html { redirect_back_or(manager_pages_path(:subdomain=>@subdomain)) }
       else
@@ -104,6 +126,14 @@ class PagesController < ApplicationController
 
   def destroy
     if @page.children.count.zero?
+      # СОБЫТИЕ ДЛЯ СТАТИСТИКИ ОБНОВЛЕНИЙ
+      updevt = @user.update_events.new(:event_object=>@page,
+                                       :event_object_title=>@page.title,
+                                       :event_type=>'page_destroy'
+                                      )
+      updevt.save! if updevt.valid?
+      #~СОБЫТИЕ ДЛЯ СТАТИСТИКИ ОБНОВЛЕНИЙ
+        
       @page.destroy
       flash[:notice]= t('page.deleted')
     else
