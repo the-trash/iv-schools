@@ -110,9 +110,29 @@ body{
     padding:3px;
     line-height:100%;
     text-align:right;
+    overflow:hidden;
+    zoom:1;
 }
 .pagetop_portal_info a{color:#CCC; font-size:8pt;margin-right:20px;}
 .pagetop_portal_info a:hover{color:#2476FF;}
+.pagetop_portal_info a:hover{color:#2476FF;}
+
+.pagetop_portal_info .google_search{
+  float:right;
+  overflow:hidden;
+  zoom:1;
+  width:35%;
+}
+.pagetop_portal_info .basic_links{
+  width:49%;
+  float:left;
+  overflow:hidden;
+  zoom:1;
+  line-height:150%;
+  margin-top:6px;
+  margin-left:10px;
+  text-align:left;
+}
 
 /* anti_msie_declaration FIXED PATCH */
 #anti_msie_declaration { position: absolute; left: 20%; top: 20%;  }
