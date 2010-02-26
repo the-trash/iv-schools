@@ -6,11 +6,8 @@
     =@user.login
     |
     =t('portal_name')
-.block
-  %ul
-    %li.system
-      - text= content_tag :span, '&laquo; Назад в личный кабинет', :class=>:bar
-      = link_to text, cabinet_users_url(:subdomain=>current_user.subdomain)
+- content_for :navigation_menu do
+  =render :partial => "shared/navigation_menu/to_cabinet"
 
 = will_paginate @questions
           

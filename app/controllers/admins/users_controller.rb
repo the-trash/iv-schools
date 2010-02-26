@@ -1,5 +1,4 @@
 class Admins::UsersController < ApplicationController
-  
   before_filter :login_required
   
   # GET /users
@@ -7,7 +6,7 @@ class Admins::UsersController < ApplicationController
     @users = User.paginate(:all,
                            :order=>"created_at ASC", #ASC, DESC
                            :page => params[:page],
-                           :per_page=>3
+                           :per_page=>20
                            )
                            
     respond_to do |format|
@@ -23,7 +22,7 @@ class Admins::UsersController < ApplicationController
       format.html # show.haml
     end
   end
-
+  
   # GET /users/new
   def new
     @user = User.new
@@ -38,17 +37,40 @@ class Admins::UsersController < ApplicationController
     @user = User.find(params[:id])
   end
 
-  # POST /users
   def create
+    #cookies.delete :auth_token
+    # protects against session fixation attacks, wreaks havoc with 
+    # request forgery protection.
+    # uncomment at your own risk
+    # reset_session
+    
+    # Создать пользователя
+    # Назначить роль зарегистрированного пользователя
+    # Сохранить
     @user = User.new(params[:user])
-
-    respond_to do |format|
-      if @user.save
-        flash[:notice] = 'user успешно создано.'
-        format.html { redirect_to(admins_user_path(@user)) }
-      else
-        format.html { render :action => "new" }
-      end
+    @user.set_role(Role.find_by_name('site_administrator'))
+    @user.save
+        
+    if @user.errors.empty?
+      # Если все успешно - создадим пользователю пустой профайл
+      Profile.new(:user_id=>@user.id).save
+      
+      # Если все успешно - создадим пользователю набор базовых страниц
+      # @user.pages.new(:title=>'Главная').save
+      
+      # Если все успешно - создадим пользователю Разделы файлового хранилища
+      @user.storage_sections.new(:title=>'Текстовые документы').save!
+      @user.storage_sections.new(:title=>'Изображения').save!
+      @user.storage_sections.new(:title=>'Презентации').save!
+      @user.storage_sections.new(:title=>'Другие файлы').save!
+      
+      #self.current_user = @user
+      redirect_to(admins_users_path)
+      flash[:notice] = t('user.auth.created')
+    else
+      #flash[:warning] = t('server.error')
+      flash[:notice] = t('user.auth.cant_be_create')
+      render :template => "admins/users/new"
     end
   end
 

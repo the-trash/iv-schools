@@ -5,11 +5,8 @@
   | Пользователь:
   = @user.login
     
-.block
-  %ul
-    %li.system
-      - text= content_tag :span, '&laquo; Назад к списку сообщений', :class=>:bar
-      = link_to text, box_questions_path(:subdomain=>current_user.subdomain)
+- content_for :navigation_menu do
+  =render :partial => "shared/navigation_menu/to_cabinet"
 
 = object_errors(@question)
 

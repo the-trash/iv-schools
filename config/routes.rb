@@ -1,8 +1,7 @@
 ActionController::Routing::Routes.draw do |map|
   map.simple_captcha '/simple_captcha/:action', :controller => 'simple_captcha'
   
-  #map.resources :admins,
-  #  :collection=>{:index=>:get}
+  #map.resources :admins, :collection=>{:index=>:get}
 
   map.resources :users,
     :collection=>{:cabinet=>:get, :profile=>:get},
@@ -54,7 +53,8 @@ ActionController::Routing::Routes.draw do |map|
   # /admins/roles/:role_id/sections/:id/delete_rule/?name=some_name
   map.namespace(:admins) do |admin|
     admin.resources :users,
-      :member=>{:change_role => :post }
+      :member=>{:change_role => :post},
+      :collection=>{:new => :get}
 
     admin.resources :pages
     

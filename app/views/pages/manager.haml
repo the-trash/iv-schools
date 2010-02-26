@@ -1,3 +1,5 @@
+- content_for :navigation_menu do
+  =render :partial => "shared/navigation_menu/to_cabinet"
 - content_for :css do
   =stylesheet_link_tag 'basic/admin_map.css', :media=>'screen'
 - content_for :title do
@@ -5,11 +7,6 @@
   = "#{@user.login}.iv-schools.ru"
   |
   =t('portal_name')
-.block
-  %ul
-    %li.system
-      - text= content_tag :span, '&laquo; Назад в личный кабинет', :class=>:bar
-      = link_to text, cabinet_users_url(:subdomain=>current_user.subdomain)
       
 %h5 Управление страницами сайта
 .admin_map

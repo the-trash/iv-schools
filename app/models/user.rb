@@ -12,6 +12,7 @@ class User < ActiveRecord::Base
   has_many    :reports                      # У пользователя много новостей (репортажей)
   has_many    :questions                    # У пользователя много вопросов
   has_many    :update_events                # У пользователя много событий об обновлениях
+  has_many    :storage_sections             # У пользователя много разделов в файловом хранилище
   
   def new_questions
     self.questions.select {|q| q.state == "new_question"}
@@ -23,6 +24,17 @@ class User < ActiveRecord::Base
   # papperclip
   #----------------------------------------------------------------------------------------------
   has_attached_file :avatar,
+    :styles => {
+        :normal => ["200x300#", :jpg],
+        :small => ["100x150#", :jpg],
+        :mini  => ["50x75#", :jpg],
+        :micro  => ["25x38#", :jpg]
+    },
+    :convert_options => {:all => "-strip"},
+    :url => Project::AVATARA_URL,
+    :default_url=>Project::AVATARA_DEFAULT
+
+=begin
     :styles => {
         :normal => ["200x300#", :jpg],
         :small => ["100x150#", :jpg],
@@ -44,7 +56,8 @@ class User < ActiveRecord::Base
     #:url => PROJECT['avatara_url']
     #avatara_path: ':rails_root/public/uploads/:attachment/:id/:id-:style.jpg'
     #avatara_url: '/uploads/:attachment/:id/:id-:style.jpg'
-    
+=end
+
   has_attached_file :base_header,
     :styles =>          {:original => ["900x250#", :jpg]},
     :convert_options => {:all => "-strip"},

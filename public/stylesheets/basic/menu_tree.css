@@ -4,7 +4,7 @@ ul.menu_tree{
     overflow:hidden;
     zoom:1;
     border-right:1px solid #CCC;
-    background:#FFF url(/images/basic/23.jpg) no-repeat 50% 0;
+    /*background:#FFF url(/images/basic/23.jpg) no-repeat 50% 0;*/
 }
 ul.menu_tree li.root a{
 	font-weight:bold;

@@ -9,6 +9,7 @@ ru:
 
     :auth:
       :updated: "Спасибо за регистрацию в системе iv-schools.ru"
+      :created: "Создан новый пользователь в системе iv-schools.ru"
       :cant_be_create: 'Не удалось создать пользователя'
       :entered: "Выполнен вход в систему iv-schools.ru"
       :logouted: "Выход из системы iv-schools.ru успешно выполнен"

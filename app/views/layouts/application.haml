@@ -54,8 +54,8 @@
           = link_to @user.subdomain + ".iv-schools.ru", root_path(:subdomain=>@subdomain)
 
       %ul.system_navigation
-        %li
-          - if @subdomain == 'portal' || @subdomain.nil?
+        - if @subdomain == 'portal' || @subdomain.nil?
+          %li
             = link_to "iv-schools.ru", root_path
           -#else
             = link_to @user.subdomain + ".iv-schools.ru", root_path(:subdomain=>@subdomain)
@@ -71,7 +71,7 @@
           =link_to t('updates'), url_for(:controller=>:updates)
         %li
           - if logged_in?
-            =link_to t('exit'), logout_url(:subdomain=>@user.subdomain)
+            =link_to t('exit'), logout_url(:subdomain=>false)
           - else
             =link_to t('login'), login_path(:subdomain=>false)
         -#
