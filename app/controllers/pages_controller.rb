@@ -53,7 +53,7 @@ class PagesController < ApplicationController
     @page= @user.pages.new(params[:page])
     @parent= nil
     @parent= Page.find_by_zip(params[:parent_id]) if params[:parent_id]
-
+        
     respond_to do |format|
       if @page.save
         @page.move_to_child_of(@parent) if @parent
