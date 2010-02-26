@@ -1,3 +1,5 @@
+- content_for :navigation_menu do
+  =render :partial => "shared/navigation_menu/to_cabinet"
 - content_for :css do
   =stylesheet_link_tag 'basic/edit_form.css', :media=>'screen'
 - content_for :title do
@@ -5,18 +7,13 @@
   =@user.login
   |
   =t('portal_name')
-.block
-  %ul
-    %li.system
-      - text= content_tag :span, '&laquo; Назад в личный кабинет', :class=>:bar
-      = link_to text, cabinet_users_url(:subdomain=>current_user.subdomain)
 
 %h3 Хранилище файлов
 .map
   %ul
     - @storage_sections.each do |section|
       %li{:style=>"padding:10px;margin:0 0 10px 0;"}
-        =link_to image_tag('iconza/blue/downloads_folder.png', :style=>'vertical-align:middle;') + " " + section.name + " (#{section.storage_files.size.to_s} файлов)", storage_files_url(:id=>section.zip), :style=>'font-weight:bold;'
+        =link_to image_tag('iconza/blue/downloads_folder.png', :style=>'vertical-align:middle;') + " " + section.title + " (#{section.storage_files.size.to_s} файлов)", storage_files_url(:id=>section.zip), :style=>'font-weight:bold;'
   
 = object_errors(@page)
 

@@ -7,22 +7,23 @@ class StorageFile < ActiveRecord::Base
                     :default_url=>Project::FILE_DEFAULT,
                     :styles => { :small=> '100x100#', :mini=>  '50x50#' },
                     :convert_options => { :all => "-strip" }
-                    
-                    #lambda { |a|
-                      #return [:empty_processor] unless a.is_image?
-                      #return [:thumbnail]
-                    #}
-                    
-  validates_presence_of :name, :message=>"Необходимо указать имя файла"
+                                        
+  validates_presence_of :title, :message=>"Необходимо указать имя файла"
   validates_attachment_size :file,
                             :in => 1.kilobytes..1.megabytes,
                             :message=>'Размер должен быть более 1 Килобайта и менее 1 Мегабайта'
-  
+
+=begin  
+  #lambda { |a|
+    #return [:empty_processor] unless a.is_image?
+    #return [:thumbnail]
+  #}
   #:processors => [:empty_processor]
   #['image/gif','image/jpeg','image/jpg','image/pjpeg','image/png','image/x-png','image/bmp']
   #['application/msword', 'application/x-doc'].include?(file.content_type)
   #['image/photoshop','image/x-photoshop','image/psd','application/photoshop','application/psd','zz-application/zz-winassoc-psd'].include?(file.content_type)
   #['application/x-zip','application/zip','application/x-zip-compressed','application/x-rar','application/rar','application/x-rar-compressed','application/x-tar'].include?(file.content_type)
+=end
     
   def is_image?
     ['.gif','.jpeg','.jpg','.pjpeg','.png','.bmp'].include?(File.extname(file_file_name))

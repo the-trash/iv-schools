@@ -4,7 +4,7 @@ class UsersController < ApplicationController
   # Проверка на регистрацию
   before_filter :navigation_menu_init
   before_filter :login_required, :except=>[:index, :new, :create]
-  before_filter :access_to_controller_action_required, :only=>[:cabinet]
+  #before_filter :access_to_controller_action_required, :only=>[:cabinet]
   
   # Список пользователей системы
   def index
