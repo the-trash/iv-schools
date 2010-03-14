@@ -98,7 +98,12 @@ module PagesHelper
         # Флаги для admin_controls поступают из рекурсии верхнего уровня
         res<< content_tag(:div, admin_controls(node, :childs=>childs.size.zero?, :first=>first, :last=>last), :class=>:controls) #|up, down, delete, edit, new|
         # Блок с названием страницы (ссылка)
-        res<< content_tag(:div, link_to(node.title, page_path(node.zip), :title=>t('page.zip_of_page') + "#{node.zip}"), :class=>"link #{'root' if root}")
+        
+        link_txt=  node.title
+        link_txt= Sanitize.clean(link_txt , SatitizeRules::Config::TITLE)
+        link_txt = 'Имя не определено' if link_txt.blank?
+        
+        res<< content_tag(:div, link_to(link_txt, page_path(node.zip), :title=>t('page.zip_of_page') + "#{node.zip}"), :class=>"link #{'root' if root}")
         # Обернуть в один блок
         res= content_tag(:div, res, :class=>:elem)
         # Получить id узла

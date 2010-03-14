@@ -72,6 +72,9 @@ ActionView::Base.field_error_proc = proc { |input, instance| input }
 ActionController::Base.session_options[:domain] = Project::COOKIES_SCOPE
 ActionController::Base.asset_host = Project::ADDRESS
 
+require 'sanitize'
+require 'redcloth'
+
 # Данное определение можно убрать после запуска rake файлов, подготовливающих систему к запуску
 # require 'factory_girl'
 # require 'faker'

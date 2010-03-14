@@ -1,11 +1,11 @@
-class PagesController < ApplicationController  
+class PagesController < ApplicationController
   # Формирование данных для отображения базового меню-навигации
   # Проверка на регистрацию
   # Поиск ресурса для обработчиков, которым он требуется
   # Исправить адрес по которому обращается пользователь к ресурсу
   # Проверка на политику доступа к обработчику, который не требует конкретного ресурса
   # Проверка на политику доступа к обработчику, который требует ресурс
-  before_filter :login_required,                        :except=> [:index, :show, :edustat, :first] 
+  before_filter :login_required,                        :except=> [:index, :show, :edustat, :first, :htmltest] 
   before_filter :find_page,                             :only=>   [:show, :edit, :update, :destroy, :up, :down]
   before_filter :access_to_controller_action_required,  :only=>   [:new, :create, :manager]
   before_filter :page_resourсe_access_required,         :only=>   [:edit, :update, :destroy, :up, :down]
@@ -18,7 +18,7 @@ class PagesController < ApplicationController
   def index
     @pages_tree= Page.find_all_by_user_id(@user.id, :select=>'id, title, zip, parent_id', :order=>"lft ASC")
   end
-  
+
   def first
     @page= Page.find_all_by_user_id(@user.id, :order=>"lft ASC", :limit=>1).first
     @parents= @page.self_and_ancestors if @page
@@ -158,6 +158,37 @@ class PagesController < ApplicationController
       format.any  { render :template => 'pages/edustat.html', :layout => false }
     end
   end
+
+  def htmltest
+    #require File.dirname(__FILE__) + "lib\html2textile\html2textile.rb"
+    #parser = HTMLToTextileParser.new
+    #parser.feed(input_html)
+    #puts parser.to_textile
+    respond_to do |format|
+      if params[:html2textile_text]
+      
+        require Rails.root.join('lib', 'html2textile', 'sgml-parser.rb')
+        require Rails.root.join('lib', 'html2textile', 'html2textile.rb')
+        parser = HTMLToTextileParser.new
+        html= Sanitize.clean(params[:html2textile_text], SatitizeRules::Config::CONTENT) 
+        parser.feed(html)
+        @textile = parser.to_textile
+        
+        format.js{render :layout=>false, :action => "ajax.html2textile.haml"}
+      end
+    end
+  end  
+    
+  def textiletest
+    respond_to do |format|
+      if params[:textile_text]
+        format.js{render :layout=>false, :action => "ajax.textile2html.haml"}
+      end
+    end
+    #if request.xhr?
+    #  render :text=>'Is XHR' and return
+    #end
+  end  
  
   protected
 

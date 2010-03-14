@@ -22,4 +22,4 @@
     %meta{ :name => "author", :content => "#{h @page.author}" }
   .page
     %h2= @page.title
-    = @page.content
+    =RedCloth.new(@page.content).to_html

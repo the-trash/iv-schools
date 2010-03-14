@@ -39,7 +39,6 @@ function hide_block(id){
     $(show_link).show();
     $(id_name).hide("blind", { direction: "vertical" }, 500);
 }
-
 function show_version_block(){
     $('#show_version_link').hide();
     $('#hide_version_link').show();
@@ -60,3 +59,49 @@ function browser_select(){
   $('#anti_msie_declaration_txt').hide("blind", { direction: "vertical" }, 500);
   $('#browser_select').delay(500).show("blind", { direction: "vertical" }, 500);
 }
+function textile2html(){
+  if(jQuery.browser.msie && (jQuery.browser.version == 6)){alert('Увы. Ничего не получится. Вы используете Internet Explorer 6.'); return false;}
+  jQuery.ajax({
+    type: "POST",
+    url: "/pages/textiletest",
+    data: {textile_text: $('#page_content').val()},
+    dataType: "html",
+    success: function(data, status, xhr){
+      // Вставить данные
+      $('#html_preview').html(data);
+    },
+    beforeSend: function(xhr){
+      //Показать символ загрузки
+      $('#html_preview').html('Идет загрузка данных с сервера с помощью технологии AJAX (АЯКС)');
+    },
+    complete: function(xhr, status){
+      //Убрать символ загрузки
+    },
+    error: function(xhr, status, error){
+      alert("Технология АЯКС. \nСерверная ошибка или ошибка соединения с Интернет.");
+      $('#html_preview').html("Технология АЯКС.<br />Серверная ошибка или ошибка соединения с Интернет.<br />Сообщите о проблеме на адрес электронной почты: iv-schools@yandex.ru");
+    }
+  });//jQuery.ajax
+}//textile2html
+
+function html2textile(){
+  if(jQuery.browser.msie && (jQuery.browser.version == 6)){alert('Увы. Ничего не получится. Вы используете Internet Explorer 6.'); return false;}
+  jQuery.ajax({
+    type: "POST",
+    url: "/pages/htmltest",
+    data: {html2textile_text: $('#html2textile_text').val()},
+    dataType: "html",
+    success: function(data, status, xhr){
+      $('#test').html(data);
+    },
+    beforeSend: function(xhr){
+      $('#test').html('Идет загрузка данных с помощью технологии AJAX (АЯКС)');
+    },
+    complete: function(xhr, status){
+      //alert('ok!');
+    },
+    error: function(xhr, status, errorThrown){
+      alert('oops!');
+    }
+  });//jQuery.ajax
+}//html2textile

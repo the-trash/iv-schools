@@ -5,12 +5,19 @@ class String
   def endl2br
     self.gsub("\n", "<br />")
   end
+  
   def space2br
     # Любое кол-во пробелов на один
     # удалить пробелы в начале и конце
     str= self.strip
     str.gsub!(/\s+/, " ")
     str.gsub(/\s+/, '<br />')
+  end
+  
+  def sharps2anchor!
+    # "Hello World! ###world I'm String!".sharps2anchor! => Hello World! <a href="#world" title="#world"></a> I'm String!
+    str = self.gsub(/###(\S*)/, " <a href=\"#\\1\" title=\"#\\1\"></a> ")
+    return str
   end
 end
 #-------------------------------------------------------------------------------------------------------

@@ -166,7 +166,12 @@ module AnsHelper
         # page_path(node.send(opts[:idname]).to_s) ==> page_path(node.id) ==> page_path('1234')
         link_path= eval("#{opts[:class_name]}_path(node.send(opts[:idname]).to_s)")
         # Блок с названием страницы (ссылка)
-        res<< content_tag(:div, link_to(node.send(opts[:title]), link_path, :title=>opts[:localize][:id_of_element] + node.send(opts[:idname]).to_s), :class=>"link #{'root' if root}")
+        
+        link_txt=  node.send(opts[:title])
+        link_txt= Sanitize.clean(link_txt , SatitizeRules::Config::TITLE)
+        link_txt = 'Имя не определено' if link_txt.blank?
+        
+        res<< content_tag(:div, link_to(link_txt, link_path, :title=>opts[:localize][:id_of_element] + node.send(opts[:idname]).to_s), :class=>"link #{'root' if root}")
         # Обернуть в один блок
         res= content_tag(:div, res, :class=>:elem)
         # Получить id узла
@@ -241,7 +246,11 @@ module AnsHelper
         # Формируем путь ссылки
         # page_path(node.send(idname).to_s) ==> page_path(node.id) ==> page_path('1234')
         link_path= eval("#{class_name}_path(opts[:node].send(opts[:idname]).to_s)")
-        res= content_tag :li, link_to(opts[:node].send(opts[:title]), link_path, :title=>opts[:localize][:id_of_element] + opts[:node].send(opts[:idname]).to_s), :class=>(opts[:root] ? 'root' : '')
+        link_txt=  opts[:node].send(opts[:title])
+        link_txt= Sanitize.clean(link_txt , SatitizeRules::Config::TITLE)
+        link_txt = 'Имя не определено' if link_txt.blank?
+        
+        res= content_tag :li, link_to(link_txt, link_path, :title=>opts[:localize][:id_of_element] + opts[:node].send(opts[:idname]).to_s), :class=>(opts[:root] ? 'root' : '')
         # Выбираем дочерние узлы к данному
         childs= tree.select{|elem| elem.parent_id == opts[:node].id}
         # Удаляем узел из дерева, при следующей рекурсии придется обходить меньше элементов =)

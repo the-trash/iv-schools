@@ -11,7 +11,7 @@ ActionController::Routing::Routes.draw do |map|
     :member=>{ :name=>:put, :avatar=>:put }
 
   map.resources :pages,
-    :collection=>{ :map=>:get, :manager=>:get },
+    :collection=>{:map=>:get, :manager=>:get, :textiletest=>:post, :htmltest=>:post},
     :member=>{ :up=>:get, :down=>:get }
     
   map.resources :updates
