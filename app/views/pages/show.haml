@@ -17,7 +17,10 @@
     |
     =t('portal_name')
   - content_for :meta do
-    %meta{ :name => "description", :content => Sanitize.clean(@page.description)}
+    - if @page.description.blank?
+      %meta{ :name => "description", :content => "Ивановский Региональный школьный Портал"}
+    - else
+      %meta{ :name => "description", :content => Sanitize.clean(@page.description)}
     %meta{ :name => "keywords", :content => "#{h @page.keywords}" }
     %meta{ :name => "author", :content => "#{h @page.author}" }
   .page
