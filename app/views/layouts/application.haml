@@ -45,7 +45,16 @@
     .body
       = render :partial => 'shared/pagetop_portal_info'
       = render :partial => 'shared/message'
-      =image_tag @user.base_header.url, :alt=>"iv-schools.ru"
+      -if logged_in? && (controller_name == 'pages' && (['new', 'edit'].include?(action_name)))
+        #base_header{:style=>'display:none;'}
+          =image_tag @user.base_header.url, :alt=>"iv-schools.ru"
+        .base_header_links.overblock
+          #base_header_show_link
+            =link_to_function 'Показать шапку сайта', "show_block('base_header')"
+          #base_header_hide_link{:style=>'display:none;'}
+            =link_to_function 'Скрыть шапку сайта', "hide_block('base_header')"
+      -else
+        =image_tag @user.base_header.url, :alt=>"iv-schools.ru"
 
       .header{:id=>:header}
         - if @subdomain == 'portal' || @subdomain.nil?
@@ -142,4 +151,4 @@
             show_anti_msie_declaration();
             }
             });
-          =render :partial => "shared/layouts/analitics"
+          =#render :partial => "shared/layouts/analitics"

@@ -13,13 +13,13 @@
 -if @page
   - content_for :title do
     = "#{@user.login}.iv-schools.ru &raquo; "
-    = @page.title
+    = Sanitize.clean(@page.title)
     |
     =t('portal_name')
   - content_for :meta do
-    %meta{ :name => "description", :content => "#{h @page.description}" }
+    %meta{ :name => "description", :content => Sanitize.clean(@page.description)}
     %meta{ :name => "keywords", :content => "#{h @page.keywords}" }
     %meta{ :name => "author", :content => "#{h @page.author}" }
   .page
-    %h2= @page.title
-    = @page.content
+    %h2= Sanitize.clean(@page.title, SatitizeRules::Config::TITLE)
+    = @page.prepared_content

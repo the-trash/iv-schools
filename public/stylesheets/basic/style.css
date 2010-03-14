@@ -205,3 +205,12 @@ body > div#anti_msie_declaration { position: fixed; top: 20%; left: 20%; }
 }
 /* FIXED PATCH */
 /* anti_msie_declaration FIXED PATCH */
+.base_header_links{
+  text-align:right;
+  padding:3px;
+}
+.base_header_links a{
+  padding:3px;
+  background:#87B3FF;
+  color:#FFF;
+}

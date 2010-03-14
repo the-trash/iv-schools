@@ -22,5 +22,5 @@
       = @parent.title
 
   -form_for :page, :url => pages_path do |f|
-    =hidden_field_tag :parent_id, @parent.zip
-    =render :partial => 'form', :locals => {:f => f, :button=>'Создать страницу'}
+    =hidden_field_tag :parent_id, @parent.zip if @parent
+    =render :partial => 'form', :locals => {:f => f, :button=>'Создать страницу', :title=>'Название страницы'}

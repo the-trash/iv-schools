@@ -7,10 +7,10 @@ class Page < ActiveRecord::Base
   validates_presence_of :user_id,     :message=>"Не определен идентификатор владельца страницы"
   validates_presence_of :zip,         :message=>"Не определен zip-идентификатор страницы"
 
-  validates_presence_of :author
-  validates_presence_of :keywords
-  validates_presence_of :description
-  validates_presence_of :copyright
+  #validates_presence_of :author
+  #validates_presence_of :keywords
+  #validates_presence_of :description
+  #validates_presence_of :copyright
   validates_presence_of :title, :message=>"У страницы должен быть заголовок"
 
   #publicated, hidden

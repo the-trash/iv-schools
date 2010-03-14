@@ -59,8 +59,9 @@ class Admins::UsersController < ApplicationController
       # @user.pages.new(:title=>'Главная').save
       
       # Если все успешно - создадим пользователю Разделы файлового хранилища
-      @user.storage_sections.new(:title=>'Текстовые документы').save!
       @user.storage_sections.new(:title=>'Изображения').save!
+      @user.storage_sections.new(:title=>'Текстовые документы').save!
+      @user.storage_sections.new(:title=>'Электронные таблицы').save!
       @user.storage_sections.new(:title=>'Презентации').save!
       @user.storage_sections.new(:title=>'Другие файлы').save!
       
