@@ -14,13 +14,16 @@ namespace :textile do
         page.prepared_content = page.content
         html = Sanitize.clean(page.prepared_content, SatitizeRules::Config::STRONG_CONTENT)
         html.gsub!("&#13;", "\r\n")
-        html.gsub!("«", "'")
-        html.gsub!("»", "'")
-        html.gsub!("“", "'")
-        html.gsub!("”", "'")
+        html.gsub!(">>", "&raquo;")
+        html.gsub!("<<", "&laquo;")
+        html.gsub!("»", "&raquo;")
+        html.gsub!("«", "&laquo;")
+        html.gsub!("“", "&quot;")
+        html.gsub!("”", "&quot;")
         parser = HTMLToTextileParser.new
         parser.feed(html)
         page.content = parser.to_textile
+        html.gsub!(".jpg !", ".jpg!")
       rescue
         puts page.zip
       end

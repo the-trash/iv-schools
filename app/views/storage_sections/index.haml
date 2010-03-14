@@ -17,19 +17,20 @@
   
 = object_errors(@page)
 
-.edit_form
-  %h5{:style=>'line-height:150%;'}
-    На этапе тестирования Вам предлагается использовать единый каталог файлов,
-    который называется "Основное"
-    %br
-    В этой папке хранятся все ваши файлы из старой версии сайта
-  -#
-    Создать новый раздел
-      
-    -form_for :storage_section, :url => storage_sections_path do |f|
-      %label{:for=>:title}
-        Название раздела
-      %span
-        = f.text_field :name, :class=>:input
+-#
+  .edit_form
+    %h5{:style=>'line-height:150%;'}
+      На этапе тестирования Вам предлагается использовать единый каталог файлов,
+      который называется "Основное"
+      %br
+      В этой папке хранятся все ваши файлы из старой версии сайта
+    -#
+      Создать новый раздел
         
-      = submit_tag 'Создать', :class=>:submit
+      -form_for :storage_section, :url => storage_sections_path do |f|
+        %label{:for=>:title}
+          Название раздела
+        %span
+          = f.text_field :name, :class=>:input
+          
+        = submit_tag 'Создать', :class=>:submit

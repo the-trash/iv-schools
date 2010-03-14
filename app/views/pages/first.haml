@@ -18,7 +18,6 @@
     =t('portal_name')
   - content_for :meta do
     %meta{ :name => "description", :content => Sanitize.clean(@page.description)}
-    -#"#{h @page.description}" }
     %meta{ :name => "keywords", :content => "#{h @page.keywords}" }
     %meta{ :name => "author", :content => "#{h @page.author}" }
   .page

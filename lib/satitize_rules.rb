@@ -33,7 +33,7 @@ module SatitizeRules
     CONTENT = {
       :elements => ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'div', 'span', 'p', 'br', 'img', 'a', 'ol', 'ul', 'li', 'strong', 'b', 'em', 'i'],
       :attributes => {
-        'a'          => ['href', 'title'],
+        'a'          => ['href', 'title', 'name'],
         'img'        => ['align', 'alt', 'height', 'src', 'title', 'width'],
         'span'       => ['style'],
         'p'       => ['style', 'class'],

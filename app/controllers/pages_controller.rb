@@ -53,7 +53,14 @@ class PagesController < ApplicationController
     @page= @user.pages.new(params[:page])
     @parent= nil
     @parent= Page.find_by_zip(params[:parent_id]) if params[:parent_id]
-        
+
+    #Textile processing
+    str = @page.content
+    str = str.sharps2anchor
+    str = RedCloth.new(str).to_html
+    @page.prepared_content = Sanitize.clean(str, SatitizeRules::Config::CONTENT)
+    #~Textile processing
+    
     respond_to do |format|
       if @page.save
         @page.move_to_child_of(@parent) if @parent
@@ -81,10 +88,19 @@ class PagesController < ApplicationController
   
   # PUT /pages/2343-5674-3345
   def update
+    @page.attributes = params[:page]
+    
+    #Textile processing
+    str = @page.content
+    str = str.sharps2anchor
+    str = RedCloth.new(str).to_html
+    @page.prepared_content = Sanitize.clean(str, SatitizeRules::Config::CONTENT)
+    #~Textile processing
+      
     respond_to do |format|
       last_update= @page.updated_at # Когда был обновлен объект в последний раз
 
-      if @page.update_attributes(params[:page])
+      if @page.save #update_attributes(params[:page])
         # СОБЫТИЕ ДЛЯ СТАТИСТИКИ ОБНОВЛЕНИЙ          
         if ((last_update + 5.minutes).to_datetime < DateTime.now)
           updevt = @user.update_events.new(:event_object=>@page,

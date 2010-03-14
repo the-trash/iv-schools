@@ -14,9 +14,9 @@ class String
     str.gsub(/\s+/, '<br />')
   end
   
-  def sharps2anchor!
-    # "Hello World! ###world I'm String!".sharps2anchor! => Hello World! <a href="#world" title="#world"></a> I'm String!
-    str = self.gsub(/###(\S*)/, " <a href=\"#\\1\" title=\"#\\1\"></a> ")
+  def sharps2anchor
+    # "Hello World! ###world I'm String!".sharps2anchor => Hello World! <a href="#world" name="world" title="world"></a> I'm String!
+    str = self.gsub(/###(\S*)/, " <a name=\"\\1\" href=\"#\\1\" title=\"\\1\"></a> ")
     return str
   end
 end
