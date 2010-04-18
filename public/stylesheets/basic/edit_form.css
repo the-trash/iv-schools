@@ -78,7 +78,7 @@
   border-width:1px 1px 1px 4px;
   font-family:Tahoma,Verdana,Arial;
   font-size:8pt;
-  height:300px;
+  height:550px;
   padding:5px 0 0 5px;
   width:95%;
   margin:0 0 15px 0;
@@ -99,7 +99,7 @@
 }
 #html_preview{
   border:2px solid #0C45A6;
-  height:300px;
+  height:550px;
   width:590px;
   overflow-y:scroll;
   overflow-x:auto;
@@ -108,7 +108,7 @@
 .edit_form .button_block{
   margin:0 0 7px 0;
 }
-.markup_help{
+#markup_help_block{
   background:none repeat scroll 0 0 #EEFFEE;
   border:1px solid #66BB66;
   margin-bottom:10px;
@@ -118,7 +118,7 @@
 #markup_man_hide_link, #markup_man_show_link, #markup_man{
   line-height:170%;
 }
-.markup_help a{color:#512BFF;}
+#markup_help_block a{color:#512BFF;}
 #markup_man{
   padding-top:10px;
 }

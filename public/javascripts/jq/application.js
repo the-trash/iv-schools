@@ -59,8 +59,23 @@ function browser_select(){
   $('#anti_msie_declaration_txt').hide("blind", { direction: "vertical" }, 500);
   $('#browser_select').delay(500).show("blind", { direction: "vertical" }, 500);
 }
-function textile2html(){
+function show_markup(){
+  $('#html_preview_block').hide();  
+  $('#markup_help_block').hide();  
+  $('#markup_preview_block').show();
+}
+function show_markup_help(){
+  $('#html_preview_block').hide();  
+  $('#markup_preview_block').hide();  
+  $('#markup_help_block').show();
+}
+function show_html(){
   if(jQuery.browser.msie && (jQuery.browser.version == 6)){alert('Увы. Ничего не получится. Вы используете Internet Explorer 6.'); return false;}
+  
+  $('#markup_preview_block').hide();
+  $('#markup_help_block').hide();
+  $('#html_preview_block').show();  
+
   jQuery.ajax({
     type: "POST",
     url: "/pages/textiletest",
@@ -72,7 +87,7 @@ function textile2html(){
     },
     beforeSend: function(xhr){
       //Показать символ загрузки
-      $('#html_preview').html('Идет загрузка данных с сервера с помощью технологии AJAX (АЯКС)');
+      $('#html_preview').html('<div class="ajax_loader"><img src="/images/basic/ajax.gif" alt="Идет загрузка данных с сервера с помощью технологии AJAX (АЯКС)" /></div>');
     },
     complete: function(xhr, status){
       //Убрать символ загрузки
@@ -95,7 +110,7 @@ function html2textile(){
       $('#test').html(data);
     },
     beforeSend: function(xhr){
-      $('#test').html('Идет загрузка данных с помощью технологии AJAX (АЯКС)');
+      $('#test').html('<img src="/images/basic/ajax.gif" alt="AJAX загрузка данных" />');
     },
     complete: function(xhr, status){
       //alert('ok!');

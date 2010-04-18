@@ -39,3 +39,47 @@
   margin:0 0 10px;
   line-height:150%;
 }
+.view_buttons{
+    padding:4px;
+    margin: 0 0 2px 0;
+}
+.view_buttons .show_markup{
+    background:#EEFFEE;
+    border:2px solid #66BB66;
+    color:#66BB66;
+    display:block;
+    float:left;
+    font-size:14pt;
+    margin-right:10px;
+    padding:8px;
+    text-align:center;
+    text-decoration:none;
+}
+.view_buttons .show_html{
+    background:#87B3FF;
+    border:2px solid #4472BF;
+    color:#FFFFFF;
+    display:block;
+    float:left;
+    font-size:14pt;
+    margin-right:10px;
+    padding:8px;
+    text-align:center;
+    text-decoration:none;
+}
+.view_buttons .show_markup_manual{
+    background:#A084FB;
+    border:2px solid #3F09F4;
+    color:#FFF;
+    display:block;
+    float:left;
+    font-size:14pt;
+    margin-right:10px;
+    padding:8px;
+    text-align:center;
+    text-decoration:none;
+}
+.ajax_loader{
+    margin:50px 0 0 0;
+    text-align:center;
+}
