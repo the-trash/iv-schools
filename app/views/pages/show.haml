@@ -18,11 +18,16 @@
     =t('portal_name')
   - content_for :meta do
     - if @page.description.blank?
-      %meta{ :name => "description", :content => "Ивановский Региональный школьный Портал"}
+      %meta{ :name => "description", :content => "Ивановский Региональный школьный Портал, Авторский школьный портал, Илья Зыкин, Иваново, Информатика, Школьный Портал, Школа, Компьютерная грамотность, Killich, Тот самый учитель информатики, Кохма"}
+      %meta{ :name => "keywords", :content => "Ивановский Региональный школьный Портал, Авторский школьный портал, Илья Зыкин, Иваново, Информатика, Школьный Портал, Школа, Компьютерная грамотность, Killich, Тот самый учитель информатики, Кохма" }
+      %meta{ :name => "author", :content => "Ивановский Региональный школьный Портал, Авторский школьный портал, Илья Зыкин, Иваново, Информатика, Школьный Портал, Школа, Компьютерная грамотность, Killich, Тот самый учитель информатики, Кохма" }
     - else
       %meta{ :name => "description", :content => Sanitize.clean(@page.description)}
-    %meta{ :name => "keywords", :content => "#{h @page.keywords}" }
-    %meta{ :name => "author", :content => "#{h @page.author}" }
+      %meta{ :name => "keywords", :content => "Ивановский Региональный школьный Портал, Авторский школьный портал, Илья Зыкин, Иваново, Информатика, Школьный Портал, Школа, Компьютерная грамотность, Killich, Тот самый учитель информатики, Кохма" }
+      %meta{ :name => "author", :content => "Ивановский Региональный школьный Портал, Авторский школьный портал, Илья Зыкин, Иваново, Информатика, Школьный Портал, Школа, Компьютерная грамотность, Killich, Тот самый учитель информатики, Кохма" }
+            
+      -# %meta{ :name => "keywords", :content => "#{h @page.keywords}" }
+      -# %meta{ :name => "author", :content => "#{h @page.author}" }
   .page
     %h2= Sanitize.clean(@page.title, SatitizeRules::Config::TITLE)
     = @page.prepared_content

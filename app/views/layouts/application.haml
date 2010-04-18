@@ -40,8 +40,6 @@
     =yield :gallery_lightbox
     =yield :css
   %body
-    =render :partial => "shared/anti_msie6.haml"
-    
     .body
       -if logged_in? && (controller_name == 'pages' && (['new', 'edit'].include?(action_name)))
         #base_header{:style=>'display:none;'}
@@ -117,8 +115,9 @@
                 =yield
       
       =yield :page_information
-    
+
       .footer
+        =render :partial => "shared/anti_msie6.haml"
         .block
           .portal
             %p
@@ -130,7 +129,7 @@
               
           .alpha.overblock
             %span{:class=>'ml100'}
-              версия: 0.01 от 15:00 14.03.2010
+              версия: 0.01 от 12:05 18.04.2010
             %span#show_version_link
               =link_to_function 'Узнать больше или сообщить об ошибке на сайте', 'show_version_block()', :class=>:version_block
             %span#hide_version_link{:style=>'display:none;'}
