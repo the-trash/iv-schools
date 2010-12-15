@@ -40,6 +40,11 @@
     =yield :gallery_lightbox
     =yield :css
   %body
+    .newyear
+      %h3{:style=>'text-align:center;'}
+        Школьный портал поздравляет всех с новым 2011 годом!
+        %br
+        Удачи, счастья, здоровья и благополучия!
     .body
       -if logged_in? && (controller_name == 'pages' && (['new', 'edit'].include?(action_name)))
         #base_header{:style=>'display:none;'}
