@@ -114,7 +114,9 @@
                 = app_flash(flash)
                 =yield
       
-      =yield :page_information
+      = yield :page_information
+      .linker{:style => 'border: 1px solid gold; padding: 5px; margin: 5px 0;'}
+        = @tl.build_links
 
       .footer
         =render :partial => "shared/anti_msie6.haml"

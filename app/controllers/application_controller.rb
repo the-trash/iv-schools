@@ -8,6 +8,10 @@ class ApplicationController < ActionController::Base
   
   # Простая капча
   include SimpleCaptcha::ControllerHelpers
+
+  require 'tl_client'
+  before_filter :trustlink
+
   
   #rescue_from ActionController::RoutingError, :with => :page_not_found
   #rescue_from ActionController::UnknownAction, :with=> :page_not_found
@@ -162,5 +166,11 @@ class ApplicationController < ActionController::Base
       zip= "#{(1000..9999).to_a.rand}-#{(1000..9999).to_a.rand}-#{(1000..9999).to_a.rand}"
     end
     zip
+  end
+
+  private
+
+  def trustlink
+    @tl=Trustlink::TlClient.new('c2c6a63a26698ae6ccdd376aeb4791d9286e96d2',request,  {:encoding=>'UTF-8'})
   end
 end
