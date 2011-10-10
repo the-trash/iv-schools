@@ -10,7 +10,6 @@ a.back:hover{color:#FF7211;}
 body{
   font-family:Verdana,Trebuchet MS,Tahoma,Arial,serif; font-size:9pt;
   behavior:url("/stylesheets/basic/hover.htc");
-  background:white url(/images/basic/snow.jpg);
 }
 .body       { width:900px; margin:auto; background:white;}
 
