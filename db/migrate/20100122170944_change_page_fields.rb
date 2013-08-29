@@ -1,6 +1,6 @@
 class ChangePageFields < ActiveRecord::Migration
   def self.up
-    add_column :pages, :state, :string, :default=>"hidden"
+    # add_column :pages, :state, :string, :default=>"hidden"
     rename_column :pages, :display, :display_state
   end
 
