@@ -7,7 +7,7 @@
 #FREE BSD /usr/local/bin/convert
 # Ubuntu Paperclip.options[:command_path] = "/usr/bin/"
 
-Paperclip.options[:command_path] = '/usr/local/bin/'
+Paperclip.options[:command_path] = '/usr/bin/'
 #sudo apt-get install imagemagick 
 
 module Paperclip
