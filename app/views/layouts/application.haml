@@ -123,7 +123,8 @@
         .block
           .portal
             %p
-              =mail_to 'iv-schools@yandex.ru', image_tag('basic/email.gif'), :encode => 'hex', :id=>:mail
+              = link_to 'open-cook.ru', 'http://open-cook.ru'
+              = mail_to 'iv-schools@yandex.ru', image_tag('basic/email.gif'), :encode => 'hex', :id=>:mail
               = link_to t('site_description'), root_url(:subdomain=>false), :class=>'logolink'
               &copy;
               &nbsp;2006 &mdash; 2009
