@@ -9,8 +9,8 @@ class ApplicationController < ActionController::Base
   # Простая капча
   include SimpleCaptcha::ControllerHelpers
 
-  require 'tl_client'
-  before_filter :trustlink
+  # require 'tl_client'
+  # before_filter :trustlink
 
   
   #rescue_from ActionController::RoutingError, :with => :page_not_found
