@@ -3,7 +3,7 @@ upstream <%= socket_name %> {
 }
 
 server{
-  listen 7777;
+  listen 80;
   server_name <%= site_name %> www.<%= site_name %>;
   root <%= current_path %>/public;
   
