@@ -7,6 +7,11 @@ server{
   server_name <%= site_name %> *.<%= site_name %>;
   root <%= current_path %>/public;
   
+  # www => no www
+  if ($host = 'www.<%= site_name %>' ) {
+     rewrite  ^/(.*)$  http://<%= site_name %>/$1  permanent;
+  }
+  
   location / {
     proxy_redirect off;
     proxy_set_header Host $http_host;
