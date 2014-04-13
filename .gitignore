@@ -6,9 +6,11 @@ log
 *.txt
 *.bat
 *Thumbs.db*
-.rvmrc
 
-Gemfile.lock
+.rvmrc
+.ruby-version
+.ruby-gemset
+
 public/system
 public/uploads
 public/*uploads
