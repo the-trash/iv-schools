@@ -12,12 +12,12 @@
     -# Меню со всеми функциями
     -# -------------------------------------------------------------------------
     -# if logged_in?
-    -# content_for :css do      
-    -# content_for :all_function_bar do 
+    -# content_for :css do
+    -# content_for :all_function_bar do
     =# render :partial => "shared/all_function_bar"
     -#if current_user.has_role_policy?(:administrator , :all)
     -# -------------------------------------------------------------------------
-                
+
     =stylesheet_link_tag 'basic/reset.css', :media=>'screen'              # Сборос
     =stylesheet_link_tag 'basic/headers.css', :media=>'screen'            # Заголовки
     =stylesheet_link_tag 'basic/style.css', :media=>'screen'              # Базовые стили
@@ -30,12 +30,12 @@
     =stylesheet_link_tag 'basic/footer.css', :media=>'screen'             # Ножки сайта
     =stylesheet_link_tag 'basic/site_map_block.css', :media=>'screen'
     =stylesheet_link_tag 'basic/menu_tree.css', :media=>'screen'
-    
-    
+
+
     =javascript_include_tag "jq/jquery-1.4.2.min"
     =javascript_include_tag "jq/jquery-ui-1.7.2.min"
     =javascript_include_tag "jq/application"
-      
+
     =yield :js
     =yield :gallery_lightbox
     =yield :css
@@ -70,7 +70,7 @@
             = link_to @user.subdomain + ".iv-schools.ru", root_path(:subdomain=>@subdomain)
         %li
           =link_to t('site_map'), pages_path(:subdomain=>@user.subdomain)
-        
+
         - if logged_in?
           %li
             =link_to t('cabinet'), cabinet_users_url(:subdomain=>current_user.subdomain), :style=>'color:green;'
@@ -99,7 +99,7 @@
           %li
             =link_to 'Документы', users_path
           %li
-            =link_to 'Обратная связь', users_path            
+            =link_to 'Обратная связь', users_path
 
       %table.main
         %tbody
@@ -108,15 +108,13 @@
               = yield(:navigation_menu) unless yield(:navigation_menu).blank?
               =# render :partial => "shared/some_partions_exemple" unless (controller_name == 'users' && action_name == 'index')
               =# yield :all_function_bar
-              
+
             %td.content
               .block
                 = app_flash(flash)
                 =yield
-      
+
       = yield :page_information
-      .linker{:style => 'border: 1px solid gold; padding: 5px; margin: 5px 0;'}
-        = @tl.build_links
 
       .footer
         =render :partial => "shared/anti_msie6.haml"
@@ -128,8 +126,8 @@
               = link_to t('site_description'), root_url(:subdomain=>false), :class=>'logolink'
               &copy;
               &nbsp;2006 &mdash; 2009
-              
-              
+
+
           .alpha.overblock
             %span{:class=>'ml100'}
               версия: 0.01 от 12:05 18.04.2010
@@ -146,7 +144,7 @@
               %br
               Если Вы обнаружили ошибку или у Вас возник вопрос, то Вам следует обратиться
               =link_to 'cюда', url_for(:controller=>:questions, :subdomain=>false) , :style=>'color:red;'
-            
+
             -# Язык интерфейса:
             =# select("local", "lang", {'английский'=>'/?lang=en', 'русский'=>'/?lang=ru'}, {:selected=>"/?lang=#{cookies[:lang]}"}, :onchange=>"top.location.href = this.options[this.selectedIndex].value")
           -javascript_tag do
