@@ -10,7 +10,7 @@ gem 'unicorn'
 
 gem 'haml',        '3.1.4'
 gem 'mysql',       '2.8.1'
-gem 'rmagick',     '2.13.2'
+gem 'rmagick',     '2.14.0' # '2.16.0' # '2.13.2'
 gem 'paperclip',   '2.3.1.1'
 
 gem 'i18n',          '0.6.0'
