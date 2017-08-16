@@ -5,21 +5,21 @@
 #/usr/local/ImageMagick-6.4.8
 #which convert
 #FREE BSD /usr/local/bin/convert
-# Ubuntu Paperclip.options[:command_path] = "/usr/bin/"
+Paperclip.options[:command_path] = "/usr/bin/"
 
-Paperclip.options[:command_path] = '/usr/local/bin/'
-#sudo apt-get install imagemagick 
+# Paperclip.options[:command_path] = '/usr/local/bin/'
+#sudo apt-get install imagemagick
 
 module Paperclip
   module Interpolations
     # Дополнения, позволяющие в путь сохранения изображений
     # добавлять новые теги
-    
+
     # :url => '/uploads/:attachment/:login/:style.jpg'
     def login attachment, style
       attachment.instance.login
     end
-    
+
     def holder_login attachment, style
       attachment.instance.user.login
     end
