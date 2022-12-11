@@ -7,9 +7,13 @@ config/database.yml
 *.txt
 *.bat
 *Thumbs.db*
+
 public/system
 public/uploads
 public/*uploads
 public/uploads*
 DeployTool/*
+
 shared
+db/MYSQL/
+db/REDIS/
