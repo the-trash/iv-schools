@@ -2,6 +2,7 @@ tmp
 db/schema.rb
 doc
 log
+config/ENV
 config/database.yml
 *.txt
 *.bat
