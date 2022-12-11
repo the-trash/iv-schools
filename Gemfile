@@ -6,7 +6,7 @@ source 'https://rubygems.org'
 gem 'rails', '2.3.4'
 gem 'rake', '0.8.7' #(0.9.2.2, 0.9.2, 0.8.7)
 
-gem 'unicorn'
+gem 'unicorn', '4.8.2'
 
 gem 'haml',        '3.1.4'
 gem 'mysql',       '2.8.1'
