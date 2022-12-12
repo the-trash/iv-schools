@@ -14,3 +14,5 @@ $ script/console
 ```
   https://guides.rubyonrails.org/v2.3/active_record_querying.html#selecting-specific-fields
 ```
+
+$ script/server -b 0.0.0.0 -p 3000

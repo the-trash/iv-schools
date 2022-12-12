@@ -32,6 +32,8 @@ services:
     image: iamteacher/iv_schools:webapp.amd64
     volumes:
       - ../:/home/rails
-      - ../shared:/shared
+    ports:
+      - 3000:3000
+    # user: ${DOCKER_USER_ID}:${DOCKER_GROUP_ID}
     depends_on:
       - mysql
