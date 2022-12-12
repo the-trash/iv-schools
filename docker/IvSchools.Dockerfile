@@ -74,7 +74,7 @@ RUN gem install state_machine -v 1.1.2 --no-document --verbose
 RUN gem install subdomain-fu  -v 1.0.0.beta2 --no-document --verbose
 RUN gem install russian       -v 0.6.0 --ignore-dependencies --no-document --verbose
 
-RUN gem install kgio          -v 2.6 --no-document --verbose
+RUN gem install kgio          -v 2.9.2 --no-document --verbose
 RUN gem install raindrops     -v 0.13.0 --no-document --verbose
 RUN gem install unicorn       -v 4.8.2 --no-document --verbose
 
@@ -83,3 +83,32 @@ RUN gem update --system 1.5.3
 USER docker
 RUN mkdir /home/rails
 WORKDIR /home/rails
+
+# actionmailer (2.3.4)
+# actionpack (2.3.4)
+# activerecord (2.3.4)
+# activeresource (2.3.4)
+# activesupport (2.3.4)
+# bundler (1.3.5)
+# bundler-unload (1.0.2)
+# executable-hooks (1.6.1)
+# gem-wrappers (1.2.7)
+# haml (3.1.4)
+# i18n (0.6.0)
+# kgio (2.9.2)
+# mysql (2.8.1)
+# nokogiri (1.5.2)
+# paperclip (2.3.1.1)
+# rack (1.0.1)
+# rails (2.3.4)
+# raindrops (0.13.0)
+# rake (0.8.7)
+# RedCloth (4.2.9)
+# rmagick (2.14.0)
+# rubygems-bundler (1.4.5)
+# russian (0.6.0)
+# rvm (1.11.3.9)
+# sanitize (2.0.3)
+# state_machine (1.1.2)
+# subdomain-fu (1.0.0.beta2)
+# unicorn (4.8.2)

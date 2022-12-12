@@ -57,4 +57,4 @@ DEPENDENCIES
   sanitize (= 2.0.3)
   state_machine (= 1.1.2)
   subdomain-fu (= 1.0.0.beta2)
-  unicorn
+  unicorn (= 4.8.2)

@@ -1,3 +1,5 @@
+ENV["RAILS_ENV"] ||= ENV["RACK_ENV"]
+
 # Be sure to restart your server when you modify this file
 
 # Specifies gem version of Rails to use when vendor/rails is not present
@@ -17,7 +19,7 @@ Rails::Initializer.run do |config|
   #-------------------------------------------------------------------------------------------------------
   # Информация о связанных плагинах и гемах
   #-------------------------------------------------------------------------------------------------------
-      
+
   # Specify gems that this application depends on and have them installed with rake gems:install
   # config.gem "bj"
   # config.gem "hpricot", :version => '0.6', :source => "http://code.whytheluckystiff.net"
@@ -29,7 +31,7 @@ Rails::Initializer.run do |config|
   #config.gem "thoughtbot-factory_girl",
   #         :lib    => "factory_girl",
   #         :source => "http://gems.github.com"
-             
+
   # Для тестового заполнения данными требуется gem faker
   # Установка всех гемов выполняется командой
   # rake gems:install # если надо указать среду разработки RAILS_ENV=test
