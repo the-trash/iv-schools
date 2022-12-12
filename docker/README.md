@@ -36,4 +36,6 @@ $ docker exec -ti iv-schools-mysql-1 bash
 $ docker compose -f prod.docker-compose.yml up -d
 
 $ docker exec -ti -u 9999:9999 iv-schools-rails-1 bash -l
-$ script/server -e production -b 0.0.0.0 -p 3000 -d
+
+$ WEBBRICK: script/server -e production -b 0.0.0.0 -p 3000 -d
+$ UNICORN: unicorn -c config/UNICORN.rb -E production

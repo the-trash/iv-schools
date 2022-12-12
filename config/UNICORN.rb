@@ -1,4 +1,4 @@
-rails_root = "/home/rails/current"
+rails_root = "/home/rails"
 
 pid_file    = "/home/rails/tmp/pids/unicorn.pid"
 socket_file = "/home/rails/tmp/sockets/unicorn.sock"
