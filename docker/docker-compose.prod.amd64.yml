@@ -1,0 +1,39 @@
+# export DOCKER_USER_ID=$(id -u)
+# export DOCKER_GROUP_ID=$(id -g)
+#
+# echo $DOCKER_USER_ID
+# echo $DOCKER_GROUP_ID
+
+version: '3.8'
+
+name: iv-schools
+
+services:
+  # port: 3306
+  mysql:
+    image: mysql
+    # NOTE: use of "mysql_native_password" is not recommended: https://dev.mysql.com/doc/refman/8.0/en/upgrading-from-previous-series.html#upgrade-caching-sha2-password
+    # (this is just an example, not intended to be a production configuration)
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: qwerty
+      MYSQL_DATABASE: iv_schools
+      MYSQL_USER: rails
+      MYSQL_PASSWORD: qwerty
+    volumes:
+      - ../db/MYSQL:/var/lib/mysql
+      - ../shared:/shared
+    user: ${DOCKER_USER_ID}:${DOCKER_GROUP_ID}
+
+  rails:
+    tty: true
+    stdin_open: true
+    image: iamteacher/iv_schools:webapp.amd64
+    volumes:
+      - ../:/home/rails
+    ports:
+      - 3000:3000
+    user: ${DOCKER_USER_ID}:${DOCKER_GROUP_ID}
+    depends_on:
+      - mysql

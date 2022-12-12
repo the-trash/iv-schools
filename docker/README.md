@@ -16,3 +16,19 @@ $ script/console
 ```
 
 $ script/server -b 0.0.0.0 -p 3000
+
+### Server
+
+```
+export DOCKER_USER_ID=$(id -u)
+export DOCKER_GROUP_ID=$(id -g)
+```
+
+$ docker pull mysql
+$ docker pull iamteacher/iv_schools:webapp.amd64
+
+$ docker compose -f dev.docker-compose.yml up mysql -d
+$ docker exec -ti iv-schools-mysql-1 bash
+
+> mysql -u rails -h localhost -pqwerty
+> mysql -urails -h localhost -pqwerty  iv_schools < shared/iv-schools.ru.iv_schools.2022_12_11_09_25.mysql.sql
