@@ -7,3 +7,10 @@ $ docker ps
 
 # login as `docker` user (id: 1000)
 $ docker exec -ti iv-schools-rails-1 /bin/bash -l
+
+$ cd /home/rails
+$ script/console
+
+```
+  https://guides.rubyonrails.org/v2.3/active_record_querying.html#selecting-specific-fields
+```

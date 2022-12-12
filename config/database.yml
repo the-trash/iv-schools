@@ -1,6 +1,6 @@
 development:
   host: mysql
-  adapter: mysql2
+  adapter: mysql
   encoding: utf8
   pool: 5
 
@@ -10,7 +10,7 @@ development:
 
 production:
   host: mysql
-  adapter: mysql2
+  adapter: mysql
   encoding: utf8
   pool: 5
 
