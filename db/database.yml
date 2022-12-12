@@ -1,0 +1,9 @@
+db:
+  host: localhost
+  adapter: mysql2
+  encoding: utf8
+  pool: 5
+
+  username: rails
+  database: iv_schools
+  password: qwerty

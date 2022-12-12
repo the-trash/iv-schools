@@ -75,3 +75,9 @@ RUN gem install subdomain-fu  -v 1.0.0.beta2 --no-document --verbose
 RUN gem install russian       -v 0.6.0 --ignore-dependencies --no-document --verbose
 RUN gem install raindrops     -v 0.13.0 --no-document --verbose
 RUN gem install unicorn       -v 4.8.2 --no-document --verbose
+
+RUN gem update --system 1.5.3
+
+USER docker
+RUN mkdir /home/rails
+WORKDIR /home/rails

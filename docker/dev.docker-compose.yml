@@ -27,8 +27,11 @@ services:
     user: ${DOCKER_USER_ID}:${DOCKER_GROUP_ID}
 
   rails:
+    tty: true
+    stdin_open: true
     image: iamteacher/iv_schools:webapp.amd64
     volumes:
-      - ../:/home/docker
+      - ../:/home/rails
       - ../shared:/shared
-    user: ${DOCKER_USER_ID}:${DOCKER_GROUP_ID}
+    depends_on:
+      - mysql
